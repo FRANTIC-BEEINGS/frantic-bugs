@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public int moveEnergy;
-    int captureEnergy;
-    public int force;
-
-    public void Initialize()
-    {
-        captureEnergy = 10;
-    }
-
+    [SerializeField] int moveEnergy;
+    [SerializeField] int captureEnergy;
+    [SerializeField] int force;
+    [SerializeField] int fightEnergy;
+    [SerializeField] int level;
+    [SerializeField] int resourceEnergy;
 }
