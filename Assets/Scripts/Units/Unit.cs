@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
+    public Func<AllegianceType> GetAllegiance;
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
     [SerializeField] int force;
@@ -14,7 +16,7 @@ public class Unit : MonoBehaviour
     [SerializeField] double decreaseCoef;
     [SerializeField] int sight;
 
-    // Повышение уровня, увеличение силы и уменьшение энергий
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     public void IncreaseLevel()
     {
         level += 1;
@@ -25,10 +27,10 @@ public class Unit : MonoBehaviour
         resourceEnergy = (int)(resourceEnergy * decreaseCoef);
     }
 
-    // Сражение с мобом.
-    // mobForce - сила моба
-    // allEnergy - глобальная энергия игрока
-    // levelupMob - будет ли убийство моба повышать уровень герою
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ.
+    // mobForce - пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+    // allEnergy - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+    // levelupMob - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     public void FightMob(int mobForce, ref int allEnergy, bool levelupMob)
     {
         if (mobForce < force)
@@ -39,7 +41,7 @@ public class Unit : MonoBehaviour
                 Death();
                 return;
             }
-            //todo передать карте, чтобы стерла монстра
+            //todo пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
             if (levelupMob)
                 IncreaseLevel();
@@ -50,14 +52,14 @@ public class Unit : MonoBehaviour
         }
     }
 
-    // Захват одной карты
+    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
     public void CaptureCard(ref int allEnergy)
     {
         if (captureEnergy > allEnergy)
             return;
 
         allEnergy -= captureEnergy;
-        // todo передать карте, что она захвачена
+        // todo пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     }
 
     public void GetResource(ref int allEnergy)
@@ -66,8 +68,8 @@ public class Unit : MonoBehaviour
             return;
 
         allEnergy -= resourceEnergy;
-        // todo получить тип ресурса и добавить ресурс в общие ресурсы
-        // todo передать карте, чтобы стерла ресурс
+        // todo пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        // todo пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     }
 
     private void Death() 
