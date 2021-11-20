@@ -1,0 +1,4 @@
+﻿public class EmptyCard : Card
+{
+
+}
