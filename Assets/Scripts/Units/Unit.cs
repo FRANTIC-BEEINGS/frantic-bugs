@@ -31,7 +31,7 @@ public class Unit : MonoBehaviour
     // mobForce - ���� ����
     // allEnergy - ���������� ������� ������
     // levelupMob - ����� �� �������� ���� �������� ������� �����
-    public void FightMob(int mobForce, ref int allEnergy, bool levelupMob)
+    public void FightMob(int mobForce, ref int allEnergy, bool levelupMob) //Enemy card
     {
         if (mobForce < force)
         {
