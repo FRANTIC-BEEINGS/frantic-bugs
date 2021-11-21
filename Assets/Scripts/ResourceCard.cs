@@ -6,6 +6,6 @@ public class ResourceCard : Card
     private int _quantity;  //initial amount of resource
     private int _replenishmentRate;
 
-    private Action<ResourceType,int> GatherResource;
+    //private Action<ResourceType,int> GatherResource;
 
 }

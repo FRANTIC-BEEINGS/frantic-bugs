@@ -1,12 +1,10 @@
-﻿public class ResourceManager
+﻿using System.Collections.Generic;
+public class ResourceManager
 {
-    public void AddResources(ResourceType resource, int quantity)
+    private Dictionary<ResourceType, int> resorces;
+    public void AddResource(ResourceType resource, int quantity)
     {
         
     }
 
-    public void GatherResource(ResourceCard resourceCard)
-    {
-        
-    }
 }
