@@ -7,9 +7,14 @@ using UnityEngine;
 public class Card : MonoBehaviour
 {
     private bool _isVisible = false;
-    [SerializeField] private Sprite face;
+    protected Sprite Face;
     private Unit currentUnit;
 
+    public void Initialize(Sprite face)
+    {
+        Face = face;
+    }
+    
     public bool StepOn(Unit unit)
     {
         if(!CanStepOn(unit)) return false;
