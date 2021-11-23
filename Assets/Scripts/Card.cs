@@ -8,7 +8,6 @@ public class Card : MonoBehaviour
 {
     private bool _isVisible = false;
     [SerializeField] private Sprite face;
-    [SerializeField] private Sprite back;
     private Unit currentUnit;
 
     public bool StepOn(Unit unit)
@@ -45,12 +44,10 @@ public class Card : MonoBehaviour
         if (visibility == _isVisible) return;
         //TODO: play animation
         _isVisible = visibility;
-        GetComponent<SpriteRenderer>().sprite = _isVisible ? face : back;
     }
 
     //assign card back image
     private void Start()
     {
-        GetComponent<SpriteRenderer>().sprite = back;
     }
 }
