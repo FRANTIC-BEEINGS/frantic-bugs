@@ -20,16 +20,18 @@ public class CountDown : NetworkBehaviour
         }
     }
     
-    private IEnumerator WaitAndUpdateTimer(int timeToWait)
+    private IEnumerator WaitAndUpdateTimer(int timeToWait, int secondsAfterTimeOver = 0)
     {
         int counter = timeToWait;
         UpdateTimeClientRpc(counter);
-        while (counter > 0) {
+        while (counter >= 0) {
             yield return new WaitForSeconds (1);
             counter--;
             UpdateTimeClientRpc(counter);
         }
-        UpdateTimeClientRpc(counter);
+        UpdateTimeClientRpc(0);
+        yield return new WaitForSeconds (secondsAfterTimeOver);
+        TimerOver?.Invoke();
     }
     
     private void StartCoro(int timeToWait)
