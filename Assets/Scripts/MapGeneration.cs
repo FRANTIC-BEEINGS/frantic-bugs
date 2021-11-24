@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cards;
 
 /*
 этот скрипт должен сработать один раз, чтобы установить карточки.
@@ -24,7 +25,7 @@ public class MapGeneration : MonoBehaviour  {
     [SerializeField] private List<GameObject> CardPrefabs;
     [SerializeField] private List<int> CardTypeCnt;
 
-    private List<List<GameObject>> Map;
+    private List<List<Card>> Map;
     private List<List<int>> MapId;
 
 
@@ -63,9 +64,9 @@ public class MapGeneration : MonoBehaviour  {
 
 
     void InstantiateCards() {
-        Map = new List<List<GameObject>>();
+        Map = new List<List<Card>>();
         for (int i = 0; i < MapCardHeight; ++i) {
-            Map.Add(new List<GameObject>());
+            Map.Add(new List<Card>());
             for (int j = 0; j < MapCardWidth; ++j) {
                 float MapUnitWidth  = (MapCardWidth  - 1) * CardWidth  + (MapCardWidth  - 1) * CardToCardDistance;
                 float MapUnitHeight = (MapCardHeight - 1) * CardHeight + (MapCardHeight - 1) * CardToCardDistance;
@@ -79,14 +80,14 @@ public class MapGeneration : MonoBehaviour  {
                     deltaY = Random.Range(-0.05f, 0.05f);
                 }
 
-                GameObject NewCard = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
+                GameObject NewCardObject = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
                 if (fluctuation) {
-                    NewCard.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                    NewCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 }
-                NewCard.transform.parent = gameObject.transform;
+                NewCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
-
+                Card NewCard = NewCardObject.GetComponent<Card>();
                 Map[i].Add(NewCard);
             }
         }
