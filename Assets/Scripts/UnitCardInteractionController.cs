@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using Cards;
+using ResourceManagment;
 
 public class UnitCardInteractionController
 {
@@ -8,8 +11,9 @@ public class UnitCardInteractionController
         
     }
 
-    public void CaptureCard(Card card)  //поменять на тип интерфейса позже (или что-то такое надо подумать)
+    public void CaptureCard(ICapturable card, ulong captorId)
     {
+        card.Capture(captorId);
     }
     
     public void GetResource(ResourceCard resourceCard)
