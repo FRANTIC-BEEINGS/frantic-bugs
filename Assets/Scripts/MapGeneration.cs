@@ -3,50 +3,59 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-
+этот скрипт должен сработать один раз, чтобы установить карточки.
 */
 
 public class MapGeneration : MonoBehaviour  {
 
-    // MapCardHeight и MapCardWidth - размеры поля в карточках (должны приходить от сервера)
-    public int MapCardHeight;
-    public int MapCardWidth;
+    // MapCardHeight и MapCardWidth - размеры поля в карточках
+    [SerializeField] private int MapCardHeight;
+    [SerializeField] private int MapCardWidth;
     // CardHeight и CardWidth - размеры одной карточки
-    public float CardHeight;
-    public float CardWidth;
+    [SerializeField] private float CardHeight;
+    [SerializeField] private float CardWidth;
     // CardToCardDistance - растояние между соседними карточками
-    public float CardToCardDistance;
+    [SerializeField] private float CardToCardDistance;
 
-    [SerializeField] bool fluctuation = false;
+    [SerializeField] private bool fluctuation = false;
 
     // MapId - то, как видит данное поле игрок (содержит в себе id карточек) (должно приходить от сервера)
     // CardPrefabs - список всевозможных карточек
-    public List<GameObject> CardPrefabs;
-    public GameObject Prefab;
+    [SerializeField] private List<GameObject> CardPrefabs;
+    [SerializeField] private List<int> CardTypeCnt;
 
     private List<List<GameObject>> Map;
     private List<List<int>> MapId;
 
 
     void Start() {
-        Initialization();
-        GetMapId();
+        SetMapId();
         InstantiateCards();
     }
 
-    void Initialization() {
-        // получить всякие константы от сервера
-    }
 
-    void GetMapId() {
+    void SetMapId() {
         MapId = new List<List<int>>();
         for (int i = 0; i < MapCardHeight; ++i) {
             MapId.Add(new List<int>());
             for (int j = 0; j < MapCardWidth; ++j) {
-                MapId[i].Add(0);
+                MapId[i].Add(-1);
+            }
+        }
+
+        for (int CardId = 0; CardId < CardTypeCnt.Count; ++CardId) {
+            for (int cnt = 0; cnt < CardTypeCnt[CardId]; ++cnt) {
+                int i = Random.Range(0, MapId.Count);
+                int j = Random.Range(0, MapId[i].Count);
+                while (MapId[i][j] != -1) {
+                    i = Random.Range(0, MapId.Count);
+                    j = Random.Range(0, MapId[i].Count);
+                }
+                MapId[i][j] = CardId;
             }
         }
     }
+
 
     void InstantiateCards() {
         Map = new List<List<GameObject>>();
@@ -65,14 +74,19 @@ public class MapGeneration : MonoBehaviour  {
                     deltaY = Random.Range(-0.05f, 0.05f);
                 }
 
-                Map[i].Add(Instantiate(Prefab, new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity));
-
+                GameObject NewCard = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
                 if (fluctuation) {
-                    Map[i][j].transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                    NewCard.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 }
+                NewCard.transform.parent = gameObject.transform;
+
+                //Spawn();
+
+                Map[i].Add(NewCard);
             }
         }
     }
+
 
     void Update() {
 
