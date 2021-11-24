@@ -1,34 +1,15 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Cards
 {
     public class Card : MonoBehaviour
     {
+        private bool _isCaptured;
         private bool _isVisible = false;
-        protected Sprite Face;
-        private Unit currentUnit;
-
-        public void Initialize(Sprite face)
-        {
-            Face = face;
-        }
-    
-        public bool StepOn(Unit unit)
-        {
-            if(!CanStepOn(unit)) return false;
-            if (currentUnit != null)
-            {
-                //fight with enemy unit
-                //TODO:update current unit
-            }
-            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
-            return true;
-        }
-
-        private bool CanStepOn(Unit unit)
-        {
-            return currentUnit == null || unit.GetAllegiance() == currentUnit.GetAllegiance();
-        }
+        [SerializeField] protected Sprite FaceSprite;
+        protected ulong CaptorId;
+        private Unit _currentUnit;
     
         //get/set card visibility (also calls method for flipping card on visibility change)
         public bool IsVisible
@@ -41,17 +22,46 @@ namespace Cards
             }
         }
 
+        public bool IsCaptured
+        {
+            get => _isCaptured;
+            set
+            {
+                _isCaptured = value;
+                if (value)
+                    IsVisible = true;
+                //todo:add handling of situation when other player captures the card
+            }
+        }
+
+        public void Initialize(Sprite face)
+        {
+            this.FaceSprite = face;
+        }
+    
+        public bool StepOn(Unit unit)
+        {
+            if(!CanStepOn(unit)) return false;
+            if (_currentUnit != null)
+            {
+                //fight with enemy unit
+                //TODO:update current unit
+            }
+            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
+            return true;
+        }
+
+        private bool CanStepOn(Unit unit)
+        {
+            return _currentUnit == null || unit.GetAllegiance() == _currentUnit.GetAllegiance();
+        }
+
         //play flipping animation and change visibility value
         private void UpdateCardView(bool visibility)
         {
             if (visibility == _isVisible) return;
             //TODO: play animation
             _isVisible = visibility;
-        }
-
-        //assign card back image
-        private void Start()
-        {
         }
     }
 }

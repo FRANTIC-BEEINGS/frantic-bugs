@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Cards
 {
-    public class ResourceCard : Card
+    public class ResourceCard : Card, ICapturable
     {
         private ResourceType _resource;
         private int _quantity;  //initial amount of resource
@@ -14,7 +14,7 @@ namespace Cards
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity,
             int replenishmentSpeed)
         {
-            Face = face;
+            base.FaceSprite = face;
             _resource = resource;
             _quantity = quantity;
             _replenishmentQuantity = replenishmentQuantity;
@@ -45,6 +45,13 @@ namespace Cards
 
             _turnsToNextReplenishment = _replenishmentSpeed;
             return false;
+        }
+
+        public void Capture(ulong captorId)
+        {
+            if (IsCaptured) return; //todo: remove tmp fix and handle recapturing
+            IsCaptured = true;
+            CaptorId = captorId;
         }
     }
 }

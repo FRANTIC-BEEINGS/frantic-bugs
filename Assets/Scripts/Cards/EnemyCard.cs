@@ -12,7 +12,7 @@ namespace Cards
 
         public void Initialize(Sprite face, int level, int experience, Dictionary<ResourceType, int> resources)
         {
-            Face = face;
+            base.FaceSprite = face;
             _level = level;
             _experience = experience;
             _resources = resources;
