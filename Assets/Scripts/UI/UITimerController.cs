@@ -11,13 +11,11 @@ public class UITimerController : MonoBehaviour
     public bool showInMinutesIfNonZeroElseInSeconds;
     public bool addZerosIfLengthLessTwo;
     public string timeSeparator = ":";
-
-    private CountDown timer;
     
     private Text timerText;
+    [SerializeField] private CountDown timer;
     void Awake()
     {
-        timer = GameObject.FindWithTag("GameTimer").GetComponent<CountDown>();
         timerText = GetComponent<Text>();
         timer.UpdateTimer += UpdateTime;
     }

@@ -11,11 +11,6 @@ public class NetworkPlayerController : NetworkBehaviour
 {
 	public NetworkVariable<bool> readyToPlay;
 
-	private void Start()
-	{
-		// GetComponentInChildren<Text>().text = "БЕСИТ ТУПОЕ ГОВНО";
-	}
-
 	public void Ready()
 	{
 		ReadyServerRpc();
