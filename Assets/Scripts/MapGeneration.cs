@@ -7,6 +7,13 @@ using Cards;
 этот скрипт должен сработать один раз, чтобы установить карточки.
 */
 
+enum CardId {
+    Empty = 0,
+    Enemy = 1,
+    Resource = 2,
+    Tree = 3
+}
+
 public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках
@@ -36,9 +43,9 @@ public class MapGeneration : MonoBehaviour  {
 
 
     void SetMapId() {
-        CardTypeCnt[0] = MapCardHeight * MapCardWidth;
+        CardTypeCnt[(int)CardId.Empty] = MapCardHeight * MapCardWidth;
         for (int i = 1; i < CardTypeCnt.Count; ++i) {
-            CardTypeCnt[0] -= CardTypeCnt[i];
+            CardTypeCnt[(int)CardId.Empty] -= CardTypeCnt[i];
         }
 
         MapId = new List<List<int>>();
