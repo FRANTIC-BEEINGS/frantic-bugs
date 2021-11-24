@@ -7,10 +7,14 @@ using UnityEngine;
 public class Card : MonoBehaviour
 {
     private bool _isVisible = false;
-    [SerializeField] private Sprite face;
-    [SerializeField] private Sprite back;
+    protected Sprite Face;
     private Unit currentUnit;
 
+    public void Initialize(Sprite face)
+    {
+        Face = face;
+    }
+    
     public bool StepOn(Unit unit)
     {
         if(!CanStepOn(unit)) return false;
@@ -45,12 +49,10 @@ public class Card : MonoBehaviour
         if (visibility == _isVisible) return;
         //TODO: play animation
         _isVisible = visibility;
-        GetComponent<SpriteRenderer>().sprite = _isVisible ? face : back;
     }
 
     //assign card back image
     private void Start()
     {
-        GetComponent<SpriteRenderer>().sprite = back;
     }
 }

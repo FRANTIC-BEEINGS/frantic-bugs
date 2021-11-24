@@ -1,4 +1,27 @@
-﻿ public class EnemyCard : Card
+﻿ using System.Collections.Generic;
+ using UnityEngine;
+
+ public class EnemyCard : Card
  {
-     //TODO
+     private int _level;
+     private int _experience;
+     private Dictionary<ResourceType, int> _resources;
+
+     public void Initialize(Sprite face, int level, int experience, Dictionary<ResourceType, int> resources)
+     {
+         Face = face;
+         _level = level;
+         _experience = experience;
+         _resources = resources;
+     }
+
+     public int GetExpReward()
+     {
+         return _experience;
+     }
+
+     public Dictionary<ResourceType, int> GetResourceReward()
+     {
+         return _resources;
+     }
  }

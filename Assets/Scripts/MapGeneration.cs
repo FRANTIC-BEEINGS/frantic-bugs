@@ -6,7 +6,7 @@ using UnityEngine;
 
 */
 
-public class MapLocalGeneration : MonoBehaviour  {
+public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках (должны приходить от сервера)
     public int MapCardHeight;
@@ -16,6 +16,9 @@ public class MapLocalGeneration : MonoBehaviour  {
     public float CardWidth;
     // CardToCardDistance - растояние между соседними карточками
     public float CardToCardDistance;
+
+    [SerializeField] bool fluctuation = false;
+
     // MapId - то, как видит данное поле игрок (содержит в себе id карточек) (должно приходить от сервера)
     // CardPrefabs - список всевозможных карточек
     public List<GameObject> CardPrefabs;
@@ -24,8 +27,6 @@ public class MapLocalGeneration : MonoBehaviour  {
     private List<List<GameObject>> Map;
     private List<List<int>> MapId;
 
-
-    private const bool fluctuation = false;
 
     void Start() {
         Initialization();
@@ -55,19 +56,19 @@ public class MapLocalGeneration : MonoBehaviour  {
                 float MapUnitWidth  = (MapCardWidth  - 1) * CardWidth  + (MapCardWidth  - 1) * CardToCardDistance;
                 float MapUnitHeight = (MapCardHeight - 1) * CardHeight + (MapCardHeight - 1) * CardToCardDistance;
                 float PosX = - MapUnitWidth  / 2 + (MapUnitWidth  / (MapCardWidth  - 1)) * j;
-                float PosZ = - MapUnitHeight / 2 + (MapUnitHeight / (MapCardHeight - 1)) * i;
+                float PosY = - MapUnitHeight / 2 + (MapUnitHeight / (MapCardHeight - 1)) * i;
 
                 float deltaX = 0;
-                float deltaZ = 0;
+                float deltaY = 0;
                 if (fluctuation) {
                     deltaX = Random.Range(-0.05f, 0.05f);
-                    deltaZ = Random.Range(-0.05f, 0.05f);
+                    deltaY = Random.Range(-0.05f, 0.05f);
                 }
 
-                Map[i].Add(Instantiate(Prefab, new Vector3(PosX + deltaX, 0f, PosZ + deltaZ), Quaternion.identity));
+                Map[i].Add(Instantiate(Prefab, new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity));
 
                 if (fluctuation) {
-                    Map[i][j].transform.eulerAngles = new Vector3(0, Random.Range(-2, 2), 0);
+                    Map[i][j].transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 }
             }
         }
