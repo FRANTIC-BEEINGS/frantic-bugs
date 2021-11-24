@@ -17,6 +17,14 @@ namespace Cards
             _experience = experience;
             _resources = resources;
         }
+        
+        //use this in generation for setting default parameters
+        public void Initialize(int level, int experience, Dictionary<ResourceType, int> resources)
+        {
+            _level = level;
+            _experience = experience;
+            _resources = resources;
+        }
 
         public int GetExpReward()
         {

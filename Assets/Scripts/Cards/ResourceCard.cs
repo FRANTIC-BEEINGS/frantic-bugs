@@ -21,6 +21,16 @@ namespace Cards
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
         }
+        
+        //use this in generation for setting default parameters
+        public void Initialize(ResourceType resource, int quantity, int replenishmentQuantity = 0, int replenishmentSpeed = 0)
+        {
+            _resource = resource;
+            _quantity = quantity;
+            _replenishmentQuantity = replenishmentQuantity;
+            _replenishmentSpeed = replenishmentSpeed;
+            _turnsToNextReplenishment = replenishmentSpeed;
+        }
 
         public ResourceType GetResource()
         {
