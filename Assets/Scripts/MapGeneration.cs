@@ -35,6 +35,11 @@ public class MapGeneration : MonoBehaviour  {
 
 
     void SetMapId() {
+        CardTypeCnt[0] = MapCardHeight * MapCardWidth;
+        for (int i = 1; i < CardTypeCnt.Count; ++i) {
+            CardTypeCnt[0] -= CardTypeCnt[i];
+        }
+
         MapId = new List<List<int>>();
         for (int i = 0; i < MapCardHeight; ++i) {
             MapId.Add(new List<int>());
