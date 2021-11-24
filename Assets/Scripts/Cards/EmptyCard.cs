@@ -1,4 +1,7 @@
-﻿public class EmptyCard : Card
+﻿namespace Cards
 {
+    public class EmptyCard : Card
+    {
 
+    }
 }

@@ -1,58 +1,57 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO.MemoryMappedFiles;
 using UnityEngine;
 
-public class Card : MonoBehaviour
+namespace Cards
 {
-    private bool _isVisible = false;
-    protected Sprite Face;
-    private Unit currentUnit;
+    public class Card : MonoBehaviour
+    {
+        private bool _isVisible = false;
+        protected Sprite Face;
+        private Unit currentUnit;
 
-    public void Initialize(Sprite face)
-    {
-        Face = face;
-    }
-    
-    public bool StepOn(Unit unit)
-    {
-        if(!CanStepOn(unit)) return false;
-        if (currentUnit != null)
+        public void Initialize(Sprite face)
         {
-            //fight with enemy unit
-            //TODO:update current unit
+            Face = face;
         }
-        unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
-        return true;
-    }
-
-    private bool CanStepOn(Unit unit)
-    {
-        return currentUnit == null || unit.GetAllegiance() == currentUnit.GetAllegiance();
-    }
     
-    //get/set card visibility (also calls method for flipping card on visibility change)
-    public bool IsVisible
-    {
-        get => _isVisible;
-        set
+        public bool StepOn(Unit unit)
         {
-            UpdateCardView(value);
-            _isVisible = value;
+            if(!CanStepOn(unit)) return false;
+            if (currentUnit != null)
+            {
+                //fight with enemy unit
+                //TODO:update current unit
+            }
+            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
+            return true;
         }
-    }
 
-    //play flipping animation and change visibility value
-    private void UpdateCardView(bool visibility)
-    {
-        if (visibility == _isVisible) return;
-        //TODO: play animation
-        _isVisible = visibility;
-    }
+        private bool CanStepOn(Unit unit)
+        {
+            return currentUnit == null || unit.GetAllegiance() == currentUnit.GetAllegiance();
+        }
+    
+        //get/set card visibility (also calls method for flipping card on visibility change)
+        public bool IsVisible
+        {
+            get => _isVisible;
+            set
+            {
+                UpdateCardView(value);
+                _isVisible = value;
+            }
+        }
 
-    //assign card back image
-    private void Start()
-    {
+        //play flipping animation and change visibility value
+        private void UpdateCardView(bool visibility)
+        {
+            if (visibility == _isVisible) return;
+            //TODO: play animation
+            _isVisible = visibility;
+        }
+
+        //assign card back image
+        private void Start()
+        {
+        }
     }
 }
