@@ -43,12 +43,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92631e132e9a2814b9c7afd5eeaff10b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapCardHeight: 30
-  MapCardWidth: 40
+  MapCardHeight: 10
+  MapCardWidth: 20
   CardHeight: 3
   CardWidth: 2
   CardToCardDistance: 0.2
   fluctuation: 0
   CardPrefabs:
   - {fileID: 8986356018623865947, guid: 0d6ff1c8e09d3a348b388e15fe7919e2, type: 3}
-  Prefab: {fileID: 8986356018623865947, guid: 0d6ff1c8e09d3a348b388e15fe7919e2, type: 3}
+  - {fileID: 8831971524404873595, guid: 640c981533df5ea4abe7c756d065a5b2, type: 3}
+  - {fileID: 6732796184060269415, guid: 89db397efbaeeb24e9ac44d1f29d9d35, type: 3}
+  CardTypeCnt: b40000000200000012000000
