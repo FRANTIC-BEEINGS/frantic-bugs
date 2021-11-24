@@ -5,10 +5,10 @@ namespace Cards
 {
     public class ResourceCard : Card, ICapturable
     {
-        private ResourceType _resource;
-        private int _quantity;  //initial amount of resource
-        private int _replenishmentQuantity; //how much of the resource is added per replenishment
-        private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
+        [SerializeField] private ResourceType _resource;
+        [SerializeField] private int _quantity;  //initial amount of resource
+        [SerializeField] private int _replenishmentQuantity; //how much of the resource is added per replenishment
+        [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
 
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity,

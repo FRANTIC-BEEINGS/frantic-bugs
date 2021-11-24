@@ -6,9 +6,9 @@ namespace Cards
 {
     public class EnemyCard : Card
     {
-        private int _level;
-        private int _experience;
-        private Dictionary<ResourceType, int> _resources;
+        [SerializeField] private int _level;
+        [SerializeField] private int _experience;
+        [SerializeField] private Dictionary<ResourceType, int> _resources;
 
         public void Initialize(Sprite face, int level, int experience, Dictionary<ResourceType, int> resources)
         {

@@ -8,7 +8,7 @@ namespace ResourceManagment
     {
         private Dictionary<ResourceType, int> resources;
         public Action<ResourceCard> GlobalReplenish;
-
+        //todo: handle energy
         public ResourceManager()
         {
             resources = new Dictionary<ResourceType, int>();

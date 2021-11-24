@@ -1,8 +1,10 @@
-﻿namespace Cards
+﻿using UnityEngine;
+
+namespace Cards
 {
     public class TreeCard : Card, ICapturable
     {
-        private int _visionRadius;
+        [SerializeField] private int _visionRadius;
         public void Capture(ulong captorId)
         {
             if (IsCaptured) return; //todo: remove tmp fix and handle recapturing
