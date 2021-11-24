@@ -9,19 +9,19 @@ using UnityEngine;
 public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках
-    public int MapCardHeight;
-    public int MapCardWidth;
+    [SerializeField] private int MapCardHeight;
+    [SerializeField] private int MapCardWidth;
     // CardHeight и CardWidth - размеры одной карточки
-    public float CardHeight;
-    public float CardWidth;
+    [SerializeField] private float CardHeight;
+    [SerializeField] private float CardWidth;
     // CardToCardDistance - растояние между соседними карточками
-    public float CardToCardDistance;
+    [SerializeField] private float CardToCardDistance;
 
-    [SerializeField] bool fluctuation = false;
+    [SerializeField] private bool fluctuation = false;
 
     // MapId - то, как видит данное поле игрок (содержит в себе id карточек) (должно приходить от сервера)
     // CardPrefabs - список всевозможных карточек
-    public List<GameObject> CardPrefabs;
+    [SerializeField] private List<GameObject> CardPrefabs;
 
     private List<List<GameObject>> Map;
     private List<List<int>> MapId;
