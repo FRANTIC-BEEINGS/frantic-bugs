@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /*
-
+этот скрипт должен сработать один раз, чтобы установить карточки.
 */
 
 public class MapGeneration : MonoBehaviour  {
 
-    // MapCardHeight и MapCardWidth - размеры поля в карточках (должны приходить от сервера)
+    // MapCardHeight и MapCardWidth - размеры поля в карточках
     public int MapCardHeight;
     public int MapCardWidth;
     // CardHeight и CardWidth - размеры одной карточки
@@ -22,7 +22,6 @@ public class MapGeneration : MonoBehaviour  {
     // MapId - то, как видит данное поле игрок (содержит в себе id карточек) (должно приходить от сервера)
     // CardPrefabs - список всевозможных карточек
     public List<GameObject> CardPrefabs;
-    public GameObject Prefab;
 
     private List<List<GameObject>> Map;
     private List<List<int>> MapId;
@@ -43,7 +42,7 @@ public class MapGeneration : MonoBehaviour  {
         for (int i = 0; i < MapCardHeight; ++i) {
             MapId.Add(new List<int>());
             for (int j = 0; j < MapCardWidth; ++j) {
-                MapId[i].Add(0);
+                MapId[i].Add(Random.Range(0, CardPrefabs.Count));
             }
         }
     }
@@ -65,11 +64,15 @@ public class MapGeneration : MonoBehaviour  {
                     deltaY = Random.Range(-0.05f, 0.05f);
                 }
 
-                Map[i].Add(Instantiate(Prefab, new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity));
-
+                GameObject NewCard = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
                 if (fluctuation) {
-                    Map[i][j].transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                    NewCard.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 }
+                NewCard.transform.parent = gameObject.transform;
+
+                //Spawn();
+
+                Map[i].Add(NewCard);
             }
         }
     }

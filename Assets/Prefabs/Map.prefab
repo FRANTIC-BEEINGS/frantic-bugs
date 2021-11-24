@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 274342834382944263}
   - component: {fileID: 7106586887760337406}
   m_Layer: 0
-  m_Name: MapGenerator
+  m_Name: Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,6 +48,7 @@ MonoBehaviour:
   CardHeight: 3
   CardWidth: 2
   CardToCardDistance: 0.2
+  fluctuation: 0
   CardPrefabs:
   - {fileID: 8986356018623865947, guid: 0d6ff1c8e09d3a348b388e15fe7919e2, type: 3}
   Prefab: {fileID: 8986356018623865947, guid: 0d6ff1c8e09d3a348b388e15fe7919e2, type: 3}
