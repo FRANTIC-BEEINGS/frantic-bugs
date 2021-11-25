@@ -45,5 +45,11 @@ namespace ResourceManagment
                 return;
             AddResource(resourceCard.GetResource(),resourceCard.GetReplenishResourceCount());
         }
+
+        public int GetEnergy()
+        {
+            //todo
+            return 0;
+        }
     }
 }
