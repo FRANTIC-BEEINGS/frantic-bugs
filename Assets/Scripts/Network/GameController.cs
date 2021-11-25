@@ -9,21 +9,26 @@ using UnityEngine.Networking;
 
 public class GameController : NetworkBehaviour
 {
+	private bool gameStarted = false;
 	[SerializeField] private GameStartController _gameStartController;
 	[SerializeField] private CountDown _gameTimer;
 
 	[SerializeField] public int GameDuration;
+	private MapGeneration _mapGeneration;
 	
 	private void Awake()
 	{
 		_gameStartController.StartGame += StartGame;
+		_mapGeneration = GetComponent<MapGeneration>();
 	}
 
 	private void StartGame()
 	{
-		if (IsServer)
+		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
+			gameStarted = true;
 			_gameTimer.StartTimer(GameDuration);
+			_mapGeneration.GenerateMap();
 		}
 	}
 }
