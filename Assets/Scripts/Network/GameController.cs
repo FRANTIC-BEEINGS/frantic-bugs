@@ -14,12 +14,12 @@ public class GameController : NetworkBehaviour
 	[SerializeField] private CountDown _gameTimer;
 
 	[SerializeField] public int GameDuration;
-	private MapGeneration _mapGeneration;
-	
+	[SerializeField] private GameObject MapPrefab;
+	private GameObject Map;
+
 	private void Awake()
 	{
 		_gameStartController.StartGame += StartGame;
-		_mapGeneration = GetComponent<MapGeneration>();
 	}
 
 	private void StartGame()
@@ -28,7 +28,7 @@ public class GameController : NetworkBehaviour
 		{
 			gameStarted = true;
 			_gameTimer.StartTimer(GameDuration);
-			_mapGeneration.GenerateMap();
+			Map = Instantiate(MapPrefab);
 		}
 	}
 }

@@ -27,11 +27,13 @@ public class MapGeneration : MonoBehaviour  {
     private List<List<GameObject>> Map;
     private List<List<int>> MapId;
 
-    public void GenerateMap()
-    {
+
+    public void Start() {
         SetMapId();
         InstantiateCards();
     }
+
+
     void SetMapId() {
         MapId = new List<List<int>>();
         for (int i = 0; i < MapCardHeight; ++i) {
