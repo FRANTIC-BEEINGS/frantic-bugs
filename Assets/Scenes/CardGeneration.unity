@@ -292,6 +292,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 817548477115006223, guid: e4bdd6f537593db46b7bd581ca32ae59, type: 3}
+      propertyPath: Flag
+      value: 
+      objectReference: {fileID: 8364041911452704831, guid: 4d4fe99300b940c4988169107e4f644d, type: 3}
+    - target: {fileID: 817548477115006223, guid: e4bdd6f537593db46b7bd581ca32ae59, type: 3}
+      propertyPath: Fighter
+      value: 
+      objectReference: {fileID: 8364041911452704831, guid: 4d4fe99300b940c4988169107e4f644d, type: 3}
     - target: {fileID: 1657595159012333344, guid: e4bdd6f537593db46b7bd581ca32ae59, type: 3}
       propertyPath: m_RootOrder
       value: 1
