@@ -10,7 +10,8 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
-    
+        [SerializeField] public ulong id;
+
         //get/set card visibility (also calls method for flipping card on visibility change)
         public bool IsVisible
         {
@@ -38,7 +39,7 @@ namespace Cards
         {
             this.FaceSprite = face;
         }
-    
+
         public bool StepOn(Unit unit)
         {
             if(!CanStepOn(unit)) return false;

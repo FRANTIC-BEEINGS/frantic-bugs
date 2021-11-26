@@ -95,6 +95,7 @@ public class MapGeneration : MonoBehaviour  {
 
                 //Spawn();
                 Card NewCard = NewCardObject.GetComponent<Card>();
+                NewCard.id = (ulong)(i * MapCardWidth + j);
                 Map[i].Add(NewCard);
             }
         }
