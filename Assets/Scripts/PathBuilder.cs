@@ -51,7 +51,7 @@ public class PathBuilder : MonoBehaviour
             }
             else if (MouseState == MouseButtons.Left && OnCard) {
                 if (Path.Count == 0) {
-                    if (Candidate != null) {
+                    if (Candidate != null && Candidate.transform.position == CurCard.transform.position) {
                         Add();
                     }
                 }
