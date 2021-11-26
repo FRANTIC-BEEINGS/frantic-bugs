@@ -17,8 +17,8 @@ enum CardId {
 public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках
-    [SerializeField] private int MapCardHeight;
-    [SerializeField] private int MapCardWidth;
+    [SerializeField] public int MapCardHeight;
+    [SerializeField] public int MapCardWidth;
     // CardHeight и CardWidth - размеры одной карточки
     [SerializeField] private float CardHeight;
     [SerializeField] private float CardWidth;
@@ -95,7 +95,7 @@ public class MapGeneration : MonoBehaviour  {
 
                 //Spawn();
                 Card NewCard = NewCardObject.GetComponent<Card>();
-                NewCard.id = (ulong)(i * MapCardWidth + j);
+                NewCard.id = i * MapCardWidth + j;
                 Map[i].Add(NewCard);
             }
         }
