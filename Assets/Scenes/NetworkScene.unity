@@ -488,6 +488,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: Map
+      value: 
+      objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: MapPrefab
+      value: 
+      objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: _gameTimer
       value: 
       objectReference: {fileID: 102673280}
@@ -547,7 +555,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 2010367550661148403, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2010367550661148403, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
 --- !u!1001 &2476533485751011799
 PrefabInstance:

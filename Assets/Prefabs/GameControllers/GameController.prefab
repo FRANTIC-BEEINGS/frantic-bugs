@@ -47,6 +47,7 @@ MonoBehaviour:
   _gameStartController: {fileID: 0}
   _gameTimer: {fileID: 0}
   GameDuration: 30
+  MapPrefab: {fileID: 0}
 --- !u!114 &2010367550247793988
 MonoBehaviour:
   m_ObjectHideFlags: 0
