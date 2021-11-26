@@ -28,7 +28,7 @@ public class MapGeneration : MonoBehaviour  {
     private List<List<int>> MapId;
 
 
-    public void Start() {
+    void Start() {
         SetMapId();
         InstantiateCards();
     }
