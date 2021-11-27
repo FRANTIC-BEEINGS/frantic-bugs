@@ -18,7 +18,7 @@ public class Unit : MonoBehaviour
     [SerializeField] int sight;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
-    [SerializeField] private float movingTime = 1f;
+    [SerializeField] private float movingTime = 0.5f;
     private bool isStopMovement = false;
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience;
@@ -73,66 +73,41 @@ public class Unit : MonoBehaviour
         }
     }
 
-    //for movement test
-    private void OnGUI()
+    public void MoveAlongPath(List<Card> cards, int energy)
     {
-        GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-        if (GUILayout.Button("Stop moving")) stopMovement();
-        if (GUILayout.Button("Start again")) Start();
-        GUILayout.EndArea();
+        StartCoroutine(Move(cards, energy));
     }
-    
 
     IEnumerator Move(List<Card> cards, int energy)
     {
-        foreach (Card card in cards)
+        for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
-            if (isStopMovement || !card.StepOn(this))
+            if (isStopMovement || !cards[i].StepOn(this))
             {
                 isStopMovement = false;
                 break;
             }
 
-            endPosition = card.gameObject.transform.position; // find destination position
+            endPosition = cards[i].gameObject.transform.position; // find destination position
             if (energy < moveEnergy)
                 break;
             energy -= moveEnergy;
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
             
             //if card is enemy break movement
-            if (card is EnemyCard)
+            if (cards[i] is EnemyCard)
             {
                 isStopMovement = false;
                 break;
             }
         }
     }
-    
-    // for movement test
-    IEnumerator MoveTest(List<Vector3> cards, int energy)
-    {
-        foreach (Vector3 card in cards)
-        {
-            if (isStopMovement)
-            {
-                isStopMovement = false;
-                break;
-            }
-            
-            endPosition = card;
-            if (energy < moveEnergy)
-                break;
-            energy -= moveEnergy;
-            yield return StartCoroutine(MoveTo(endPosition, movingTime));
-        }
-    }
-    
-    
+
     IEnumerator MoveTo(Vector3 position, float time)
     {
         Vector3 start = transform.position;
-        Vector3 end = position;
+        Vector3 end = new Vector3(position.x, position.y, start.z);
         float t = 0;
         
         //in every moment move to destination
@@ -143,17 +118,6 @@ public class Unit : MonoBehaviour
             transform.position = Vector3.Lerp(start, end, t);
         }
         transform.position = end;  
-    }
-
-    private void Start()
-    {
-        //test movement
-        List<Vector3> cards = new List<Vector3>()
-        {
-            new Vector3(5, -2, 0), new Vector3(4, 1, 0), new Vector3(-3, 2, 0), 
-            new Vector3(0, 0, 0), new Vector3(5, -2, 0)
-        };
-        StartCoroutine(MoveTest(cards, 100));
     }
 
     public void Death() 
