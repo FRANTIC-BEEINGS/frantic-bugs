@@ -29,7 +29,7 @@ public class GameController : NetworkBehaviour
 		_gameTimer.TimerOver += GameOver;
 		foreach (var _turnTimer in _turnTimers)
 		{
-			_turnTimer.TimerOver += StartTurnTimer;
+			_turnTimer.TimerOver += StartNextTurnTimer;
 		}
 	}
 
@@ -41,27 +41,47 @@ public class GameController : NetworkBehaviour
 			currentTurnPlayer = -1;
 			_gameTimer.StartTimer(GameDuration);
 			Map = Instantiate(MapPrefab);
-			StartTurnTimer();
+			StartNextTurnTimer();
 		}
 	}
 
-	private void StartTurnTimer()
+	private void StartNextTurnTimer()
 	{
-		if (gameOver)
+		if (gameOver || !IsServer)
 			return;
 		if (currentTurnPlayer < 0)
 		{
-			currentTurnPlayer = UnityEngine.Random.Range(0, NetworkManager.Singleton.ConnectedClients.Count - 1);
+			ChangeCurrentTurnPlayer(UnityEngine.Random.Range(0, NetworkManager.Singleton.ConnectedClients.Count - 1));
 		}
 		else
 		{
-			currentTurnPlayer = (currentTurnPlayer + 1) % NetworkManager.Singleton.ConnectedClients.Count;
+			ChangeCurrentTurnPlayer((currentTurnPlayer + 1) % NetworkManager.Singleton.ConnectedClients.Count);
 		}
+
 		_turnTimers[currentTurnPlayer].StartTimer(TurnDuration);
+	}
+
+	private void ChangeCurrentTurnPlayer(int newValue)
+	{
+		if (currentTurnPlayer >= 0)
+		{
+			NetworkManager.Singleton.ConnectedClients[(ulong) currentTurnPlayer].PlayerObject
+				.GetComponent<NetworkPlayerController>().EndTurnServerRpc();
+		}
+		currentTurnPlayer = newValue;
+		NetworkManager.Singleton.ConnectedClients[(ulong) currentTurnPlayer].PlayerObject
+			.GetComponent<NetworkPlayerController>().StartTurnServerRpc();
 	}
 
 	private void GameOver()
 	{
 		gameOver = true;
+	}
+
+	[ServerRpc(RequireOwnership = false)]	
+	public void EndTurnServerRpc()
+	{
+		_turnTimers[currentTurnPlayer].StopTimer();
+		StartNextTurnTimer();
 	}
 }

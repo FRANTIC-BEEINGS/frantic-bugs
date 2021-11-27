@@ -10,10 +10,25 @@ using UnityEngine.Networking;
 public class NetworkPlayerController : NetworkBehaviour
 {
 	public NetworkVariable<bool> readyToPlay;
+	public NetworkVariable<bool> thisPlayerTurn;
+	[SerializeField] private GameController _gameController;
+
+	private void Start()
+	{
+		_gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+	}
 
 	public void Ready()
 	{
 		ReadyServerRpc();
+	}
+
+	public void EndTurn()
+	{
+		if (thisPlayerTurn.Value)
+		{
+			_gameController.EndTurnServerRpc();
+		}
 	}
 
 	[ServerRpc]
@@ -22,5 +37,16 @@ public class NetworkPlayerController : NetworkBehaviour
 		readyToPlay.Value = true;
 	}
 	
+	[ServerRpc(RequireOwnership = false)]
+	public void StartTurnServerRpc()
+	{
+		thisPlayerTurn.Value = true;
+	}
+	
+	[ServerRpc(RequireOwnership = false)]
+	public void EndTurnServerRpc()
+	{
+		thisPlayerTurn.Value = false;
+	}
 	
 }
