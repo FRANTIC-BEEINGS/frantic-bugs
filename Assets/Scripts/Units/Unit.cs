@@ -23,6 +23,7 @@ public class Unit : MonoBehaviour
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience;
     [SerializeField] private int experienceLimit;
+    [SerializeField] private UnitsMoveController unitsMoveController;
 
     public int FightEnergy
     {
@@ -80,6 +81,7 @@ public class Unit : MonoBehaviour
 
     IEnumerator Move(List<Card> cards, int energy)
     {
+        unitsMoveController.CanBuildPath = false;
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
@@ -102,6 +104,7 @@ public class Unit : MonoBehaviour
                 break;
             }
         }
+        unitsMoveController.CanBuildPath = true;
     }
 
     IEnumerator MoveTo(Vector3 position, float time)

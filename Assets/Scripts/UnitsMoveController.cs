@@ -18,4 +18,10 @@ public class UnitsMoveController : MonoBehaviour
         path[0].GetCurrentUnit().MoveAlongPath(path, _resourceManager.GetResource(ResourceType.Energy));
         PathBuilder.CanBuild = true;
     }
+
+    public bool CanBuildPath
+    {
+        get => PathBuilder.CanBuild;
+        set => PathBuilder.CanBuild = value;
+    }
 }

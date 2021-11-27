@@ -50,26 +50,4 @@ public class VisionController : MonoBehaviour
                         }
                 }
         }
-        
-        //for test
-        void OnGUI()
-        {
-                GUILayout.BeginArea(new Rect(10, 10, 300, 300));
-                if (GUILayout.Button("start"))
-                {
-                        map = m.Map;
-                        OpenCardsInVision(2);
-                        for (int i = 0; i < map.Count; i++)
-                        {
-                                for (int j = 0; j < map[i].Count; j++)
-                                {
-                                        if (map[i][j].IsVisible)
-                                                Debug.Log(i.ToString() + j.ToString());
-                                }
-                        }   
-                }
-
-                GUILayout.EndArea();
-        }
-        
 }
