@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
@@ -12,25 +13,30 @@ enum MouseButtons {
 
 public class PathBuilder : MonoBehaviour
 {
-    [SerializeField] public GameObject CandidatePrefab;
-    [SerializeField] private GameObject Candidate;
-    [SerializeField] public GameObject SelectionPrefab;
+    public bool CanBuild;
+
     [SerializeField] private MouseButtons MouseState;
     [SerializeField] private bool OnCard;
-    [SerializeField] private GameObject CurCard;
-    [SerializeField] private int CurId;
+
+    [SerializeField] private BodyInformation Candidate;
+    [SerializeField] private BodyInformation CurBody;
+
     private List<bool> SelectedCards;
-    public List<GameObject> Path;
-    public bool CanBuild;
+    public List<BodyInformation> PathBody;
+    public List<Card> PathCards;
+
+    private int MapCardWidth, MapCardHeight;
 
     void Start() {
         CanBuild = true;
         MouseState = MouseButtons.Nothing;
         OnCard = false;
-        GameObject Map = GameObject.Find("Map");
 
+        GameObject Map = GameObject.Find("Map");
+        MapCardWidth = Map.GetComponent<MapGeneration>().MapCardWidth;
+        MapCardHeight = Map.GetComponent<MapGeneration>().MapCardHeight;
         SelectedCards = new List<bool>();
-        for (int i = 0; i < Map.GetComponent<MapGeneration>().MapCardWidth * Map.GetComponent<MapGeneration>().MapCardHeight; ++i) {
+        for (int i = 0; i < MapCardWidth * MapCardHeight; ++i) {
             SelectedCards.Add(false);
         }
     }
@@ -50,14 +56,15 @@ public class PathBuilder : MonoBehaviour
                 Clear();
             }
             else if (MouseState == MouseButtons.Left && OnCard) {
-                if (Path.Count == 0) {
-                    if (Candidate != null && Candidate.transform.position == CurCard.transform.position) {
+                if (PathBody.Count == 0) {
+                    if (Candidate != null && Candidate.id == CurBody.id) {
                         Add();
                     }
                 }
                 else {
-                    if (SelectedCards[CurId]) {
-                        while (Path[Path.Count - 1].GetComponent<Card>().id != CurId) {
+                    if (SelectedCards[CurBody.id]) {
+                        //while (Path[Path.Count - 1].GetComponent<Card>().id != CurId) {
+                        while (PathBody.Last().id != CurBody.id) {
                             Remove();
                         }
                     }
@@ -69,17 +76,23 @@ public class PathBuilder : MonoBehaviour
                 }
             }
             else if (MouseState == MouseButtons.Nothing) {
-                if (Path.Count == 0) {
+                if (PathBody.Count == 0) {
                     if (OnCard && true) { // OnCard && на ней наш юнит
-                        Destroy(Candidate);
-                        Candidate = Instantiate(CandidatePrefab, CurCard.transform.position, Quaternion.identity);
+                        if (Candidate != null && Candidate.id != CurBody.id) {
+                            Candidate.SetHighlight(false);
+                        }
+                        Candidate = CurBody;
+                        Candidate.SetHighlight(true);
                     }
                     else {
-                        Destroy(Candidate);
+                        if (Candidate != null) {
+                            Candidate.SetHighlight(false);
+                        }
                     }
                 }
                 else {
-                    if (Path.Count > 1) {
+                    if (PathBody.Count > 1) {
+                        // переделать PathBody в PathCard
                         // отправить построенный путь
                     }
                     Clear();
@@ -89,30 +102,28 @@ public class PathBuilder : MonoBehaviour
     }
 
     bool Neighbor() {
-        GameObject Map = GameObject.Find("Map");
-        int NeighborId = Path[Path.Count - 1].GetComponent<Card>().id;
-        int i1 = CurId / Map.GetComponent<MapGeneration>().MapCardWidth;
-        int j1 = CurId % Map.GetComponent<MapGeneration>().MapCardWidth;
-        int i2 = Path[Path.Count - 1].GetComponent<Card>().id / Map.GetComponent<MapGeneration>().MapCardWidth;
-        int j2 = Path[Path.Count - 1].GetComponent<Card>().id % Map.GetComponent<MapGeneration>().MapCardWidth;
+        int NeighborId = PathBody.Last().id;
+        int i1 = CurBody.id / MapCardWidth;
+        int j1 = CurBody.id % MapCardWidth;
+        int i2 = NeighborId / MapCardWidth;
+        int j2 = NeighborId % MapCardWidth;
         return (i1 == i2 && j1 == j2 + 1) || (i1 == i2 && j1 == j2 - 1) || (i1 == i2 + 1 && j1 == j2) || (i1 == i2 - 1 && j1 == j2);
     }
 
     void Add() {
-        SelectedCards[CurId] = true;
-        Path.Add(CurCard);
-        GameObject NewSelection = Instantiate(SelectionPrefab, CurCard.transform.position, Quaternion.identity);
-        NewSelection.transform.parent = CurCard.transform;
+        SelectedCards[CurBody.id] = true;
+        PathBody.Add(CurBody);
+        CurBody.SetSelection(true);
     }
 
     void Remove() {
-        Destroy(Path[Path.Count - 1].transform.Find("CardSelection(Clone)").gameObject);
-        SelectedCards[Path[Path.Count - 1].GetComponent<Card>().id] = false;
-        Path.RemoveAt(Path.Count - 1);
+        PathBody.Last().SetSelection(false);
+        SelectedCards[PathBody.Last().id] = false;
+        PathBody.RemoveAt(PathBody.Count - 1);
     }
 
     void Clear() {
-        while (Path.Count > 0) {
+        while (PathBody.Count > 0) {
             Remove();
         }
     }
@@ -121,13 +132,11 @@ public class PathBuilder : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit rayHit;
         OnCard = false;
-        CurCard = null;
-        CurId = -1;
+        CurBody = null;
         if (Physics.Raycast(ray, out rayHit, 100.0f)) {
             if (rayHit.collider.tag == "Card") {
                 OnCard = true;
-                CurCard = rayHit.collider.transform.parent.gameObject;
-                CurId = CurCard.GetComponent<Card>().id;
+                CurBody = rayHit.collider.transform.gameObject.GetComponent<BodyInformation>();
             }
         }
     }
