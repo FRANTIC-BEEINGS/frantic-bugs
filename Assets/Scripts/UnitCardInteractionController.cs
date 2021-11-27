@@ -31,7 +31,6 @@ public class UnitCardInteractionController
             return;
         _resourceManager.AddResource(ResourceType.Energy, -unit.CaptureEnergy);
         card.Capture(captorId);
-        //todo: show that card is captured
     }
     
     public void GetResource(ResourceCard resourceCard, Unit unit)
@@ -40,8 +39,6 @@ public class UnitCardInteractionController
             return;
         _resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         _resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
-        //todo: add replenish
-        //todo: resource disappear from card
     }
     
     public bool StepOnCard(Unit unit, Card card)
