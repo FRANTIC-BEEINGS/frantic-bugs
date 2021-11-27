@@ -40,5 +40,10 @@ namespace Cards
         {
             
         }
+
+        public int GetLevel()
+        {
+            return _level;
+        }
     }
 }
