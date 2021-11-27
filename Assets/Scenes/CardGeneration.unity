@@ -344,6 +344,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map
       objectReference: {fileID: 0}
+    - target: {fileID: 7106586887760337406, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
+      propertyPath: fluctuation
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
 --- !u!1001 &1611646628

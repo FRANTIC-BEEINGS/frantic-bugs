@@ -79,7 +79,9 @@ public class PathBuilder : MonoBehaviour
                     }
                 }
                 else {
-                    // отправить построенный путь
+                    if (Path.Count > 1) {
+                        // отправить построенный путь
+                    }
                     Clear();
                 }
             }
