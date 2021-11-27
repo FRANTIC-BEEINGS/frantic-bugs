@@ -65,7 +65,7 @@ namespace Cards
 
         private bool CanStepOn(Unit unit)
         {
-            return _currentUnit == null || unit.GetAllegiance() == _currentUnit.GetAllegiance();
+            return _currentUnit == null || unit.Allegiance == _currentUnit.Allegiance;
         }
 
         //play flipping animation and change visibility value

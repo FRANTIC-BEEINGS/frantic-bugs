@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    public Func<AllegianceType> GetAllegiance;
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
     [SerializeField] int force;
@@ -20,6 +19,7 @@ public class Unit : MonoBehaviour
     private Vector3 endPosition;
     [SerializeField] private float movingTime = 1f;
     private bool isStopMovement = false;
+    public AllegianceType Allegiance = AllegianceType.A;
 
     public void stopMovement()
     {
