@@ -43,3 +43,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b72dca9366c70144ad0f2fe80383b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CandidatePrefab: {fileID: 2294842283293427975, guid: a86091393fa0c5b4093b9fc028f70e68, type: 3}
+  Candidate: {fileID: 0}
+  SelectionPrefab: {fileID: 1946189490516792424, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
+  MouseState: 0
+  OnCard: 0
+  CurCard: {fileID: 0}
+  CurId: 0
+  Path: []
+  CanBuild: 1

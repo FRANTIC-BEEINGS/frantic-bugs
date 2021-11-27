@@ -1,16 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cards;
 
 /*
 этот скрипт должен сработать один раз, чтобы установить карточки.
 */
 
+enum CardId {
+    Empty = 0,
+    Enemy = 1,
+    Resource = 2,
+    Tree = 3
+}
+
 public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках
-    [SerializeField] private int MapCardHeight;
-    [SerializeField] private int MapCardWidth;
+    [SerializeField] public int MapCardHeight;
+    [SerializeField] public int MapCardWidth;
     // CardHeight и CardWidth - размеры одной карточки
     [SerializeField] private float CardHeight;
     [SerializeField] private float CardWidth;
@@ -24,7 +32,7 @@ public class MapGeneration : MonoBehaviour  {
     [SerializeField] private List<GameObject> CardPrefabs;
     [SerializeField] private List<int> CardTypeCnt;
 
-    private List<List<GameObject>> Map;
+    public List<List<Card>> Map;
     private List<List<int>> MapId;
 
 
@@ -35,6 +43,11 @@ public class MapGeneration : MonoBehaviour  {
 
 
     void SetMapId() {
+        CardTypeCnt[(int)CardId.Empty] = MapCardHeight * MapCardWidth;
+        for (int i = 1; i < CardTypeCnt.Count; ++i) {
+            CardTypeCnt[(int)CardId.Empty] -= CardTypeCnt[i];
+        }
+
         MapId = new List<List<int>>();
         for (int i = 0; i < MapCardHeight; ++i) {
             MapId.Add(new List<int>());
@@ -58,9 +71,9 @@ public class MapGeneration : MonoBehaviour  {
 
 
     void InstantiateCards() {
-        Map = new List<List<GameObject>>();
+        Map = new List<List<Card>>();
         for (int i = 0; i < MapCardHeight; ++i) {
-            Map.Add(new List<GameObject>());
+            Map.Add(new List<Card>());
             for (int j = 0; j < MapCardWidth; ++j) {
                 float MapUnitWidth  = (MapCardWidth  - 1) * CardWidth  + (MapCardWidth  - 1) * CardToCardDistance;
                 float MapUnitHeight = (MapCardHeight - 1) * CardHeight + (MapCardHeight - 1) * CardToCardDistance;
@@ -74,14 +87,16 @@ public class MapGeneration : MonoBehaviour  {
                     deltaY = Random.Range(-0.05f, 0.05f);
                 }
 
-                GameObject NewCard = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
+                GameObject NewCardObject = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
                 if (fluctuation) {
-                    NewCard.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                    NewCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 }
-                NewCard.transform.parent = gameObject.transform;
+                NewCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
-
+                Card NewCard = NewCardObject.GetComponent<Card>();
+                BodyInformation Body = NewCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
+                Body.id = i * MapCardWidth + j;
                 Map[i].Add(NewCard);
             }
         }

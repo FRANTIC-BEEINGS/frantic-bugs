@@ -50,7 +50,8 @@ MonoBehaviour:
   CardToCardDistance: 0.2
   fluctuation: 0
   CardPrefabs:
-  - {fileID: 8986356018623865947, guid: 0d6ff1c8e09d3a348b388e15fe7919e2, type: 3}
-  - {fileID: 8831971524404873595, guid: 640c981533df5ea4abe7c756d065a5b2, type: 3}
-  - {fileID: 6732796184060269415, guid: 89db397efbaeeb24e9ac44d1f29d9d35, type: 3}
-  CardTypeCnt: b40000000200000012000000
+  - {fileID: 8284019897818107672, guid: 33847528fc7c1544da2df9d2ff08541f, type: 3}
+  - {fileID: 1662601610067456762, guid: 751a6411c32693f4389791fad00995f0, type: 3}
+  - {fileID: 5319531521658111253, guid: 4ee449507634deb42b73a394ed4e1659, type: 3}
+  - {fileID: 5354331520021831468, guid: 8b3bb467c7dd573449cd0fbb3411d26a, type: 3}
+  CardTypeCnt: 00000000050000000a00000003000000
