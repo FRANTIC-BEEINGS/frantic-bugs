@@ -14,6 +14,10 @@ public class UnitCardInteractionController
     public void CaptureCard(ICapturable card, ulong captorId)
     {
         card.Capture(captorId);
+        if (card is ResourceCard)
+        {
+            _resourceManager.AddReplenishableResource((ResourceCard) card);
+        }
     }
     
     public void GetResource(ResourceCard resourceCard)

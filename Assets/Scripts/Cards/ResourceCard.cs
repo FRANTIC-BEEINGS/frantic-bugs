@@ -60,6 +60,9 @@ namespace Cards
             if (IsCaptured) return; //todo: remove tmp fix and handle recapturing
             IsCaptured = true;
             CaptorId = captorId;
+            //todo: add replenish
         }
+        
+        //todo resource visual update
     }
 }
