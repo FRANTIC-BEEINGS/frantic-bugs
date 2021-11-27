@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using Random = UnityEngine.Random;
 
 /*
 этот скрипт должен сработать один раз, чтобы установить карточки.
@@ -35,10 +37,13 @@ public class MapGeneration : MonoBehaviour  {
     public List<List<Card>> Map;
     private List<List<int>> MapId;
 
+    public Action MapGenerated;
+
 
     void Start() {
         SetMapId();
         InstantiateCards();
+        MapGenerated?.Invoke();
     }
 
 

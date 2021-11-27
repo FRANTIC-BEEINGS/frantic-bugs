@@ -31,25 +31,32 @@ public class PathBuilder : MonoBehaviour
     private int MapCardWidth, MapCardHeight;
 
     private MapGeneration Map;
+    private bool initialized = false; 
+    
+    void Update()
+    {
+        if (!initialized)
+            return;
+        UpdateOnCard();
+        UpdateMouseState();
+        UpdatePath();
+    }
 
-    void Start() {
+    public void Initialize(MapGeneration mapGeneration)
+    {
         CanBuild = true;
         MouseState = MouseButtons.Nothing;
         OnCard = false;
 
-        Map = GameObject.Find("Map").GetComponent<MapGeneration>();
+        Map = mapGeneration;
         MapCardWidth = Map.MapCardWidth;
         MapCardHeight = Map.MapCardHeight;
         SelectedCards = new List<bool>();
         for (int i = 0; i < MapCardWidth * MapCardHeight; ++i) {
             SelectedCards.Add(false);
         }
-    }
 
-    void Update() {
-        UpdateOnCard();
-        UpdateMouseState();
-        UpdatePath();
+        initialized = true;
     }
 
     void UpdatePath() {

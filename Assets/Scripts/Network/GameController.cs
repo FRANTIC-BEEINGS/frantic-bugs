@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Cards;
 using Unity.Netcode;
 using UnityEngine.Networking.Match;
 using UnityEngine.SceneManagement;
@@ -20,8 +21,12 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int GameDuration;
 	[SerializeField] public int TurnDuration;
 	
-	[SerializeField] private GameObject MapPrefab;
-	private GameObject Map;
+	[SerializeField] private GameObject mapPrefab;
+	[SerializeField] private GameObject pathBuilderPrefab;
+	[SerializeField] private GameObject unitPrefab;
+	private MapGeneration map;
+	private PathBuilder path;
+	private Unit unit;
 
 	private void Awake()
 	{
@@ -40,10 +45,37 @@ public class GameController : NetworkBehaviour
 			gameStarted = true;
 			currentTurnPlayer = -1;
 			_gameTimer.StartTimer(GameDuration);
-			Map = Instantiate(MapPrefab);
-			StartNextTurnTimer();
+			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
+			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
+
+	private void StartAfterMapGenerated()
+	{
+		path = Instantiate(pathBuilderPrefab).GetComponent<PathBuilder>();
+		path.Initialize(mapGeneration: map);
+		SpawnMainUnits();
+		StartNextTurnTimer();
+	}
+
+	private void SpawnMainUnits()
+	{
+		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
+		{
+			Card card = map.Map[0][map.MapCardWidth/2];
+			GameObject u = Instantiate(unitPrefab,card.gameObject.transform.position, Quaternion.identity);
+			unit = u.GetComponent<Unit>();
+			card.StepOn(unit);
+		}
+
+		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
+		{
+			Card card = map.Map[map.MapCardHeight-1][map.MapCardWidth/2];
+			GameObject u = Instantiate(unitPrefab,card.gameObject.transform.position, Quaternion.identity);
+			unit = u.GetComponent<Unit>();
+			card.StepOn(unit);
+		}
+	} 
 
 	private void StartNextTurnTimer()
 	{

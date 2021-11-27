@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1657595159012333344}
   - component: {fileID: 817548477115006223}
+  - component: {fileID: 877181482}
   m_Layer: 0
   m_Name: PathBuilderGO
   m_TagString: Untagged
@@ -43,12 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b72dca9366c70144ad0f2fe80383b5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CandidatePrefab: {fileID: 2294842283293427975, guid: a86091393fa0c5b4093b9fc028f70e68, type: 3}
-  Candidate: {fileID: 0}
-  SelectionPrefab: {fileID: 1946189490516792424, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
+  CanBuild: 1
   MouseState: 0
   OnCard: 0
-  CurCard: {fileID: 0}
-  CurId: 0
-  Path: []
-  CanBuild: 1
+  Candidate: {fileID: 0}
+  CurBody: {fileID: 0}
+  PathBody: []
+  PathCards: []
+--- !u!114 &877181482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1770553660621100032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa6d0721e5c7eb498cd9c6c0f8513ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  aPathBuilder: {fileID: 817548477115006223}
