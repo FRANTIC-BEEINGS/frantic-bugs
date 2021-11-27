@@ -35,5 +35,15 @@ namespace Cards
         {
             return _resources;
         }
+
+        public void OnDeath()
+        {
+            
+        }
+
+        public int GetLevel()
+        {
+            return _level;
+        }
     }
 }

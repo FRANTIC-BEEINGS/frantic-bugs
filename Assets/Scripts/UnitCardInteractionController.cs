@@ -31,6 +31,10 @@ public class UnitCardInteractionController
             return;
         _resourceManager.AddResource(ResourceType.Energy, -unit.CaptureEnergy);
         card.Capture(captorId);
+        if (card is ResourceCard)
+        {
+            _resourceManager.AddReplenishableResource((ResourceCard) card);
+        }
     }
     
     public void GetResource(ResourceCard resourceCard, Unit unit)

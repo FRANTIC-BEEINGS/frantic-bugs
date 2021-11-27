@@ -1,4 +1,5 @@
-﻿using ResourceManagment;
+﻿using System;
+using ResourceManagment;
 using UnityEngine;
 
 namespace Cards
@@ -10,6 +11,7 @@ namespace Cards
         [SerializeField] private int _replenishmentQuantity; //how much of the resource is added per replenishment
         [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
+        public Action<ResourceCard> Replenish;
 
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity,
             int replenishmentSpeed)
@@ -42,17 +44,13 @@ namespace Cards
             return _quantity;
         }
     
-        public int GetReplenishResourceCount()
-        {
-            return _replenishmentQuantity;
-        }
-
-        public bool ReplenishTick()
+        //must be called every player turn (do not call when it is enemy's turn)
+        public bool ReplenishTurnTick()
         {
             _turnsToNextReplenishment--;
             if (_turnsToNextReplenishment > 0)
                 return true;
-
+            Replenish?.Invoke(this);
             _turnsToNextReplenishment = _replenishmentSpeed;
             return false;
         }
@@ -62,6 +60,9 @@ namespace Cards
             if (IsCaptured) return; //todo: remove tmp fix and handle recapturing
             IsCaptured = true;
             CaptorId = captorId;
+            //todo: add replenish
         }
+        
+        //todo resource visual update
     }
 }
