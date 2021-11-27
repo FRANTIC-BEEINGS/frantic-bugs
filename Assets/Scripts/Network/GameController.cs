@@ -20,6 +20,9 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int GameDuration;
 	[SerializeField] public int TurnDuration;
 	
+	[SerializeField] private GameObject MapPrefab;
+	private GameObject Map;
+
 	private void Awake()
 	{
 		_gameStartController.StartGame += StartGame;
@@ -37,6 +40,7 @@ public class GameController : NetworkBehaviour
 			gameStarted = true;
 			currentTurnPlayer = -1;
 			_gameTimer.StartTimer(GameDuration);
+			Map = Instantiate(MapPrefab);
 			StartTurnTimer();
 		}
 	}
