@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ enum MouseButtons {
 
 public class PathBuilder : MonoBehaviour
 {
+    public Action<List<Card>> pathBuilt;
+
     public bool CanBuild;
 
     [SerializeField] private MouseButtons MouseState;
@@ -92,8 +95,12 @@ public class PathBuilder : MonoBehaviour
                 }
                 else {
                     if (PathBody.Count > 1) {
-                        // переделать PathBody в PathCard
+                        PathCards.Clear();
+                        for (int i = 0; i < PathBody.Count; ++i) {
+                            PathCards.Add(PathBody[i].gameObject.transform.parent.gameObject.GetComponent<Card>());
+                        }
                         // отправить построенный путь
+                        pathBuilt?.Invoke(PathCards);
                     }
                     Clear();
                 }
