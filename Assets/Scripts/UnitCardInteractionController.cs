@@ -8,8 +8,7 @@ public class UnitCardInteractionController
     private ResourceManager _resourceManager;
     public void FightEnemyCard(EnemyCard enemyCard, Unit unit)
     {
-        // todo: get level from enemyCard
-        if (unit.Force < 1 /*enemyCard.getLevel*/ || _resourceManager.GetEnergy() < unit.FightEnergy)
+        if (unit.Force < enemyCard.GetLevel() || _resourceManager.GetResource(ResourceType.Energy) < unit.FightEnergy)
         {
             unit.Death();
         }
@@ -27,7 +26,7 @@ public class UnitCardInteractionController
 
     public void CaptureCard(ICapturable card, ulong captorId, Unit unit)
     {
-        if (_resourceManager.GetEnergy() < unit.CaptureEnergy)
+        if (_resourceManager.GetResource(ResourceType.Energy) < unit.CaptureEnergy)
             return;
         _resourceManager.AddResource(ResourceType.Energy, -unit.CaptureEnergy);
         card.Capture(captorId);
@@ -39,7 +38,7 @@ public class UnitCardInteractionController
     
     public void GetResource(ResourceCard resourceCard, Unit unit)
     {
-        if (_resourceManager.GetEnergy() < unit.ResourceEnergy)
+        if (_resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy)
             return;
         _resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         _resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
