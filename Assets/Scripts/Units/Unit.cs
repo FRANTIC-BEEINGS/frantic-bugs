@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Cards;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Unit : MonoBehaviour
 {
     public Func<AllegianceType> GetAllegiance;
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
-    [SerializeField] int force;
+    [SerializeField] double forceCoef;
     [SerializeField] int fightEnergy;
     [SerializeField] int level = 1;
     [SerializeField] int resourceEnergy;
@@ -28,14 +29,9 @@ public class Unit : MonoBehaviour
         get => fightEnergy;
     }
 
-    public int Experiencelimit
-    {
-        get => experienceLimit;
-    }
-
     public int Force
     {
-        get => force;
+        get => (int)(level * forceCoef);
     }
 
     public int ResourceEnergy
@@ -57,7 +53,7 @@ public class Unit : MonoBehaviour
     public void IncreaseLevel()
     {
         level += 1;
-        force = (int)(force * increaseCoef);
+        forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
         fightEnergy = (int)(fightEnergy * decreaseCoef);
