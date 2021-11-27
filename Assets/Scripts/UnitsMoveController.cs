@@ -14,9 +14,7 @@ public class UnitsMoveController : MonoBehaviour
 
     public void Move(List<Card> path)
     {
-        PathBuilder.CanBuild = false;
         path[0].GetCurrentUnit().MoveAlongPath(path, _resourceManager.GetResource(ResourceType.Energy));
-        PathBuilder.CanBuild = true;
     }
 
     public bool CanBuildPath
