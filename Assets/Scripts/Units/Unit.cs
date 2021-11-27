@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Cards;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Unit : MonoBehaviour
 {
     public Func<AllegianceType> GetAllegiance;
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
-    [SerializeField] int force;
+    [SerializeField] double forceCoef;
     [SerializeField] int fightEnergy;
-    [SerializeField] int level;
+    [SerializeField] int level = 1;
     [SerializeField] int resourceEnergy;
     [SerializeField] double increaseCoef;
     [SerializeField] double decreaseCoef;
@@ -20,6 +21,28 @@ public class Unit : MonoBehaviour
     private Vector3 endPosition;
     [SerializeField] private float movingTime = 1f;
     private bool isStopMovement = false;
+    private int experience;
+    [SerializeField] private int experienceLimit;
+
+    public int FightEnergy
+    {
+        get => fightEnergy;
+    }
+
+    public int Force
+    {
+        get => (int)(level * forceCoef);
+    }
+
+    public int ResourceEnergy
+    {
+        get => resourceEnergy;
+    }
+
+    public int CaptureEnergy
+    {
+        get => captureEnergy;
+    }
 
     public void stopMovement()
     {
@@ -30,11 +53,23 @@ public class Unit : MonoBehaviour
     public void IncreaseLevel()
     {
         level += 1;
-        force = (int)(force * increaseCoef);
+        forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
         fightEnergy = (int)(fightEnergy * decreaseCoef);
         resourceEnergy = (int)(resourceEnergy * decreaseCoef);
+    }
+
+    public void IncreaseExperience(int exp)
+    {
+        experience += exp;
+        if (experience > experienceLimit)
+        {
+            for (int i = 0; i < experience / experienceLimit; i++)
+                IncreaseLevel();
+            
+            experience %= experienceLimit;
+        }
     }
 
     //for movement test
@@ -51,7 +86,8 @@ public class Unit : MonoBehaviour
     {
         foreach (Card card in cards)
         {
-            if (isStopMovement)
+            // check if we can step on next card and if player want stop
+            if (isStopMovement || !card.StepOn(this))
             {
                 isStopMovement = false;
                 break;
@@ -62,6 +98,13 @@ public class Unit : MonoBehaviour
                 break;
             energy -= moveEnergy;
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
+            
+            //if card is enemy break movement
+            if (card is EnemyCard)
+            {
+                isStopMovement = false;
+                break;
+            }
         }
     }
     
@@ -112,7 +155,7 @@ public class Unit : MonoBehaviour
         StartCoroutine(MoveTest(cards, 100));
     }
 
-    private void Death() 
+    public void Death() 
     {
         Destroy(this);
     }
