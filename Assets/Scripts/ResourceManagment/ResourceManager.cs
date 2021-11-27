@@ -7,11 +7,12 @@ namespace ResourceManagment
 {
     public class ResourceManager
     {
+        private List<ResourceCard> _replenishableResources;
         private Dictionary<ResourceType, int> resources;
         private int _maxEnergy;
         private int _extraEnergy;
         
-        public Action<ResourceCard> GlobalReplenish;
+        public Action<ResourceCard> ReplenishResource;
         
         public ResourceManager()
         {
@@ -24,9 +25,9 @@ namespace ResourceManagment
             _maxEnergy = maxEnergy;
         }
 
-        public int GetEnergy()
+        public int GetResource(ResourceType resourceType)
         {
-            return resources.ContainsKey(ResourceType.Energy) ? resources[ResourceType.Energy] : 0;
+            return resources.ContainsKey(resourceType) ? resources[resourceType] : 0;
         }
 
         public void ReplenishEnergy()
@@ -41,7 +42,8 @@ namespace ResourceManagment
             }
         }
         
-        public void AddResource(ResourceType resource, int quantity)
+        //returns false when attempted to detract more of the resource than was available
+        public bool AddResource(ResourceType resource, int quantity)
         {
             if (resources.ContainsKey(resource))
             {
@@ -54,26 +56,30 @@ namespace ResourceManagment
 
             if (resource == ResourceType.Energy)
                 _extraEnergy = resources[resource] > _maxEnergy ? resources[resource] - _maxEnergy : 0;
+
+            if (resources[resource] < 0)
+            {
+                resources[resource] = 0;
+                return false;
+            }
+            
+            return true;
         }
 
         //adds replenishment func (must be called when captured resource card)
-        public void AddReplenishableResource()
+        public void AddReplenishableResource(ResourceCard resourceCard)
         {
-            //todo: fix this
-            GlobalReplenish += Replenish;
+            resourceCard.Replenish = Replenish;
         }
 
-        public void RemoveReplenishableResource()
+        public void RemoveReplenishableResource(ResourceCard resourceCard)
         {
-            GlobalReplenish -= Replenish;
+            resourceCard.Replenish = null;
         }
 
         private void Replenish(ResourceCard resourceCard)
         {
-            bool replenishNow = resourceCard.ReplenishTick();
-            if (!replenishNow)
-                return;
-            AddResource(resourceCard.GetResource(),resourceCard.GetReplenishResourceCount());
+            AddResource(resourceCard.GetResource(),resourceCard.GetResourceCount());
         }
     }
 }
