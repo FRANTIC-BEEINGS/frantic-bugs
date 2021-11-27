@@ -9,6 +9,12 @@ namespace Cards
         [SerializeField] private int _level;
         [SerializeField] private int _experience;
         [SerializeField] private Dictionary<ResourceType, int> _resources;
+        private bool _isDefeated = false;
+
+        public bool IsDefeated()
+        {
+            return _isDefeated;
+        }
 
         public void Initialize(Sprite face, int level, int experience, Dictionary<ResourceType, int> resources)
         {
@@ -38,7 +44,7 @@ namespace Cards
 
         public void OnDeath()
         {
-            
+            _isDefeated = true;
         }
 
         public int GetLevel()
