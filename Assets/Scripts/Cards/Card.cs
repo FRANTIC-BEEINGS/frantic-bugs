@@ -10,7 +10,12 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
-
+        
+        public Unit GetCurrentUnit()
+        {
+            return _currentUnit;
+        }
+        
         //get/set card visibility (also calls method for flipping card on visibility change)
         public bool IsVisible
         {
@@ -47,13 +52,20 @@ namespace Cards
                 //fight with enemy unit
                 //TODO:update current unit
             }
+
+            _currentUnit = unit;
             unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
             return true;
         }
 
+        public void LeaveCard()
+        {
+            _currentUnit = null;
+        }
+
         private bool CanStepOn(Unit unit)
         {
-            return _currentUnit == null || unit.GetAllegiance() == _currentUnit.GetAllegiance();
+            return _currentUnit == null || unit.Allegiance == _currentUnit.Allegiance;
         }
 
         //play flipping animation and change visibility value

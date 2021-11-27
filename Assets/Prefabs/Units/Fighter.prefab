@@ -97,7 +97,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveEnergy: 5
   captureEnergy: 10
-  force: 5
+  forceCoef: 1
   fightEnergy: 5
   level: 1
   resourceEnergy: 10
+  increaseCoef: 1.2
+  decreaseCoef: 0.8
+  sight: 0
+  sprite: {fileID: 0}
+  movingTime: 1
+  Allegiance: 1
+  experienceLimit: 50
