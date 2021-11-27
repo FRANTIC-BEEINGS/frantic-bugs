@@ -51,6 +51,9 @@ public class CountDown : NetworkBehaviour
     public void StopTimer()
     {
         if (timerCoroutine != null)
+        {
+            UpdateTimeClientRpc(0);
             StopCoroutine(timerCoroutine);
+        }
     }
 }
