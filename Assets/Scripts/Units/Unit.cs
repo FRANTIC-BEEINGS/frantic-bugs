@@ -7,7 +7,6 @@ using UnityEngine.Serialization;
 
 public class Unit : MonoBehaviour
 {
-    public Func<AllegianceType> GetAllegiance;
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
     [SerializeField] double forceCoef;
@@ -21,6 +20,7 @@ public class Unit : MonoBehaviour
     private Vector3 endPosition;
     [SerializeField] private float movingTime = 1f;
     private bool isStopMovement = false;
+    public AllegianceType Allegiance = AllegianceType.A;
     private int experience;
     [SerializeField] private int experienceLimit;
 
@@ -43,6 +43,7 @@ public class Unit : MonoBehaviour
     {
         get => captureEnergy;
     }
+    
 
     public void stopMovement()
     {
