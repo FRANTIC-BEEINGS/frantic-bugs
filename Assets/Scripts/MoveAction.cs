@@ -11,9 +11,9 @@ public class MoveAction : MonoBehaviour
     {
         aPathBuilder.pathBuilt += Move;
     }
-    
+
     public void Move(List<Card> Path)
     {
-        Debug.Log("Иду куда-то " + Path.Count);
+        //Debug.Log("Иду куда-то " + Path.Count);
     }
 }

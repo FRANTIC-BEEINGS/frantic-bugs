@@ -32,7 +32,7 @@ public class MapGeneration : MonoBehaviour  {
     [SerializeField] private List<GameObject> CardPrefabs;
     [SerializeField] private List<int> CardTypeCnt;
 
-    private List<List<Card>> Map;
+    public List<List<Card>> Map;
     private List<List<int>> MapId;
 
 

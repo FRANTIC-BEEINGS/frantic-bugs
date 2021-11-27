@@ -30,14 +30,16 @@ public class PathBuilder : MonoBehaviour
 
     private int MapCardWidth, MapCardHeight;
 
+    private MapGeneration Map;
+
     void Start() {
         CanBuild = true;
         MouseState = MouseButtons.Nothing;
         OnCard = false;
 
-        GameObject Map = GameObject.Find("Map");
-        MapCardWidth = Map.GetComponent<MapGeneration>().MapCardWidth;
-        MapCardHeight = Map.GetComponent<MapGeneration>().MapCardHeight;
+        Map = GameObject.Find("Map").GetComponent<MapGeneration>();
+        MapCardWidth = Map.MapCardWidth;
+        MapCardHeight = Map.MapCardHeight;
         SelectedCards = new List<bool>();
         for (int i = 0; i < MapCardWidth * MapCardHeight; ++i) {
             SelectedCards.Add(false);
@@ -61,7 +63,7 @@ public class PathBuilder : MonoBehaviour
             else if (MouseState == MouseButtons.Left && OnCard) {
                 if (PathBody.Count == 0) {
                     if (Candidate != null && Candidate.id == CurBody.id) {
-                        Add();
+                        Add(CurBody);
                     }
                 }
                 else {
@@ -72,9 +74,12 @@ public class PathBuilder : MonoBehaviour
                         }
                     }
                     else {
+                        BuildPathThroughNeighbors(PathBody.Last(), CurBody);
+                        /*
                         if (Neighbor()) {
                             Add();
                         }
+                        */
                     }
                 }
             }
@@ -108,19 +113,64 @@ public class PathBuilder : MonoBehaviour
         }
     }
 
-    bool Neighbor() {
-        int NeighborId = PathBody.Last().id;
-        int i1 = CurBody.id / MapCardWidth;
-        int j1 = CurBody.id % MapCardWidth;
-        int i2 = NeighborId / MapCardWidth;
-        int j2 = NeighborId % MapCardWidth;
+    void BuildPathThroughNeighbors(BodyInformation Start, BodyInformation Finish) {
+        BodyInformation Middle = Start;
+        int i1 = Start.id / MapCardWidth;
+        int j1 = Start.id % MapCardWidth;
+        int i3 = Finish.id / MapCardWidth;
+        int j3 = Finish.id % MapCardWidth;
+        double angle = 0;
+        if (i1 != i3 || j1 != j3) {
+            angle = Math.Asin((j3 - j1) / Math.Sqrt((i1 - i3) * (i1 - i3) + (j1 - j3) * (j1 - j3)));
+        }
+
+        int di = (-1) * Convert.ToInt32(i1 > i3) + (1) * Convert.ToInt32(i1 < i3);
+        int dj = (-1) * Convert.ToInt32(j1 > j3) + (1) * Convert.ToInt32(j1 < j3);
+
+        while (true) {
+            if (Neighbor(Middle, Finish)) {
+                Add(Middle);
+                Add(Finish);
+                break;
+            }
+            int i2 = Middle.id / MapCardWidth;
+            int j2 = Middle.id % MapCardWidth;
+
+            Add(Middle);
+            if (i2 == i3) {
+                j2 += dj;
+            }
+            else if (j2 == j3) {
+                i2 += di;
+            }
+            else {
+                double anglei = Math.Asin((j3 - j2) / Math.Sqrt(((i2 + di) - i3) * ((i2 + di) - i3) + (j2 - j3) * (j2 - j3)));
+                double anglej = Math.Asin((j3 - (j2 + dj)) / Math.Sqrt((i2 - i3) * (i2 - i3) + ((j2 + dj) - j3) * ((j2 + dj) - j3)));
+                if (Math.Abs(anglei - angle) < Math.Abs(anglej - angle)) {
+                    i2 += di;
+                }
+                else {
+                    j2 += dj;
+                }
+            }
+            Middle = Map.Map[i2][j2].gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
+        }
+    }
+
+    bool Neighbor(BodyInformation Start, BodyInformation Finish) {
+        int i1 = Start.id / MapCardWidth;
+        int j1 = Start.id % MapCardWidth;
+        int i2 = Finish.id / MapCardWidth;
+        int j2 = Finish.id % MapCardWidth;
         return (i1 == i2 && j1 == j2 + 1) || (i1 == i2 && j1 == j2 - 1) || (i1 == i2 + 1 && j1 == j2) || (i1 == i2 - 1 && j1 == j2);
     }
 
-    void Add() {
-        SelectedCards[CurBody.id] = true;
-        PathBody.Add(CurBody);
-        CurBody.SetSelection(true);
+    void Add(BodyInformation NewBody) {
+        if (SelectedCards[NewBody.id] == false) {
+            SelectedCards[NewBody.id] = true;
+            PathBody.Add(NewBody);
+            NewBody.SetSelection(true);
+        }
     }
 
     void Remove() {
