@@ -11,6 +11,7 @@ public class CountDown : NetworkBehaviour
     // Вызывается каждую секунду, если таймер запущен
     public Action<int> UpdateTimer;
     public Action TimerOver;
+    Coroutine timerCoroutine;
 
     public void StartTimer(int timeToWait)
     {
@@ -20,21 +21,25 @@ public class CountDown : NetworkBehaviour
         }
     }
     
-    private IEnumerator WaitAndUpdateTimer(int timeToWait)
+    private IEnumerator WaitAndUpdateTimer(int timeToWait, int secondsAfterTimeOver = 0)
     {
         int counter = timeToWait;
         UpdateTimeClientRpc(counter);
-        while (counter > 0) {
+        while (counter >= 0) {
             yield return new WaitForSeconds (1);
             counter--;
             UpdateTimeClientRpc(counter);
         }
-        UpdateTimeClientRpc(counter);
+        UpdateTimeClientRpc(0);
+        yield return new WaitForSeconds (secondsAfterTimeOver);
+        TimerOver?.Invoke();
     }
     
     private void StartCoro(int timeToWait)
     {
-        StartCoroutine(WaitAndUpdateTimer(timeToWait));
+        if (timerCoroutine != null)
+            StopCoroutine(timerCoroutine);
+        timerCoroutine = StartCoroutine(WaitAndUpdateTimer(timeToWait));
     }
     
     [ClientRpc]
@@ -45,6 +50,10 @@ public class CountDown : NetworkBehaviour
 
     public void StopTimer()
     {
-        
+        if (timerCoroutine != null)
+        {
+            UpdateTimeClientRpc(0);
+            StopCoroutine(timerCoroutine);
+        }
     }
 }

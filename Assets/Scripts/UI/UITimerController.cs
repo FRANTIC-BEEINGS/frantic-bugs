@@ -13,9 +13,10 @@ public class UITimerController : MonoBehaviour
     public string timeSeparator = ":";
     
     private Text timerText;
-    [SerializeField] private CountDown timer;
+    private CountDown timer;
     void Awake()
     {
+        timer = GetComponent<CountDown>();
         timerText = GetComponent<Text>();
         timer.UpdateTimer += UpdateTime;
     }
