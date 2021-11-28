@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using ResourceManagment;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -23,7 +24,7 @@ public class Unit : MonoBehaviour
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience;
     [SerializeField] private int experienceLimit;
-    [SerializeField] private UnitsMoveController unitsMoveController;
+    public Action FinishedMovement;
 
     public int FightEnergy
     {
@@ -74,14 +75,13 @@ public class Unit : MonoBehaviour
         }
     }
 
-    public void MoveAlongPath(List<Card> cards, int energy)
+    public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
-        StartCoroutine(Move(cards, energy));
+        StartCoroutine(Move(cards, resourceManager));
     }
 
-    IEnumerator Move(List<Card> cards, int energy)
+    IEnumerator Move(List<Card> cards, ResourceManager resourceManager)
     {
-        unitsMoveController.CanBuildPath = false;
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
@@ -92,9 +92,13 @@ public class Unit : MonoBehaviour
             }
 
             endPosition = cards[i].gameObject.transform.position; // find destination position
-            if (energy < moveEnergy)
+            if (resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
+            {
+                isStopMovement = false;
                 break;
-            energy -= moveEnergy;
+            }
+            resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
+            cards[i - 1].LeaveCard();
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
             
             //if card is enemy break movement
@@ -104,7 +108,8 @@ public class Unit : MonoBehaviour
                 break;
             }
         }
-        unitsMoveController.CanBuildPath = true;
+        isStopMovement = false;
+        FinishedMovement?.Invoke();
     }
 
     IEnumerator MoveTo(Vector3 position, float time)

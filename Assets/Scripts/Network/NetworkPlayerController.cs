@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ResourceManagment;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,19 @@ public class NetworkPlayerController : NetworkBehaviour
 {
 	public NetworkVariable<bool> readyToPlay;
 	public NetworkVariable<bool> thisPlayerTurn;
-	[SerializeField] private GameController _gameController;
+	private GameController _gameController;
+	private ResourceManager _resourceManager;
+	private UnitsMoveController _unitsMoveController;
+
+	public ResourceManager GetResourceManager()
+	{
+		return _resourceManager;
+	}
+	
+	public UnitsMoveController GetUnitsMoveController()
+	{
+		return _unitsMoveController;
+	}
 
 	private void Start()
 	{
@@ -28,6 +41,7 @@ public class NetworkPlayerController : NetworkBehaviour
 		if (thisPlayerTurn.Value)
 		{
 			_gameController.EndTurnServerRpc();
+			_unitsMoveController.StopMovement();
 		}
 	}
 
@@ -47,6 +61,13 @@ public class NetworkPlayerController : NetworkBehaviour
 	public void EndTurnServerRpc()
 	{
 		thisPlayerTurn.Value = false;
+		_unitsMoveController.StopMovement();
 	}
-	
+
+	public void Initialize(int turnEnergy, PathBuilder pathBuilder)
+	{
+		_resourceManager = new ResourceManager(turnEnergy);
+		_unitsMoveController = new UnitsMoveController(pathBuilder, _resourceManager);
+	}
+
 }

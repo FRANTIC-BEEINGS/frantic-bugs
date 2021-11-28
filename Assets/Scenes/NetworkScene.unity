@@ -781,9 +781,21 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: mapPrefab
+      value: 
+      objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: TurnEnergy
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: _gameTimer
       value: 
       objectReference: {fileID: 1104237679}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: unitPrefab
+      value: 
+      objectReference: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: GameDuration
       value: 60
@@ -793,9 +805,21 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: pathBuilderPrefab
+      value: 
+      objectReference: {fileID: 1770553660621100032, guid: e4bdd6f537593db46b7bd581ca32ae59, type: 3}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: unitsMovementPrefab
+      value: 
+      objectReference: {fileID: 4910317527336542848, guid: 94dedac9b05c94cd1af0f74e12dc3cde, type: 3}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: _gameStartController
       value: 
       objectReference: {fileID: 2028153537}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: ResourceManagerPrefab
+      value: 
+      objectReference: {fileID: 5665642635768932795, guid: b39c2cc58779f41b2bd884759a088abe, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: _turnTimers.Array.size
       value: 2
@@ -1170,6 +1194,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 388054793}
     m_Modifications:
+    - target: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7638655455812073630, guid: 93457c620f73343f497f66291667aeef, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -1,11 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+using Cards;
+using ResourceManagment;
 using Unity.Netcode;
-using UnityEngine.Networking.Match;
-using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
 
 public class GameController : NetworkBehaviour
 {
@@ -16,12 +13,24 @@ public class GameController : NetworkBehaviour
 	[SerializeField] private List<CountDown> _turnTimers;
 
 	private int currentTurnPlayer = -1;
+	private List<ResourceManager> _resourceManagers;
+	private List<NetworkPlayerController> _networkPlayerControllers;
 
 	[SerializeField] public int GameDuration;
 	[SerializeField] public int TurnDuration;
+	[SerializeField] public int TurnEnergy;
 	
-	[SerializeField] private GameObject MapPrefab;
-	private GameObject Map;
+	[SerializeField] private GameObject mapPrefab;
+	[SerializeField] private GameObject pathBuilderPrefab;
+	[SerializeField] private GameObject unitPrefab;
+	private MapGeneration map;
+	private PathBuilder pathBuilder;
+	private Unit unit;
+
+	public PathBuilder GetPathBuilder()
+	{
+		return pathBuilder;
+	}
 
 	private void Awake()
 	{
@@ -29,7 +38,7 @@ public class GameController : NetworkBehaviour
 		_gameTimer.TimerOver += GameOver;
 		foreach (var _turnTimer in _turnTimers)
 		{
-			_turnTimer.TimerOver += StartNextTurnTimer;
+			_turnTimer.TimerOver += StartNextTurn;
 		}
 	}
 
@@ -38,14 +47,71 @@ public class GameController : NetworkBehaviour
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
 			gameStarted = true;
-			currentTurnPlayer = -1;
-			_gameTimer.StartTimer(GameDuration);
-			Map = Instantiate(MapPrefab);
-			StartNextTurnTimer();
+			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
+			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
 
-	private void StartNextTurnTimer()
+	
+	private void StartAfterMapGenerated()
+	{
+		currentTurnPlayer = -1;
+		_gameTimer.StartTimer(GameDuration);
+		SetNetworkPlayers();
+		InstantiateLocalObjects();
+		foreach (var player in _networkPlayerControllers)
+		{
+			player.Initialize(TurnEnergy, pathBuilder);
+		}
+		SpawnMainUnits();
+		StartNextTurn();
+	}
+
+	private void SetNetworkPlayers()
+	{
+		_networkPlayerControllers = new List<NetworkPlayerController>();
+		foreach (var player in NetworkManager.Singleton.ConnectedClients.Values)
+		{
+			var playerObject = player.PlayerObject;
+			_networkPlayerControllers.Add(playerObject.GetComponent<NetworkPlayerController>());
+		}
+	}
+	
+	//client rpc
+	private void InstantiateLocalObjects()
+	{
+		pathBuilder = Instantiate(pathBuilderPrefab).GetComponent<PathBuilder>();
+		pathBuilder.Initialize(mapGeneration: map);
+	}
+
+	private void SpawnMainUnits()
+	{
+		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
+		{
+			Card card = map.Map[0][map.MapCardWidth/2];
+			
+			Vector3 cardPosition = card.gameObject.transform.position;
+			GameObject u = Instantiate(unitPrefab,
+				new Vector3(cardPosition.x, cardPosition.y,-8), 
+				Quaternion.identity);
+			unit = u.GetComponent<Unit>();
+			UnitCardInteractionController.StepOnCard(unit, card);
+		}
+
+		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
+		{
+			Card card = map.Map[map.MapCardHeight-1][map.MapCardWidth/2];
+
+			Vector3 cardPosition = card.gameObject.transform.position;
+			GameObject u = Instantiate(unitPrefab,
+				new Vector3(cardPosition.x, cardPosition.y,-8), 
+					Quaternion.identity);
+			unit = u.GetComponent<Unit>();
+			UnitCardInteractionController.StepOnCard(unit, card);
+		}
+	} 
+
+	private void StartNextTurn()
 	{
 		if (gameOver || !IsServer)
 			return;
@@ -58,6 +124,7 @@ public class GameController : NetworkBehaviour
 			ChangeCurrentTurnPlayer((currentTurnPlayer + 1) % NetworkManager.Singleton.ConnectedClients.Count);
 		}
 
+		_networkPlayerControllers[currentTurnPlayer].GetResourceManager().ReplenishEnergy();
 		_turnTimers[currentTurnPlayer].StartTimer(TurnDuration);
 	}
 
@@ -65,12 +132,10 @@ public class GameController : NetworkBehaviour
 	{
 		if (currentTurnPlayer >= 0)
 		{
-			NetworkManager.Singleton.ConnectedClients[(ulong) currentTurnPlayer].PlayerObject
-				.GetComponent<NetworkPlayerController>().EndTurnServerRpc();
+			_networkPlayerControllers[currentTurnPlayer].EndTurnServerRpc();
 		}
 		currentTurnPlayer = newValue;
-		NetworkManager.Singleton.ConnectedClients[(ulong) currentTurnPlayer].PlayerObject
-			.GetComponent<NetworkPlayerController>().StartTurnServerRpc();
+		_networkPlayerControllers[currentTurnPlayer].StartTurnServerRpc();
 	}
 
 	private void GameOver()
@@ -82,6 +147,6 @@ public class GameController : NetworkBehaviour
 	public void EndTurnServerRpc()
 	{
 		_turnTimers[currentTurnPlayer].StopTimer();
-		StartNextTurnTimer();
+		StartNextTurn();
 	}
 }

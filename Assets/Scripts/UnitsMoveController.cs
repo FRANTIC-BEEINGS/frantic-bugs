@@ -3,23 +3,38 @@ using Cards;
 using ResourceManagment;
 using UnityEngine;
 
-public class UnitsMoveController : MonoBehaviour
+public class UnitsMoveController
 {
-    [SerializeField] private PathBuilder PathBuilder;
-    private ResourceManager _resourceManager;
-    private void Start()
+    private PathBuilder pathBuilder;
+    private ResourceManager resourceManager;
+    private Unit currentMovingUnit;
+
+    public UnitsMoveController(PathBuilder pathBuilder, ResourceManager resourceManager)
     {
-        PathBuilder.pathBuilt += Move;
+        this.pathBuilder = pathBuilder;
+        pathBuilder.pathBuilt += Move;
+        this.resourceManager = resourceManager;
     }
 
     public void Move(List<Card> path)
     {
-        path[0].GetCurrentUnit().MoveAlongPath(path, _resourceManager.GetResource(ResourceType.Energy));
+        pathBuilder.CanBuild = false;
+        currentMovingUnit = path[0].GetCurrentUnit();
+        if (currentMovingUnit == null)
+            return;
+        //не смотрите на эти две строки
+        currentMovingUnit.FinishedMovement -= FinishedMovement;
+        currentMovingUnit.FinishedMovement += FinishedMovement;
+        currentMovingUnit.MoveAlongPath(path, resourceManager);
     }
 
-    public bool CanBuildPath
+    private void FinishedMovement()
     {
-        get => PathBuilder.CanBuild;
-        set => PathBuilder.CanBuild = value;
+        pathBuilder.CanBuild = true;
+    }
+
+    public void StopMovement()
+    {
+        currentMovingUnit.stopMovement();
     }
 }
