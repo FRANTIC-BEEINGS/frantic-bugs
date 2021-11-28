@@ -200,17 +200,16 @@ public class GameController : NetworkBehaviour
 		UnitCardInteractionController.CaptureCard(
 			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable, 
 			(ulong)currentTurnPlayer, unit, _networkPlayerControllers[currentTurnPlayer].GetResourceManager());
-		
+		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
+
 	}
 
 	public void GetResource()
 	{
-		Debug.Log("Getting resource");
-		Debug.Log(_networkPlayerControllers[currentTurnPlayer].lastClickedCard == null);
-		Debug.Log(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 		UnitCardInteractionController.GetResource(
 			(ResourceCard)_networkPlayerControllers[currentTurnPlayer].lastClickedCard, unit,
 			_networkPlayerControllers[currentTurnPlayer].GetResourceManager()
 			);
+		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 	}
 }

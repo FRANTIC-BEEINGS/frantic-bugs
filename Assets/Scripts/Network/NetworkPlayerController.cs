@@ -20,6 +20,16 @@ public class NetworkPlayerController : NetworkBehaviour
 	private UnitsMoveController _unitsMoveController;
 	public Card lastClickedCard;
 
+	public ResourceManager GetResourceManager()
+	{
+		return _resourceManager;
+	}
+	
+	public UnitsMoveController GetUnitsMoveController()
+	{
+		return _unitsMoveController;
+	}
+	
 	void Update()
 	{
 		if (Input.GetMouseButtonDown((int)MouseButtons.Right))
@@ -43,15 +53,6 @@ public class NetworkPlayerController : NetworkBehaviour
 				}
 			}
 		}
-	}
-	public ResourceManager GetResourceManager()
-	{
-		return _resourceManager;
-	}
-	
-	public UnitsMoveController GetUnitsMoveController()
-	{
-		return _unitsMoveController;
 	}
 
 	public bool ShowInteractionButtons()
@@ -102,10 +103,16 @@ public class NetworkPlayerController : NetworkBehaviour
 		_unitsMoveController.StopMovement();
 	}
 
+	void FinishedMovement()
+	{
+		_gameController.ClickedCard(lastClickedCard);
+	}
+	
 	public void Initialize(int turnEnergy, PathBuilder pathBuilder)
 	{
 		_resourceManager = new ResourceManager(turnEnergy);
 		_unitsMoveController = new UnitsMoveController(pathBuilder, _resourceManager);
+		_unitsMoveController.FinishedMovementAction += FinishedMovement;
 	}
 
 }

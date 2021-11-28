@@ -26,7 +26,7 @@ public static class UnitCardInteractionController
 
     public static bool CanCaptureCard(Card card, Unit unit)
     {
-        return card is ICapturable && card.GetCurrentUnit() == unit;
+        return card is ICapturable && card.GetCurrentUnit() == unit && !card.IsCaptured;
     }
 
     public static bool HaveEnoughResourceToCaptureCard(Card card, ResourceManager resourceManager, Unit unit)
@@ -36,7 +36,7 @@ public static class UnitCardInteractionController
     
     public static bool CanGetResource(Card card, Unit unit)
     {
-        return card is ResourceCard && card.GetCurrentUnit() == unit;
+        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResurceСollected;
     }
 
     public static bool HaveEnoughResourceToGetResourceCard(Card card, ResourceManager resourceManager, Unit unit)
@@ -61,8 +61,6 @@ public static class UnitCardInteractionController
         if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy)
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
-        Debug.Log(resourceCard.GetResource());
-        Debug.Log(resourceCard.GetResourceCount());
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
     }
     
