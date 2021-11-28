@@ -33,6 +33,11 @@ public class UnitsMoveController
         pathBuilder.CanBuild = true;
     }
 
+    public bool UnitIsMoving()
+    {
+        return !pathBuilder.CanBuild;
+    }
+
     public void StopMovement()
     {
         currentMovingUnit.stopMovement();

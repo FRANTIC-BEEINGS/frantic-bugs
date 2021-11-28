@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Cards;
 using ResourceManagment;
+using UnityEngine;
 
 public static class UnitCardInteractionController
 {
@@ -40,6 +41,8 @@ public static class UnitCardInteractionController
         if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy)
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
+        Debug.Log(resourceCard.GetResource());
+        Debug.Log(resourceCard.GetResourceCount());
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
     }
     

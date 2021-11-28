@@ -4,5 +4,7 @@ namespace UI
     {
         PlayerReady,
         EndTurn,
+        CaptureCard,
+        GetResource
     }
 }

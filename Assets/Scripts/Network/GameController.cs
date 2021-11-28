@@ -3,6 +3,7 @@ using UnityEngine;
 using Cards;
 using ResourceManagment;
 using Unity.Netcode;
+using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
@@ -26,6 +27,9 @@ public class GameController : NetworkBehaviour
 	private MapGeneration map;
 	private PathBuilder pathBuilder;
 	private Unit unit;
+
+	[SerializeField] private Button captureButton;
+	[SerializeField] private Button addResourceButton;
 
 	public PathBuilder GetPathBuilder()
 	{
@@ -51,7 +55,6 @@ public class GameController : NetworkBehaviour
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
-
 	
 	private void StartAfterMapGenerated()
 	{
@@ -148,5 +151,28 @@ public class GameController : NetworkBehaviour
 	{
 		_turnTimers[currentTurnPlayer].StopTimer();
 		StartNextTurn();
+	}
+
+	public void ClickedCard(Card card)
+	{
+		
+	}
+	public void CaptureCard()
+	{
+		UnitCardInteractionController.CaptureCard(
+			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable, 
+			(ulong)currentTurnPlayer, unit, _networkPlayerControllers[currentTurnPlayer].GetResourceManager());
+		
+	}
+
+	public void GetResource()
+	{
+		Debug.Log("Getting resource");
+		Debug.Log(_networkPlayerControllers[currentTurnPlayer].lastClickedCard == null);
+		Debug.Log(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
+		UnitCardInteractionController.GetResource(
+			(ResourceCard)_networkPlayerControllers[currentTurnPlayer].lastClickedCard, unit,
+			_networkPlayerControllers[currentTurnPlayer].GetResourceManager()
+			);
 	}
 }

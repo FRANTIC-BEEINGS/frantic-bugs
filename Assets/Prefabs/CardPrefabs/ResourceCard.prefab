@@ -45,8 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FaceSprite: {fileID: 21300000, guid: 8d98ab6168c3e91439339f1908b8fe97, type: 3}
-  id: 0
-  _resource: 0
+  _resource: 2
   _quantity: 2
   _replenishmentQuantity: 1
   _replenishmentSpeed: 1
