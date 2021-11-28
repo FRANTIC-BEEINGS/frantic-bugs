@@ -10,6 +10,8 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
+        public bool isUnitVisible;
+        public bool isTreeVisible;
         
         public Unit GetCurrentUnit()
         {
