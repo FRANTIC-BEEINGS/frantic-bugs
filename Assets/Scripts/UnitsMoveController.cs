@@ -27,6 +27,7 @@ public class UnitsMoveController
         //не смотрите на эти две строки
         currentMovingUnit.FinishedMovement -= FinishedMovement;
         currentMovingUnit.FinishedMovement += FinishedMovement;
+        currentMovingUnit.FightEnemy -= FightEnemy;
         currentMovingUnit.FightEnemy += FightEnemy;
         currentMovingUnit.MoveAlongPath(path, resourceManager);
     }

@@ -47,6 +47,7 @@ public class GameController : NetworkBehaviour
 		}
 	}
 
+	// After all players ready
 	private void StartGame()
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
@@ -70,6 +71,7 @@ public class GameController : NetworkBehaviour
 		}
 		SpawnMainUnits();
 		StartNextTurn();
+		// todo: show end turn button
 	}
 
 	private void SetNetworkPlayers()
