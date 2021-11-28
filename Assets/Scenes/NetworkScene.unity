@@ -245,6 +245,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7638655455812073630, guid: 93457c620f73343f497f66291667aeef, type: 3}
   m_PrefabInstance: {fileID: 2124202493}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &656846274 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+  m_PrefabInstance: {fileID: 7638655455387413147}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &799023247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -620,6 +631,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7638655455812073630, guid: 93457c620f73343f497f66291667aeef, type: 3}
   m_PrefabInstance: {fileID: 1953459861}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1043051849 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+  m_PrefabInstance: {fileID: 1953459861}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1051742725 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7638655455812073630, guid: 93457c620f73343f497f66291667aeef, type: 3}
@@ -743,6 +765,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonGetResource
       objectReference: {fileID: 0}
+    - target: {fileID: 7638655455812073631, guid: 93457c620f73343f497f66291667aeef, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7638655456025690049, guid: 93457c620f73343f497f66291667aeef, type: 3}
       propertyPath: m_Text
       value: Get Resource
@@ -856,6 +882,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ButtonCaptureCard
       objectReference: {fileID: 0}
+    - target: {fileID: 7638655455812073631, guid: 93457c620f73343f497f66291667aeef, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7638655456025690049, guid: 93457c620f73343f497f66291667aeef, type: 3}
       propertyPath: m_Text
       value: Capture card
@@ -894,6 +924,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7638655455812073630, guid: 93457c620f73343f497f66291667aeef, type: 3}
   m_PrefabInstance: {fileID: 1306501252}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2101123496 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7638655455812073628, guid: 93457c620f73343f497f66291667aeef, type: 3}
+  m_PrefabInstance: {fileID: 1306501252}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2124202493
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1035,6 +1076,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: readyButton
+      value: 
+      objectReference: {fileID: 656846274}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: GameDuration
       value: 60
       objectReference: {fileID: 0}
@@ -1042,6 +1087,14 @@ PrefabInstance:
       propertyPath: TurnDuration
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: captureButton
+      value: 
+      objectReference: {fileID: 1043051849}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: getResourceButton
+      value: 
+      objectReference: {fileID: 2101123496}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: pathBuilderPrefab
       value: 

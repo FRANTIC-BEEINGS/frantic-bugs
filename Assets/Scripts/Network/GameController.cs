@@ -29,7 +29,8 @@ public class GameController : NetworkBehaviour
 	private Unit unit;
 
 	[SerializeField] private Button captureButton;
-	[SerializeField] private Button addResourceButton;
+	[SerializeField] private Button getResourceButton;
+	[SerializeField] private Button readyButton;
 
 	public PathBuilder GetPathBuilder()
 	{
@@ -50,6 +51,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
+			readyButton.gameObject.SetActive(false);
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 			map.MapGenerated += StartAfterMapGenerated;
@@ -155,7 +157,43 @@ public class GameController : NetworkBehaviour
 
 	public void ClickedCard(Card card)
 	{
+		if (UnitCardInteractionController.CanGetResource(card, unit))
+		{
+			getResourceButton.gameObject.SetActive(true); 
+			if (UnitCardInteractionController.HaveEnoughResourceToGetResourceCard(card,
+				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+			{
+				getResourceButton.interactable = true;
+			}
+			else
+			{
+				getResourceButton.interactable = true;
+			}
+					
+		}
+		else
+		{
+			getResourceButton.gameObject.SetActive(false);
+		}
 		
+		if (UnitCardInteractionController.CanCaptureCard(card, unit))
+		{
+			captureButton.gameObject.SetActive(true); 
+			if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
+				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+			{
+				captureButton.interactable = true;
+			}
+			else
+			{
+				captureButton.interactable = true;
+			}
+					
+		}
+		else
+		{
+			captureButton.gameObject.SetActive(false);
+		}
 	}
 	public void CaptureCard()
 	{
