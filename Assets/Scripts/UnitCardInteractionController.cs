@@ -24,6 +24,26 @@ public static class UnitCardInteractionController
         }
     }
 
+    public static bool CanCaptureCard(Card card, Unit unit)
+    {
+        return card is ICapturable && card.GetCurrentUnit() == unit;
+    }
+
+    public static bool HaveEnoughResourceToCaptureCard(Card card, ResourceManager resourceManager, Unit unit)
+    {
+        return resourceManager.GetResource(ResourceType.Energy) >= unit.CaptureEnergy;
+    }
+    
+    public static bool CanGetResource(Card card, Unit unit)
+    {
+        return card is ResourceCard && card.GetCurrentUnit() == unit;
+    }
+
+    public static bool HaveEnoughResourceToGetResourceCard(Card card, ResourceManager resourceManager, Unit unit)
+    {
+        return resourceManager.GetResource(ResourceType.Energy) >= unit.ResourceEnergy;
+    }
+    
     public static void CaptureCard(ICapturable card, ulong captorId, Unit unit, ResourceManager resourceManager)
     {
         if (resourceManager.GetResource(ResourceType.Energy) < unit.CaptureEnergy)

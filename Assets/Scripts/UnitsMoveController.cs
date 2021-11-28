@@ -25,6 +25,7 @@ public class UnitsMoveController
         //не смотрите на эти две строки
         currentMovingUnit.FinishedMovement -= FinishedMovement;
         currentMovingUnit.FinishedMovement += FinishedMovement;
+        currentMovingUnit.FightEnemy += FightEnemy;
         currentMovingUnit.MoveAlongPath(path, resourceManager);
     }
 
@@ -41,5 +42,10 @@ public class UnitsMoveController
     public void StopMovement()
     {
         currentMovingUnit.stopMovement();
+    }
+
+    private void FightEnemy(EnemyCard card)
+    {
+        UnitCardInteractionController.FightEnemyCard(card, currentMovingUnit, resourceManager);
     }
 }
