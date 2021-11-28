@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class ButtonOnClickAdd : MonoBehaviour
 {
-    [SerializeField] private GameController gameController;
+    [SerializeField] private GameController _gameController;
     public ButtonType buttonType;
     private bool onClickAdded = false;
 
@@ -31,6 +31,12 @@ public class ButtonOnClickAdd : MonoBehaviour
             case ButtonType.EndTurn:
                 SetEndTurn();
                 break;
+            case ButtonType.CaptureCard:
+                CaptureCard();
+                break;
+            case ButtonType.GetResource:
+                GetResource();
+                break;
         }
         
     }
@@ -53,6 +59,26 @@ public class ButtonOnClickAdd : MonoBehaviour
             Button btn = gameObject.GetComponent<Button>();
             btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
                 .GetComponent<NetworkPlayerController>().EndTurn);
+            onClickAdded = true;
+        }
+    }
+    
+    private void CaptureCard()
+    {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            Button btn = gameObject.GetComponent<Button>();
+            btn.onClick.AddListener(_gameController.CaptureCard);
+            onClickAdded = true;
+        }
+    }
+    
+    private void GetResource()
+    {
+        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        {
+            Button btn = gameObject.GetComponent<Button>();
+            btn.onClick.AddListener(_gameController.GetResource);
             onClickAdded = true;
         }
     }

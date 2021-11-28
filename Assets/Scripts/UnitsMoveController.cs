@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Cards;
 using ResourceManagment;
 using UnityEngine;
@@ -8,6 +9,7 @@ public class UnitsMoveController
     private PathBuilder pathBuilder;
     private ResourceManager resourceManager;
     private Unit currentMovingUnit;
+    public Action FinishedMovementAction;
 
     public UnitsMoveController(PathBuilder pathBuilder, ResourceManager resourceManager)
     {
@@ -25,6 +27,7 @@ public class UnitsMoveController
         //не смотрите на эти две строки
         currentMovingUnit.FinishedMovement -= FinishedMovement;
         currentMovingUnit.FinishedMovement += FinishedMovement;
+        currentMovingUnit.FightEnemy -= FightEnemy;
         currentMovingUnit.FightEnemy += FightEnemy;
         currentMovingUnit.MoveAlongPath(path, resourceManager);
     }
@@ -32,6 +35,12 @@ public class UnitsMoveController
     private void FinishedMovement()
     {
         pathBuilder.CanBuild = true;
+        FinishedMovementAction?.Invoke();
+    }
+
+    public bool UnitIsMoving()
+    {
+        return !pathBuilder.CanBuild;
     }
 
     public void StopMovement()

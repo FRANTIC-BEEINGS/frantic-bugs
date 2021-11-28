@@ -3,6 +3,7 @@ using UnityEngine;
 using Cards;
 using ResourceManagment;
 using Unity.Netcode;
+using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
@@ -27,6 +28,10 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
+	[SerializeField] private Button captureButton;
+	[SerializeField] private Button getResourceButton;
+	[SerializeField] private Button readyButton;
+
 	public PathBuilder GetPathBuilder()
 	{
 		return pathBuilder;
@@ -42,16 +47,17 @@ public class GameController : NetworkBehaviour
 		}
 	}
 
+	// After all players ready
 	private void StartGame()
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
+			readyButton.gameObject.SetActive(false);
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
-
 	
 	private void StartAfterMapGenerated()
 	{
@@ -65,6 +71,7 @@ public class GameController : NetworkBehaviour
 		}
 		SpawnMainUnits();
 		StartNextTurn();
+		// todo: show end turn button
 	}
 
 	private void SetNetworkPlayers()
@@ -148,5 +155,63 @@ public class GameController : NetworkBehaviour
 	{
 		_turnTimers[currentTurnPlayer].StopTimer();
 		StartNextTurn();
+	}
+
+	public void ClickedCard(Card card)
+	{
+		if (UnitCardInteractionController.CanGetResource(card, unit))
+		{
+			getResourceButton.gameObject.SetActive(true); 
+			if (UnitCardInteractionController.HaveEnoughResourceToGetResourceCard(card,
+				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+			{
+				getResourceButton.interactable = true;
+			}
+			else
+			{
+				getResourceButton.interactable = true;
+			}
+					
+		}
+		else
+		{
+			getResourceButton.gameObject.SetActive(false);
+		}
+		
+		if (UnitCardInteractionController.CanCaptureCard(card, unit))
+		{
+			captureButton.gameObject.SetActive(true); 
+			if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
+				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+			{
+				captureButton.interactable = true;
+			}
+			else
+			{
+				captureButton.interactable = true;
+			}
+					
+		}
+		else
+		{
+			captureButton.gameObject.SetActive(false);
+		}
+	}
+	public void CaptureCard()
+	{
+		UnitCardInteractionController.CaptureCard(
+			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable, 
+			(ulong)currentTurnPlayer, unit, _networkPlayerControllers[currentTurnPlayer].GetResourceManager());
+		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
+
+	}
+
+	public void GetResource()
+	{
+		UnitCardInteractionController.GetResource(
+			(ResourceCard)_networkPlayerControllers[currentTurnPlayer].lastClickedCard, unit,
+			_networkPlayerControllers[currentTurnPlayer].GetResourceManager()
+			);
+		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 	}
 }

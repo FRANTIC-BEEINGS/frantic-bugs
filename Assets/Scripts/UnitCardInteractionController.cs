@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Cards;
 using ResourceManagment;
+using UnityEngine;
 
 public static class UnitCardInteractionController
 {
@@ -25,7 +26,7 @@ public static class UnitCardInteractionController
 
     public static bool CanCaptureCard(Card card, Unit unit)
     {
-        return card is ICapturable && card.GetCurrentUnit() == unit;
+        return card is ICapturable && card.GetCurrentUnit() == unit && !card.IsCaptured;
     }
 
     public static bool HaveEnoughResourceToCaptureCard(Card card, ResourceManager resourceManager, Unit unit)
@@ -35,7 +36,7 @@ public static class UnitCardInteractionController
     
     public static bool CanGetResource(Card card, Unit unit)
     {
-        return card is ResourceCard && card.GetCurrentUnit() == unit;
+        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResurceСollected;
     }
 
     public static bool HaveEnoughResourceToGetResourceCard(Card card, ResourceManager resourceManager, Unit unit)

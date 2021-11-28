@@ -12,6 +12,7 @@ namespace Cards
         [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
         public Action<ResourceCard> Replenish;
+        public bool ResurceСollected;
 
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity,
             int replenishmentSpeed)
@@ -22,6 +23,7 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
+            ResurceСollected = false;
         }
         
         //use this in generation for setting default parameters
@@ -32,10 +34,12 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
+            ResurceСollected = false;
         }
 
         public ResourceType GetResource()
         {
+            ResurceСollected = true;
             return _resource;
         }
 
