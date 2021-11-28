@@ -25,6 +25,7 @@ public class Unit : MonoBehaviour
     private int experience;
     [SerializeField] private int experienceLimit;
     public Action FinishedMovement;
+    public Action<EnemyCard> FightEnemy;
 
     public int FightEnergy
     {
@@ -77,6 +78,7 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
+        isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));
     }
 
@@ -85,18 +87,12 @@ public class Unit : MonoBehaviour
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
-            if (isStopMovement || !cards[i].StepOn(this))
+            if (isStopMovement || !cards[i].StepOn(this) || resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
             {
-                isStopMovement = false;
                 break;
             }
 
             endPosition = cards[i].gameObject.transform.position; // find destination position
-            if (resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
-            {
-                isStopMovement = false;
-                break;
-            }
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
@@ -104,7 +100,7 @@ public class Unit : MonoBehaviour
             //if card is enemy break movement
             if (cards[i] is EnemyCard)
             {
-                isStopMovement = false;
+                FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;
             }
         }
