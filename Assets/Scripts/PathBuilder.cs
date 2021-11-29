@@ -31,8 +31,8 @@ public class PathBuilder : MonoBehaviour
     private int MapCardWidth, MapCardHeight;
 
     private MapGeneration Map;
-    private bool initialized = false; 
-    
+    private bool initialized = false;
+
     void Update()
     {
         if (!initialized)
@@ -76,9 +76,7 @@ public class PathBuilder : MonoBehaviour
                 else {
                     if (SelectedCards[CurBody.id]) {
                         //while (Path[Path.Count - 1].GetComponent<Card>().id != CurId) {
-                        while (PathBody.Last().id != CurBody.id) {
-                            Remove();
-                        }
+                        Rollback(CurBody);
                     }
                     else {
                         BuildPathThroughNeighbors(PathBody.Last(), CurBody);
@@ -177,6 +175,17 @@ public class PathBuilder : MonoBehaviour
             SelectedCards[NewBody.id] = true;
             PathBody.Add(NewBody);
             NewBody.SetSelection(true);
+        }
+        else {
+            Rollback(NewBody);
+        }
+    }
+
+    void Rollback(BodyInformation NewBody) {
+        if (SelectedCards[NewBody.id] == true) {
+            while (PathBody.Last().id != NewBody.id) {
+                Remove();
+            }
         }
     }
 
