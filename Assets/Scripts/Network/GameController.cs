@@ -110,6 +110,7 @@ public class GameController : NetworkBehaviour
 				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
+			unit.OnDeath += Death;
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
 
@@ -156,6 +157,7 @@ public class GameController : NetworkBehaviour
 	private void GameOver()
 	{
 		gameOver = true;
+		Death();
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -245,4 +247,10 @@ public class GameController : NetworkBehaviour
 				break;
 		}
 	}
+
+	private void Death()
+	{
+		uiController.OnLoss();
+	}
+	
 }
