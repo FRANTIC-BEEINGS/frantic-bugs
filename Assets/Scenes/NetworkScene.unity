@@ -1178,7 +1178,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: TurnDuration
-      value: 10
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: captureButton
