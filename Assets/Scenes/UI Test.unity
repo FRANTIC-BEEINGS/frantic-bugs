@@ -123,17 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &200437210 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 485868147200490516, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
-  m_PrefabInstance: {fileID: 1853968538}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &435754985
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,10 +432,42 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2554670311269824615, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554670311269824615, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554670311269824615, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4058153
+      objectReference: {fileID: 0}
+    - target: {fileID: 2554670311269824615, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3448736
+      objectReference: {fileID: 0}
     - target: {fileID: 3099357426189129754, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: cardInfoUI
       value: 
       objectReference: {fileID: 1207787628}
+    - target: {fileID: 4236916655043961907, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4236916655043961907, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 4236916655043961907, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4058153
+      objectReference: {fileID: 0}
+    - target: {fileID: 4236916655043961907, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3448736
+      objectReference: {fileID: 0}
     - target: {fileID: 4579518103919099636, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
@@ -459,6 +480,22 @@ PrefabInstance:
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
+    - target: {fileID: 5777621378847209038, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777621378847209038, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.b
+      value: 0.4716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777621378847209038, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4058153
+      objectReference: {fileID: 0}
+    - target: {fileID: 5777621378847209038, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_Color.r
+      value: 0.3448736
+      objectReference: {fileID: 0}
     - target: {fileID: 5858151969380817526, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3345944061
@@ -553,7 +590,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: buttonType
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
@@ -645,7 +682,7 @@ PrefabInstance:
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: captureButton
       value: 
-      objectReference: {fileID: 200437210}
+      objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: getResourceButton
       value: 
@@ -852,6 +889,18 @@ PrefabInstance:
     - target: {fileID: 3117324825687955748, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955749, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.26886794
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955749, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.3584906
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955749, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.2784311
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955751, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_Name
