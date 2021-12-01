@@ -71,6 +71,7 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
+			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
 		}
 		SpawnMainUnits();
 		StartNextTurn();

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using ResourceManagment;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
@@ -10,6 +12,11 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject buttonStart;
     [SerializeField] private GameObject curtain;
     [SerializeField] private CardInfoUI cardInfoUI;
+
+    [SerializeField] private GameObject resources;
+    [SerializeField] private Text energyCount;
+    [SerializeField] private Text foodCount;
+    [SerializeField] private Text moneyCount;
 
     private void Start()
     {
@@ -29,5 +36,24 @@ public class UIController : MonoBehaviour
     {
         cardInfoUI.gameObject.SetActive(true);
         cardInfoUI.DisplayCardInfo(card);
+    }
+
+    public void UpdateResourceDisplay(Resource resource)
+    {
+        switch (resource.ResourceType)
+        {
+            case ResourceType.Energy:
+                energyCount.text = resource.Amount.ToString();
+                break;
+            case ResourceType.Food:
+                foodCount.text = resource.Amount.ToString();
+                break;
+            case ResourceType.Money:
+                moneyCount.text = resource.Amount.ToString();
+                break;
+            default:
+                break;
+        }
+        Debug.Log("update rd");
     }
 }
