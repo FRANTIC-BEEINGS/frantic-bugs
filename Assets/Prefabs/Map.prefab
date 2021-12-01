@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapCardHeight: 10
-  MapCardWidth: 20
+  MapCardWidth: 19
   CardHeight: 3
   CardWidth: 2
   CardToCardDistance: 0.2
