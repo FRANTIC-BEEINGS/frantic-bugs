@@ -45,7 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   FaceSprite: {fileID: 21300000, guid: 2cfbf6619eb047545a425e8a31732c83, type: 3}
-  id: 0
 --- !u!1001 &8284019897403988867
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -53,6 +52,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8284019897818107654}
     m_Modifications:
+    - target: {fileID: 347766683665592839, guid: 69d5cf3c3706a5a498e1ef54d7ee74b1, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b1050f31a48834043a307dbf62834618, type: 2}
     - target: {fileID: 5835306611185681321, guid: 69d5cf3c3706a5a498e1ef54d7ee74b1, type: 3}
       propertyPath: m_Name
       value: CardBody
