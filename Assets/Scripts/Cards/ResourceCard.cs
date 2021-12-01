@@ -14,8 +14,7 @@ namespace Cards
         public Action<ResourceCard> Replenish;
         public bool ResurceСollected;
 
-        public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity,
-            int replenishmentSpeed)
+        public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity = 0, int replenishmentSpeed = 0)
         {
             base.FaceSprite = face;
             _resource = resource;
@@ -25,7 +24,7 @@ namespace Cards
             _turnsToNextReplenishment = replenishmentSpeed;
             ResurceСollected = false;
         }
-        
+
         //use this in generation for setting default parameters
         public void Initialize(ResourceType resource, int quantity, int replenishmentQuantity = 0, int replenishmentSpeed = 0)
         {
@@ -47,7 +46,7 @@ namespace Cards
         {
             return _quantity;
         }
-    
+
         //must be called every player turn (do not call when it is enemy's turn)
         public bool ReplenishTurnTick()
         {
@@ -66,7 +65,7 @@ namespace Cards
             CaptorId = captorId;
             //todo: add replenish
         }
-        
+
         //todo resource visual update
 
         public override string ToString()

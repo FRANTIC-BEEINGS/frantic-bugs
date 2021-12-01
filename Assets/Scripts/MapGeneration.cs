@@ -125,19 +125,23 @@ public class MapGeneration : MonoBehaviour  {
                 else if (NewCard is ResourceCard)
                 {
                     var resourceTypes = Enum.GetValues (typeof (ResourceType));
-                    var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length - 1));
+                    var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length));
                     switch (resourceType)
                     {
                         case ResourceType.Food:
+                            NewCardObject.transform.GetChild(4).gameObject.SetActive(true);
                             ((ResourceCard)NewCard).Initialize(ResourceType.Food, Random.Range(5, 20));
                             break;
                         case ResourceType.Energy:
+                            NewCardObject.transform.GetChild(3).gameObject.SetActive(true);
                             ((ResourceCard)NewCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
                             break;
                         case ResourceType.Money:
+                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
                             ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
                             break;
                         default:
+                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
                             ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
                             break;
                     }
