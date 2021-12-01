@@ -6,12 +6,12 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Camera camera;
-    
+
     // speed of camera
     [SerializeField] private float zoomSpeed = 1;
     [SerializeField] private float zoomCursorSpeed = 300;
     [SerializeField] private float movementSpeed = 5f;
-    
+
     // borders on the edge of the screen on which cursor moves camera (in pixels)
     [SerializeField] private float bordersWidth = 10f;
 
@@ -26,7 +26,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] public bool cursorCameraMoveEnabled;
 
 
-     
+
     void Awake()
     {
         camera = GetComponent<Camera>();
@@ -54,7 +54,7 @@ public class CameraController : MonoBehaviour
     void ZoomToCursor()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        
+
         if (scroll != 0.0f && camera.orthographicSize > minOrtho && camera.orthographicSize < maxOrtho)
         {
             transform.position = Vector3.MoveTowards(transform.position,
@@ -73,9 +73,18 @@ public class CameraController : MonoBehaviour
 
     void CursorCameraMove()
     {
+        if (Input.mousePosition.x >= Screen.width - bordersWidth ||
+            Input.mousePosition.x <= 0 + bordersWidth ||
+            Input.mousePosition.y >= Screen.height - bordersWidth ||
+            Input.mousePosition.y <= 0 + bordersWidth) {
+              Vector3 Direction = Vector3.Normalize(Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2, 0));
+              transform.position += Direction * movementSpeed * Time.deltaTime;
+        }
+    }
+/*
         float horizontal = 0.0f;
         float vertical = 0.0f;
-        
+
         if (Input.mousePosition.x >= Screen.width - bordersWidth)
         {
             horizontal = 1f;
@@ -84,7 +93,7 @@ public class CameraController : MonoBehaviour
         {
             horizontal = -1f;
         }
-        
+
         if ( Input.mousePosition.y >= Screen.height - bordersWidth )
         {
             vertical = 1f;
@@ -93,14 +102,14 @@ public class CameraController : MonoBehaviour
         {
             vertical = -1f;
         }
-        
         if (horizontal != 0.0f || vertical != 0.0f)
             MoveCamera(horizontal, vertical);
     }
+*/
 
     void MoveCamera(float horizontalSpeed, float verticalSpeed)
     {
-        transform.Translate(new Vector2(horizontalSpeed, verticalSpeed) 
+        transform.Translate(new Vector2(horizontalSpeed, verticalSpeed)
                             * (movementSpeed * Time.deltaTime));
     }
 

@@ -54,3 +54,6 @@ MonoBehaviour:
   - {fileID: 1662601610067456762, guid: 751a6411c32693f4389791fad00995f0, type: 3}
   - {fileID: 5319531521658111253, guid: 4ee449507634deb42b73a394ed4e1659, type: 3}
   CardTypeCnt: 000000000a00000014000000
+  FoodResourceSprite: {fileID: 21300000, guid: 313b9edfc4ec48f41b2461f066fb769c, type: 3}
+  EnergyResourceSprite: {fileID: 21300000, guid: ebd5b269de090b7418102f529bad9bfb, type: 3}
+  MoneyResourceSprite: {fileID: 21300000, guid: fd33d2553dd3b4048beaf9d1f456ad73, type: 3}
