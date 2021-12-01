@@ -35,6 +35,9 @@ public class GameController : NetworkBehaviour
 	[SerializeField] private Button getResourceButton;
 	[SerializeField] private Button readyButton;
 
+	[SerializeField] private int foodToWin;
+	[SerializeField] private int moneyToWin;
+
 	public PathBuilder GetPathBuilder()
 	{
 		return pathBuilder;
@@ -72,6 +75,7 @@ public class GameController : NetworkBehaviour
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
 			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
+			player.GetResourceManager().OnResourceChange += CheckWinCondition;
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -217,5 +221,28 @@ public class GameController : NetworkBehaviour
 			_networkPlayerControllers[currentTurnPlayer].GetResourceManager()
 			);
 		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
+	}
+
+	private void CheckWinCondition(Resource resource)
+	{
+		switch (resource.ResourceType)
+		{
+			case ResourceType.Food:
+				if (resource.Amount >= foodToWin)
+				{
+					foodToWin = 0;
+					if (moneyToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+			case ResourceType.Money:
+				if (resource.Amount >= moneyToWin)
+				{
+					moneyToWin = 0;
+					if (foodToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+		}
 	}
 }

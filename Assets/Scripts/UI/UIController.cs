@@ -18,6 +18,9 @@ public class UIController : MonoBehaviour
     [SerializeField] private Text foodCount;
     [SerializeField] private Text moneyCount;
 
+    [SerializeField] private Text endText;
+    [SerializeField] private Button restartButton;
+
     private void Start()
     {
         //turnControlPanel.SetActive(false);
@@ -55,5 +58,21 @@ public class UIController : MonoBehaviour
                 break;
         }
         Debug.Log("update rd");
+    }
+
+    public void OnWin()
+    {
+        curtain.SetActive(true);
+        endText.gameObject.SetActive(true);
+        endText.text = "You won!";
+        restartButton.gameObject.SetActive(true);
+    }
+
+    public void OnLoss()
+    {
+        curtain.SetActive(true);
+        endText.gameObject.SetActive(true);
+        endText.text = "You lost...";
+        restartButton.gameObject.SetActive(true);
     }
 }
