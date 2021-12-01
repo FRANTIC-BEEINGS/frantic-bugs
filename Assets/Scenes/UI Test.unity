@@ -552,6 +552,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: buttonType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}

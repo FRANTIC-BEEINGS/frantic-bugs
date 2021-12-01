@@ -112,6 +112,7 @@ public class GameController : NetworkBehaviour
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			unit.OnDeath += Death;
+			unit.OnLevelChange += ChangeLevelUI;
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
 
@@ -189,24 +190,24 @@ public class GameController : NetworkBehaviour
 			getResourceButton.gameObject.SetActive(false);
 		}
 
-		if (UnitCardInteractionController.CanCaptureCard(card, unit))
-		{
-			captureButton.gameObject.SetActive(true);
-			if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
-				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
-			{
-				captureButton.interactable = true;
-			}
-			else
-			{
-				captureButton.interactable = true;
-			}
-
-		}
-		else
-		{
-			captureButton.gameObject.SetActive(false);
-		}
+		// if (UnitCardInteractionController.CanCaptureCard(card, unit))
+		// {
+		// 	captureButton.gameObject.SetActive(true);
+		// 	if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
+		// 		_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+		// 	{
+		// 		captureButton.interactable = true;
+		// 	}
+		// 	else
+		// 	{
+		// 		captureButton.interactable = true;
+		// 	}
+		//
+		// }
+		// else
+		// {
+		// 	captureButton.gameObject.SetActive(false);
+		// }
 	}
 	public void CaptureCard()
 	{
@@ -252,6 +253,11 @@ public class GameController : NetworkBehaviour
 	private void Death()
 	{
 		uiController.OnLoss();
+	}
+
+	private void ChangeLevelUI(int level)
+	{
+		uiController.GetGameInfoUI().UpdateLevel(level);
 	}
 	
 }
