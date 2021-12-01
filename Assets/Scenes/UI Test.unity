@@ -134,6 +134,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &476717527 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7195546317326460110, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+  m_PrefabInstance: {fileID: 1853968538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &799023247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -272,6 +283,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fbd8c5eb82344b4781a3f408a7c12bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1207787628 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+  m_PrefabInstance: {fileID: 1853968538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f07b0f484596f44a28302106b2b4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1363752220 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4579518103919099637, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
@@ -316,14 +338,30 @@ PrefabInstance:
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
+    - target: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: cardName
+      value: 
+      objectReference: {fileID: 476717527}
+    - target: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: actionButtons.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: actionButtons.Array.data[0]
+      value: 
+      objectReference: {fileID: 200437210}
+    - target: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: actionButtons.Array.data[1]
+      value: 
+      objectReference: {fileID: 1656834452}
     - target: {fileID: 1922807021896063185, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
-    - target: {fileID: 2114921221686397428, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
+    - target: {fileID: 3099357426189129754, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: cardInfoUI
+      value: 
+      objectReference: {fileID: 1207787628}
     - target: {fileID: 4579518103919099636, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
@@ -339,14 +377,6 @@ PrefabInstance:
     - target: {fileID: 6074882050473502224, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: m_Name
       value: SingleplayerUICanvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 6074882050473502227, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
-      propertyPath: m_BlockingObjects
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6074882050473502227, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
-      propertyPath: m_BlockingMask.m_Bits
-      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 6074882050473502236, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: m_Pivot.x
@@ -436,9 +466,7 @@ PrefabInstance:
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
-    m_RemovedComponents:
-    - {fileID: 4186256735079309220, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
-    - {fileID: 8684556057809253646, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
 --- !u!114 &1906102324 stripped
 MonoBehaviour:
