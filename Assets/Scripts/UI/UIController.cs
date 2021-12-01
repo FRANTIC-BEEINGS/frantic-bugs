@@ -12,6 +12,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject buttonStart;
     [SerializeField] private GameObject curtain;
     [SerializeField] private CardInfoUI cardInfoUI;
+    [SerializeField] private GameInfoUI gameInfoUI;
 
     [SerializeField] private GameObject resources;
     [SerializeField] private Text energyCount;
@@ -26,6 +27,11 @@ public class UIController : MonoBehaviour
         //turnControlPanel.SetActive(false);
         curtain.SetActive(true);
         buttonStart.SetActive(true);
+    }
+
+    public GameInfoUI GetGameInfoUI()
+    {
+        return gameInfoUI;
     }
 
     public void OnGameStarted()

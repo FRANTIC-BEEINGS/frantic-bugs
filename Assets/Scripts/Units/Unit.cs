@@ -27,6 +27,7 @@ public class Unit : MonoBehaviour
     public Action FinishedMovement;
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
+    public Action<int> OnLevelChange;
 
     public int FightEnergy
     {
@@ -58,6 +59,7 @@ public class Unit : MonoBehaviour
     public void IncreaseLevel()
     {
         level += 1;
+        OnLevelChange(level);
         forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
@@ -68,7 +70,7 @@ public class Unit : MonoBehaviour
     public void IncreaseExperience(int exp)
     {
         experience += exp;
-        if (experience > experienceLimit)
+        if (experience >= experienceLimit)
         {
             for (int i = 0; i < experience / experienceLimit; i++)
                 IncreaseLevel();

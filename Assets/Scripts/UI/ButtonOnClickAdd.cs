@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UI;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class ButtonOnClickAdd : MonoBehaviour
@@ -36,6 +37,9 @@ public class ButtonOnClickAdd : MonoBehaviour
                 break;
             case ButtonType.GetResource:
                 GetResource();
+                break;
+            case ButtonType.Restart:
+                Restart();
                 break;
         }
         
@@ -84,5 +88,11 @@ public class ButtonOnClickAdd : MonoBehaviour
             btn.onClick.AddListener(_gameController.GetResource);
             onClickAdded = true;
         }
+    }
+
+    private void Restart()
+    {
+        Destroy(GameObject.Find("NetworkManager"));
+        SceneManager.LoadScene(0);
     }
 }
