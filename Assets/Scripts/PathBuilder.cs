@@ -32,8 +32,8 @@ public class PathBuilder : MonoBehaviour
     private int MapCardWidth, MapCardHeight;
 
     private MapGeneration Map;
-    private bool initialized = false; 
-    
+    private bool initialized = false;
+
     void Update()
     {
         if (!initialized)
@@ -62,7 +62,10 @@ public class PathBuilder : MonoBehaviour
 
     void UpdatePath() {
         if (!CanBuild) {
-            Clear();
+            if (Candidate != null) {
+                Candidate.SetHighlight(false);
+            }
+            //Clear();
         }
         else {
             if (MouseState == MouseButtons.Right || MouseState == MouseButtons.Both) {
@@ -70,16 +73,14 @@ public class PathBuilder : MonoBehaviour
             }
             else if (MouseState == MouseButtons.Left && OnCard) {
                 if (PathBody.Count == 0) {
-                    if (Candidate != null && Candidate.id == CurBody.id) {
+                    if (Candidate != null && Candidate.id == CurBody.id && CurBody.gameObject.transform.parent.gameObject.GetComponent<Card>().GetCurrentUnit() != null) {
                         Add(CurBody);
                     }
                 }
                 else {
                     if (SelectedCards[CurBody.id]) {
                         //while (Path[Path.Count - 1].GetComponent<Card>().id != CurId) {
-                        while (PathBody.Last().id != CurBody.id) {
-                            Remove();
-                        }
+                        Rollback(CurBody);
                     }
                     else {
                         BuildPathThroughNeighbors(PathBody.Last(), CurBody);
@@ -114,8 +115,12 @@ public class PathBuilder : MonoBehaviour
                         }
                         // отправить построенный путь
                         pathBuilt?.Invoke(PathCards);
+                        ClearPathBody();
                     }
-                    Clear();
+                    else {
+                        Clear();
+                    }
+                    //Clear();
                 }
             }
         }
@@ -179,12 +184,30 @@ public class PathBuilder : MonoBehaviour
             PathBody.Add(NewBody);
             NewBody.SetSelection(true);
         }
+        else {
+            Rollback(NewBody);
+        }
+    }
+
+    void Rollback(BodyInformation NewBody) {
+        if (SelectedCards[NewBody.id] == true) {
+            while (PathBody.Last().id != NewBody.id) {
+                Remove();
+            }
+        }
     }
 
     void Remove() {
         PathBody.Last().SetSelection(false);
         SelectedCards[PathBody.Last().id] = false;
         PathBody.RemoveAt(PathBody.Count - 1);
+    }
+
+    void ClearPathBody() {
+        while (PathBody.Count > 0) {
+            SelectedCards[PathBody.Last().id] = false;
+            PathBody.RemoveAt(PathBody.Count - 1);
+        }
     }
 
     void Clear() {

@@ -10,12 +10,12 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
-        
+
         public Unit GetCurrentUnit()
         {
             return _currentUnit;
         }
-        
+
         //get/set card visibility (also calls method for flipping card on visibility change)
         public bool IsVisible
         {

@@ -9,13 +9,6 @@ using Random = UnityEngine.Random;
 этот скрипт должен сработать один раз, чтобы установить карточки.
 */
 
-enum CardId {
-    Empty = 0,
-    Enemy = 1,
-    Resource = 2,
-    Tree = 3
-}
-
 public class MapGeneration : MonoBehaviour  {
 
     // MapCardHeight и MapCardWidth - размеры поля в карточках
@@ -46,11 +39,14 @@ public class MapGeneration : MonoBehaviour  {
         MapGenerated?.Invoke();
     }
 
+    bool CorrectCoordinates(int x, int y) {
+        return ((0 <= x) && (x < MapCardHeight) && (0 <= y) && (y < MapCardWidth));
+    }
 
     void SetMapId() {
-        CardTypeCnt[(int)CardId.Empty] = MapCardHeight * MapCardWidth;
+        CardTypeCnt[0] = MapCardHeight * MapCardWidth;
         for (int i = 1; i < CardTypeCnt.Count; ++i) {
-            CardTypeCnt[(int)CardId.Empty] -= CardTypeCnt[i];
+            CardTypeCnt[0] -= CardTypeCnt[i];
         }
 
         MapId = new List<List<int>>();
@@ -61,7 +57,19 @@ public class MapGeneration : MonoBehaviour  {
             }
         }
 
-        for (int CardId = 0; CardId < CardTypeCnt.Count; ++CardId) {
+        int MainUnitPosx = 0;
+        int MainUnitPosy = MapCardWidth / 2;
+
+        int PeacefulRadius = 2;
+        for (int x = MainUnitPosx - PeacefulRadius; x <= MainUnitPosx + PeacefulRadius; ++x) {
+            for (int y = MainUnitPosy - PeacefulRadius; y <= MainUnitPosy + PeacefulRadius; ++y) {
+                if (CorrectCoordinates(x, y)) {
+                    MapId[x][y] = 0;
+                }
+            }
+        }
+
+        for (int CardId = 1; CardId < CardTypeCnt.Count; ++CardId) {
             for (int cnt = 0; cnt < CardTypeCnt[CardId]; ++cnt) {
                 int i = Random.Range(0, MapId.Count);
                 int j = Random.Range(0, MapId[i].Count);
@@ -70,6 +78,13 @@ public class MapGeneration : MonoBehaviour  {
                     j = Random.Range(0, MapId[i].Count);
                 }
                 MapId[i][j] = CardId;
+            }
+        }
+        for (int i = 0; i < MapCardHeight; ++i) {
+            for (int j = 0; j < MapCardWidth; ++j) {
+                if (MapId[i][j] == -1) {
+                    MapId[i][j] = 0;
+                }
             }
         }
     }

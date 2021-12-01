@@ -46,14 +46,14 @@ public class Unit : MonoBehaviour
     {
         get => captureEnergy;
     }
-    
+
 
     public void stopMovement()
     {
         isStopMovement = true;
     }
 
-    // increase level and change characteristics 
+    // increase level and change characteristics
     public void IncreaseLevel()
     {
         level += 1;
@@ -71,7 +71,7 @@ public class Unit : MonoBehaviour
         {
             for (int i = 0; i < experience / experienceLimit; i++)
                 IncreaseLevel();
-            
+
             experience %= experienceLimit;
         }
     }
@@ -95,14 +95,22 @@ public class Unit : MonoBehaviour
             endPosition = cards[i].gameObject.transform.position; // find destination position
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
+
+            // temporary crutch
+            cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            //BI.SetHighlight(false);
+
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
-            
+
             //if card is enemy break movement
             if (cards[i] is EnemyCard)
             {
                 FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;
             }
+        }
+        for (int i = 0; i < cards.Count; i++) {
+            cards[i].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
         }
         isStopMovement = false;
         FinishedMovement?.Invoke();
@@ -113,7 +121,7 @@ public class Unit : MonoBehaviour
         Vector3 start = transform.position;
         Vector3 end = new Vector3(position.x, position.y, start.z);
         float t = 0;
-        
+
         //in every moment move to destination
         while(t < 1)
         {
@@ -121,10 +129,10 @@ public class Unit : MonoBehaviour
             t += Time.deltaTime / time;
             transform.position = Vector3.Lerp(start, end, t);
         }
-        transform.position = end;  
+        transform.position = end;
     }
 
-    public void Death() 
+    public void Death()
     {
         Destroy(this);
     }

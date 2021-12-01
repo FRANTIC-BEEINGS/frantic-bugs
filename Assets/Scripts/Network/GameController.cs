@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+	private const int UnitPositionZ = -1;
 	private bool gameStarted = false;
 	private bool gameOver = false;
 	[SerializeField] private GameStartController _gameStartController;
@@ -20,7 +21,7 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int GameDuration;
 	[SerializeField] public int TurnDuration;
 	[SerializeField] public int TurnEnergy;
-	
+
 	[SerializeField] private GameObject mapPrefab;
 	[SerializeField] private GameObject pathBuilderPrefab;
 	[SerializeField] private GameObject unitPrefab;
@@ -60,7 +61,7 @@ public class GameController : NetworkBehaviour
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
-	
+
 	private void StartAfterMapGenerated()
 	{
 		currentTurnPlayer = -1;
@@ -85,7 +86,7 @@ public class GameController : NetworkBehaviour
 			_networkPlayerControllers.Add(playerObject.GetComponent<NetworkPlayerController>());
 		}
 	}
-	
+
 	//client rpc
 	private void InstantiateLocalObjects()
 	{
@@ -98,10 +99,10 @@ public class GameController : NetworkBehaviour
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
 			Card card = map.Map[0][map.MapCardWidth/2];
-			
+
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y,-8), 
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			UnitCardInteractionController.StepOnCard(unit, card);
@@ -113,12 +114,12 @@ public class GameController : NetworkBehaviour
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y,-8), 
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 					Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
-	} 
+	}
 
 	private void StartNextTurn()
 	{
@@ -152,7 +153,7 @@ public class GameController : NetworkBehaviour
 		gameOver = true;
 	}
 
-	[ServerRpc(RequireOwnership = false)]	
+	[ServerRpc(RequireOwnership = false)]
 	public void EndTurnServerRpc()
 	{
 		_turnTimers[currentTurnPlayer].StopTimer();
@@ -163,7 +164,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (UnitCardInteractionController.CanGetResource(card, unit))
 		{
-			getResourceButton.gameObject.SetActive(true); 
+			getResourceButton.gameObject.SetActive(true);
 			if (UnitCardInteractionController.HaveEnoughResourceToGetResourceCard(card,
 				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
 			{
@@ -173,16 +174,16 @@ public class GameController : NetworkBehaviour
 			{
 				getResourceButton.interactable = true;
 			}
-					
+
 		}
 		else
 		{
 			getResourceButton.gameObject.SetActive(false);
 		}
-		
+
 		if (UnitCardInteractionController.CanCaptureCard(card, unit))
 		{
-			captureButton.gameObject.SetActive(true); 
+			captureButton.gameObject.SetActive(true);
 			if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
 				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
 			{
@@ -192,7 +193,7 @@ public class GameController : NetworkBehaviour
 			{
 				captureButton.interactable = true;
 			}
-					
+
 		}
 		else
 		{
@@ -202,7 +203,7 @@ public class GameController : NetworkBehaviour
 	public void CaptureCard()
 	{
 		UnitCardInteractionController.CaptureCard(
-			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable, 
+			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable,
 			(ulong)currentTurnPlayer, unit, _networkPlayerControllers[currentTurnPlayer].GetResourceManager());
 		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 
