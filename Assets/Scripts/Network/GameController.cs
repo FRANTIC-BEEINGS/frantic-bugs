@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+	private const int UnitPositionZ = -1;
 	private bool gameStarted = false;
 	private bool gameOver = false;
 	[SerializeField] private GameStartController _gameStartController;
@@ -99,7 +100,7 @@ public class GameController : NetworkBehaviour
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y, 0),
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			UnitCardInteractionController.StepOnCard(unit, card);
@@ -111,7 +112,7 @@ public class GameController : NetworkBehaviour
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y, 0),
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 					Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			UnitCardInteractionController.StepOnCard(unit, card);
