@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using UnityEngine.EventSystems;
 
 enum MouseButtons {
     Left = 0,
@@ -216,6 +217,11 @@ public class PathBuilder : MonoBehaviour
     }
 
     void UpdateOnCard() {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            OnCard = false;
+            return;
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit rayHit;
         OnCard = false;
@@ -227,7 +233,7 @@ public class PathBuilder : MonoBehaviour
             }
         }
     }
-
+    
     void UpdateMouseState() {
         if (Input.GetMouseButton((int)MouseButtons.Left)) {
             if (Input.GetMouseButton((int)MouseButtons.Right)) {

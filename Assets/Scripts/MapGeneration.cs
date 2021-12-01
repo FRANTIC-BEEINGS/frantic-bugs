@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using ResourceManagment;
 using Random = UnityEngine.Random;
 
 /*
@@ -114,7 +115,33 @@ public class MapGeneration : MonoBehaviour  {
                 NewCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
-                Card NewCard = NewCardObject.GetComponent<Card>();                
+                Card NewCard = NewCardObject.GetComponent<Card>();
+                if (NewCard is EnemyCard)
+                {
+                    int level = Random.Range(1, 3);
+                    ((EnemyCard)NewCard).Initialize(level, 50,
+                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10*level}, {ResourceType.Money, 100*level}});
+                }
+                else if (NewCard is ResourceCard)
+                {
+                    var resourceTypes = Enum.GetValues (typeof (ResourceType));
+                    var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length - 1));
+                    switch (resourceType)
+                    {
+                        case ResourceType.Food:
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Food, Random.Range(5, 20));
+                            break;
+                        case ResourceType.Energy:
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
+                            break;
+                        case ResourceType.Money:
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            break;
+                        default:
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            break;
+                    }
+                }
                 BodyInformation Body = NewCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
                 Body.id = i * MapCardWidth + j;
                 Map[i].Add(NewCard);

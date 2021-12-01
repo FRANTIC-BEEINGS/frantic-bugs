@@ -29,9 +29,14 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
+	[SerializeField] private UIController uiController;
+	
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
 	[SerializeField] private Button readyButton;
+
+	[SerializeField] private int foodToWin;
+	[SerializeField] private int moneyToWin;
 
 	public PathBuilder GetPathBuilder()
 	{
@@ -53,7 +58,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
-			readyButton.gameObject.SetActive(false);
+			uiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 			map.MapGenerated += StartAfterMapGenerated;
@@ -69,6 +74,8 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
+			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
+			player.GetResourceManager().OnResourceChange += CheckWinCondition;
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -103,6 +110,7 @@ public class GameController : NetworkBehaviour
 				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
+			unit.OnDeath += Death;
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
 
@@ -149,6 +157,7 @@ public class GameController : NetworkBehaviour
 	private void GameOver()
 	{
 		gameOver = true;
+		Death();
 	}
 
 	[ServerRpc(RequireOwnership = false)]
@@ -215,4 +224,33 @@ public class GameController : NetworkBehaviour
 			);
 		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 	}
+
+	private void CheckWinCondition(Resource resource)
+	{
+		switch (resource.ResourceType)
+		{
+			case ResourceType.Food:
+				if (resource.Amount >= foodToWin)
+				{
+					foodToWin = 0;
+					if (moneyToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+			case ResourceType.Money:
+				if (resource.Amount >= moneyToWin)
+				{
+					moneyToWin = 0;
+					if (foodToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+		}
+	}
+
+	private void Death()
+	{
+		uiController.OnLoss();
+	}
+	
 }
