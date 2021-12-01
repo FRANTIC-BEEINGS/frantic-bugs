@@ -114,7 +114,7 @@ public class MapGeneration : MonoBehaviour  {
                 NewCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
-                Card NewCard = NewCardObject.GetComponent<Card>();
+                Card NewCard = NewCardObject.GetComponent<Card>();                
                 BodyInformation Body = NewCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
                 Body.id = i * MapCardWidth + j;
                 Map[i].Add(NewCard);
