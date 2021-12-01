@@ -120,7 +120,7 @@ public class MapGeneration : MonoBehaviour  {
                 {
                     int level = Random.Range(1, 3);
                     ((EnemyCard)NewCard).Initialize(level, 50, 
-                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10*level}, {ResourceType.Money, 200*level}});
+                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10*level}, {ResourceType.Money, 100*level}});
                 }
                 else if (NewCard is ResourceCard)
                 {

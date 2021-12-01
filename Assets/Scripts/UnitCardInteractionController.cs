@@ -20,7 +20,7 @@ public static class UnitCardInteractionController
             {
                 resourceManager.AddResource(r.Key, r.Value);
             }
-            //todo: add die method for enemyCard
+            enemyCard.OnDeath();
         }
     }
 
@@ -62,6 +62,7 @@ public static class UnitCardInteractionController
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
+        resourceCard.GetResource();
     }
     
     public static bool StepOnCard(Unit unit, Card card)

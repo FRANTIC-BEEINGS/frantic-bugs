@@ -12,17 +12,26 @@ public class UIController : MonoBehaviour
     [SerializeField] private GameObject buttonStart;
     [SerializeField] private GameObject curtain;
     [SerializeField] private CardInfoUI cardInfoUI;
+    [SerializeField] private GameInfoUI gameInfoUI;
 
     [SerializeField] private GameObject resources;
     [SerializeField] private Text energyCount;
     [SerializeField] private Text foodCount;
     [SerializeField] private Text moneyCount;
 
+    [SerializeField] private Text endText;
+    [SerializeField] private Button restartButton;
+
     private void Start()
     {
         //turnControlPanel.SetActive(false);
         curtain.SetActive(true);
         buttonStart.SetActive(true);
+    }
+
+    public GameInfoUI GetGameInfoUI()
+    {
+        return gameInfoUI;
     }
 
     public void OnGameStarted()
@@ -55,5 +64,21 @@ public class UIController : MonoBehaviour
                 break;
         }
         Debug.Log("update rd");
+    }
+
+    public void OnWin()
+    {
+        curtain.SetActive(true);
+        endText.gameObject.SetActive(true);
+        endText.text = "You won!";
+        restartButton.gameObject.SetActive(true);
+    }
+
+    public void OnLoss()
+    {
+        curtain.SetActive(true);
+        endText.gameObject.SetActive(true);
+        endText.text = "You lost...";
+        restartButton.gameObject.SetActive(true);
     }
 }

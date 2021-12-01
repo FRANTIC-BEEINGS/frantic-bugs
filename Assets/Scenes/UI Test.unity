@@ -455,6 +455,10 @@ PrefabInstance:
       propertyPath: GlobalObjectIdHash
       value: 4100705102
       objectReference: {fileID: 0}
+    - target: {fileID: 5240647256403677124, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: _gameController
+      value: 
+      objectReference: {fileID: 2032835886}
     - target: {fileID: 5858151969380817526, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: GlobalObjectIdHash
       value: 3345944061
@@ -548,6 +552,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: buttonType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534564531068569752, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
@@ -595,6 +603,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: foodToWin
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: mapPrefab
       value: 
       objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
@@ -607,6 +619,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 864342272}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: moneyToWin
+      value: 1900
+      objectReference: {fileID: 0}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: unitPrefab
       value: 
       objectReference: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
@@ -616,11 +632,11 @@ PrefabInstance:
       objectReference: {fileID: 1363752220}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: GameDuration
-      value: 60
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: TurnDuration
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: uiController
@@ -672,7 +688,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793988, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 3849229324
+      value: 1099784001
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793989, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: m_RootOrder
