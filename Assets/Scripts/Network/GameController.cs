@@ -76,6 +76,7 @@ public class GameController : NetworkBehaviour
 			player.Initialize(TurnEnergy, pathBuilder);
 			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
 			player.GetResourceManager().OnResourceChange += CheckWinCondition;
+			uiController.GetGameInfoUI().SetGameGoals(foodToWin,moneyToWin);
 		}
 		SpawnMainUnits();
 		StartNextTurn();
