@@ -320,6 +320,10 @@ PrefabInstance:
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
+    - target: {fileID: 2114921221686397428, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4579518103919099636, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
@@ -335,6 +339,14 @@ PrefabInstance:
     - target: {fileID: 6074882050473502224, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: m_Name
       value: SingleplayerUICanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074882050473502227, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_BlockingObjects
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6074882050473502227, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: m_BlockingMask.m_Bits
+      value: 51
       objectReference: {fileID: 0}
     - target: {fileID: 6074882050473502236, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: m_Pivot.x
@@ -424,7 +436,9 @@ PrefabInstance:
       propertyPath: _gameController
       value: 
       objectReference: {fileID: 2032835886}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4186256735079309220, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+    - {fileID: 8684556057809253646, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
 --- !u!114 &1906102324 stripped
 MonoBehaviour:
