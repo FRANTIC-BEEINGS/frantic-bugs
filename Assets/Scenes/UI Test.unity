@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &200437210 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 485868147200490516, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+  m_PrefabInstance: {fileID: 1853968538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &799023247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -272,6 +283,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1656834452 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1922807021896063184, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+  m_PrefabInstance: {fileID: 1853968538}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1741107390 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4923070401652454233, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
@@ -290,6 +312,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 485868147200490517, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: _gameController
+      value: 
+      objectReference: {fileID: 2032835886}
+    - target: {fileID: 1922807021896063185, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
+      propertyPath: _gameController
+      value: 
+      objectReference: {fileID: 2032835886}
     - target: {fileID: 4579518103919099636, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
       propertyPath: _gameController
       value: 
@@ -479,11 +509,11 @@ PrefabInstance:
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: captureButton
       value: 
-      objectReference: {fileID: 1363752220}
+      objectReference: {fileID: 200437210}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: getResourceButton
       value: 
-      objectReference: {fileID: 1363752220}
+      objectReference: {fileID: 1656834452}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: pathBuilderPrefab
       value: 
