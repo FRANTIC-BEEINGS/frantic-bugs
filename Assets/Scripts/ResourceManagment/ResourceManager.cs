@@ -14,6 +14,7 @@ namespace ResourceManagment
         private NetworkList<Resource> resources;
         
         public Action<ResourceCard> ReplenishResource;
+        public Action<Resource> OnResourceChange;
         
         public ResourceManager(int maxEnergy)
         {
@@ -49,6 +50,7 @@ namespace ResourceManagment
                     var tmp = resources[i];
                     tmp.Amount = _maxEnergy;
                     resources[i] = tmp;
+                    OnResourceChange?.Invoke(resources[i]);
                 }
             }
         }
@@ -63,6 +65,7 @@ namespace ResourceManagment
                     var tmp = resources[i];
                     tmp.Amount = Math.Max(tmp.Amount + quantity, 0);
                     resources[i] = tmp;
+                    OnResourceChange?.Invoke(resources[i]);
                     if (resource == ResourceType.Energy)
                     {
                         _extraEnergy = resources[i].Amount > _maxEnergy ? resources[i].Amount - _maxEnergy : 0;

@@ -29,6 +29,8 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
+	[SerializeField] private UIController uiController;
+	
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
 	[SerializeField] private Button readyButton;
@@ -53,7 +55,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
-			readyButton.gameObject.SetActive(false);
+			uiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 			map.MapGenerated += StartAfterMapGenerated;
@@ -69,6 +71,7 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
+			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
 		}
 		SpawnMainUnits();
 		StartNextTurn();

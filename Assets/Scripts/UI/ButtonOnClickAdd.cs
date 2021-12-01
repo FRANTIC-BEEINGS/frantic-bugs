@@ -43,6 +43,9 @@ public class ButtonOnClickAdd : MonoBehaviour
     
     private void SetPlayerReady()
     {
+        //tmp add host game feature on ready button (for single player)
+        NetworkManager.Singleton.StartHost();
+        
         if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
         {
             Button btn = gameObject.GetComponent<Button>();

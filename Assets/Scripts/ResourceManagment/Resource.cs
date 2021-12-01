@@ -1,7 +1,7 @@
 using System;
 using ResourceManagment;
 
-struct Resource : IEquatable<Resource>
+public struct Resource : IEquatable<Resource>
 {
     public ResourceType ResourceType;
     public int Amount;
