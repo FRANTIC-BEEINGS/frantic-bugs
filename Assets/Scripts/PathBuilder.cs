@@ -196,7 +196,7 @@ public class PathBuilder : MonoBehaviour
     void UpdateOnCard() {
         if (EventSystem.current.IsPointerOverGameObject())
         {
-            //todo: clear/reset path selection here (nothing must be selected)
+            OnCard = false;
             return;
         }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

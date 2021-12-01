@@ -68,5 +68,10 @@ namespace Cards
         }
         
         //todo resource visual update
+
+        public override string ToString()
+        {
+            return _resource.ToString() + " | " + _quantity;
+        }
     }
 }

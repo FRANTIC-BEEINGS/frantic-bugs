@@ -18,5 +18,10 @@ namespace Cards
         {
             _visionRadius = visionRadius;
         }
+
+        public override string ToString()
+        {
+            return "Tree | Vision range: " + _visionRadius;
+        }
     }
 }
