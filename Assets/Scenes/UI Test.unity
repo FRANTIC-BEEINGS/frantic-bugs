@@ -908,7 +908,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: cursorCameraMoveEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
