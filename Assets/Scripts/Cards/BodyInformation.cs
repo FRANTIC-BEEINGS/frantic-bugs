@@ -35,7 +35,5 @@ public class BodyInformation : MonoBehaviour {
             UIController uiController = GameObject.FindWithTag("UIController").GetComponent<UIController>();
             uiController.UpdateCardInfo(_card);
         }
-
-        _card.IsVisible = !_card.IsVisible;
     }
 }
