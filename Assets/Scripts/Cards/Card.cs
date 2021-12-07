@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,6 +12,8 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
+        private Coroutine _rotateCard;
+        private float _rotationTime = 0.5f;
 
         public Unit GetCurrentUnit()
         {
@@ -72,8 +76,23 @@ namespace Cards
         private void UpdateCardView(bool visibility)
         {
             if (visibility == _isVisible) return;
-            //TODO: play animation
+            _rotateCard = StartCoroutine(RotateCardY(Quaternion.Euler(transform.eulerAngles + 180f * Vector3.up), _rotationTime));
             _isVisible = visibility;
+        }
+
+        IEnumerator RotateCardY(Quaternion endValue, float duration)
+        {
+            Debug.Log("rotating");
+            float time = 0;
+            Quaternion startValue = transform.rotation;
+
+            while (time < duration)
+            {
+                transform.rotation = Quaternion.Lerp(startValue, endValue, time / duration);
+                time += Time.deltaTime;
+                yield return null;
+            }
+            transform.rotation = endValue;
         }
     }
 }

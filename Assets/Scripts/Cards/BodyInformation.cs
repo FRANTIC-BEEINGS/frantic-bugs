@@ -9,6 +9,7 @@ public class BodyInformation : MonoBehaviour {
     public int id;
     public GameObject Highlight;
     public GameObject Selection;
+    private Card _card;
 
     public void SetSelection(bool v) {
         Selection.SetActive(v);
@@ -16,6 +17,11 @@ public class BodyInformation : MonoBehaviour {
 
     public void SetHighlight(bool v) {
         Highlight.SetActive(v);
+    }
+
+    private void Start()
+    {
+        _card = gameObject.GetComponentInParent<Card>();
     }
 
     private void OnMouseDown()
@@ -27,8 +33,7 @@ public class BodyInformation : MonoBehaviour {
         if (Input.GetMouseButtonDown(0))
         {
             UIController uiController = GameObject.FindWithTag("UIController").GetComponent<UIController>();
-            Card card = gameObject.GetComponentInParent<Card>();
-            uiController.UpdateCardInfo(card);
+            uiController.UpdateCardInfo(_card);
         }
     }
 }
