@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GameTimer
   - Card
+  - UIController
   layers:
   - Default
   - TransparentFX

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
+	private const int UnitPositionZ = -1;
 	private bool gameStarted = false;
 	private bool gameOver = false;
 	[SerializeField] private GameStartController _gameStartController;
@@ -20,7 +21,7 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int GameDuration;
 	[SerializeField] public int TurnDuration;
 	[SerializeField] public int TurnEnergy;
-	
+
 	[SerializeField] private GameObject mapPrefab;
 	[SerializeField] private GameObject pathBuilderPrefab;
 	[SerializeField] private GameObject unitPrefab;
@@ -28,9 +29,14 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
+	[SerializeField] private UIController uiController;
+	
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
 	[SerializeField] private Button readyButton;
+
+	[SerializeField] private int foodToWin;
+	[SerializeField] private int moneyToWin;
 
 	public PathBuilder GetPathBuilder()
 	{
@@ -52,13 +58,13 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
-			readyButton.gameObject.SetActive(false);
+			uiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
-	
+
 	private void StartAfterMapGenerated()
 	{
 		currentTurnPlayer = -1;
@@ -68,6 +74,9 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
+			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
+			player.GetResourceManager().OnResourceChange += CheckWinCondition;
+			uiController.GetGameInfoUI().SetGameGoals(foodToWin,moneyToWin);
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -83,7 +92,7 @@ public class GameController : NetworkBehaviour
 			_networkPlayerControllers.Add(playerObject.GetComponent<NetworkPlayerController>());
 		}
 	}
-	
+
 	//client rpc
 	private void InstantiateLocalObjects()
 	{
@@ -96,12 +105,14 @@ public class GameController : NetworkBehaviour
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
 			Card card = map.Map[0][map.MapCardWidth/2];
-			
+
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y,-8), 
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
+			unit.OnDeath += Death;
+			unit.OnLevelChange += ChangeLevelUI;
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
 
@@ -111,12 +122,12 @@ public class GameController : NetworkBehaviour
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y,-8), 
+				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 					Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			UnitCardInteractionController.StepOnCard(unit, card);
 		}
-	} 
+	}
 
 	private void StartNextTurn()
 	{
@@ -148,9 +159,10 @@ public class GameController : NetworkBehaviour
 	private void GameOver()
 	{
 		gameOver = true;
+		Death();
 	}
 
-	[ServerRpc(RequireOwnership = false)]	
+	[ServerRpc(RequireOwnership = false)]
 	public void EndTurnServerRpc()
 	{
 		_turnTimers[currentTurnPlayer].StopTimer();
@@ -161,7 +173,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (UnitCardInteractionController.CanGetResource(card, unit))
 		{
-			getResourceButton.gameObject.SetActive(true); 
+			getResourceButton.gameObject.SetActive(true);
 			if (UnitCardInteractionController.HaveEnoughResourceToGetResourceCard(card,
 				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
 			{
@@ -171,36 +183,36 @@ public class GameController : NetworkBehaviour
 			{
 				getResourceButton.interactable = true;
 			}
-					
+
 		}
 		else
 		{
 			getResourceButton.gameObject.SetActive(false);
 		}
-		
-		if (UnitCardInteractionController.CanCaptureCard(card, unit))
-		{
-			captureButton.gameObject.SetActive(true); 
-			if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
-				_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
-			{
-				captureButton.interactable = true;
-			}
-			else
-			{
-				captureButton.interactable = true;
-			}
-					
-		}
-		else
-		{
-			captureButton.gameObject.SetActive(false);
-		}
+
+		// if (UnitCardInteractionController.CanCaptureCard(card, unit))
+		// {
+		// 	captureButton.gameObject.SetActive(true);
+		// 	if (UnitCardInteractionController.HaveEnoughResourceToCaptureCard(card,
+		// 		_networkPlayerControllers[currentTurnPlayer].GetResourceManager(), unit))
+		// 	{
+		// 		captureButton.interactable = true;
+		// 	}
+		// 	else
+		// 	{
+		// 		captureButton.interactable = true;
+		// 	}
+		//
+		// }
+		// else
+		// {
+		// 	captureButton.gameObject.SetActive(false);
+		// }
 	}
 	public void CaptureCard()
 	{
 		UnitCardInteractionController.CaptureCard(
-			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable, 
+			_networkPlayerControllers[currentTurnPlayer].lastClickedCard as ICapturable,
 			(ulong)currentTurnPlayer, unit, _networkPlayerControllers[currentTurnPlayer].GetResourceManager());
 		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 
@@ -214,4 +226,38 @@ public class GameController : NetworkBehaviour
 			);
 		ClickedCard(_networkPlayerControllers[currentTurnPlayer].lastClickedCard);
 	}
+
+	private void CheckWinCondition(Resource resource)
+	{
+		switch (resource.ResourceType)
+		{
+			case ResourceType.Food:
+				if (resource.Amount >= foodToWin)
+				{
+					foodToWin = 0;
+					if (moneyToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+			case ResourceType.Money:
+				if (resource.Amount >= moneyToWin)
+				{
+					moneyToWin = 0;
+					if (foodToWin == 0)
+						uiController.OnWin();
+				}
+				break;
+		}
+	}
+
+	private void Death()
+	{
+		uiController.OnLoss();
+	}
+
+	private void ChangeLevelUI(int level)
+	{
+		uiController.GetGameInfoUI().UpdateLevel(level);
+	}
+	
 }

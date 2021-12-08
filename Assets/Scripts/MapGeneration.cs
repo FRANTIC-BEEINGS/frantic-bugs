@@ -3,18 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using ResourceManagment;
 using Random = UnityEngine.Random;
 
 /*
 этот скрипт должен сработать один раз, чтобы установить карточки.
 */
-
-enum CardId {
-    Empty = 0,
-    Enemy = 1,
-    Resource = 2,
-    Tree = 3
-}
 
 public class MapGeneration : MonoBehaviour  {
 
@@ -46,11 +40,14 @@ public class MapGeneration : MonoBehaviour  {
         MapGenerated?.Invoke();
     }
 
+    bool CorrectCoordinates(int x, int y) {
+        return ((0 <= x) && (x < MapCardHeight) && (0 <= y) && (y < MapCardWidth));
+    }
 
     void SetMapId() {
-        CardTypeCnt[(int)CardId.Empty] = MapCardHeight * MapCardWidth;
+        CardTypeCnt[0] = MapCardHeight * MapCardWidth;
         for (int i = 1; i < CardTypeCnt.Count; ++i) {
-            CardTypeCnt[(int)CardId.Empty] -= CardTypeCnt[i];
+            CardTypeCnt[0] -= CardTypeCnt[i];
         }
 
         MapId = new List<List<int>>();
@@ -61,7 +58,19 @@ public class MapGeneration : MonoBehaviour  {
             }
         }
 
-        for (int CardId = 0; CardId < CardTypeCnt.Count; ++CardId) {
+        int MainUnitPosx = 0;
+        int MainUnitPosy = MapCardWidth / 2;
+
+        int PeacefulRadius = 2;
+        for (int x = MainUnitPosx - PeacefulRadius; x <= MainUnitPosx + PeacefulRadius; ++x) {
+            for (int y = MainUnitPosy - PeacefulRadius; y <= MainUnitPosy + PeacefulRadius; ++y) {
+                if (CorrectCoordinates(x, y)) {
+                    MapId[x][y] = 0;
+                }
+            }
+        }
+
+        for (int CardId = 1; CardId < CardTypeCnt.Count; ++CardId) {
             for (int cnt = 0; cnt < CardTypeCnt[CardId]; ++cnt) {
                 int i = Random.Range(0, MapId.Count);
                 int j = Random.Range(0, MapId[i].Count);
@@ -70,6 +79,13 @@ public class MapGeneration : MonoBehaviour  {
                     j = Random.Range(0, MapId[i].Count);
                 }
                 MapId[i][j] = CardId;
+            }
+        }
+        for (int i = 0; i < MapCardHeight; ++i) {
+            for (int j = 0; j < MapCardWidth; ++j) {
+                if (MapId[i][j] == -1) {
+                    MapId[i][j] = 0;
+                }
             }
         }
     }
@@ -100,6 +116,36 @@ public class MapGeneration : MonoBehaviour  {
 
                 //Spawn();
                 Card NewCard = NewCardObject.GetComponent<Card>();
+                if (NewCard is EnemyCard)
+                {
+                    int level = Random.Range(1, 3);
+                    ((EnemyCard)NewCard).Initialize(level, 50,
+                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10*level}, {ResourceType.Money, 100*level}});
+                }
+                else if (NewCard is ResourceCard)
+                {
+                    var resourceTypes = Enum.GetValues (typeof (ResourceType));
+                    var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length));
+                    switch (resourceType)
+                    {
+                        case ResourceType.Food:
+                            NewCardObject.transform.GetChild(4).gameObject.SetActive(true);
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Food, Random.Range(5, 20));
+                            break;
+                        case ResourceType.Energy:
+                            NewCardObject.transform.GetChild(3).gameObject.SetActive(true);
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
+                            break;
+                        case ResourceType.Money:
+                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            break;
+                        default:
+                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
+                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            break;
+                    }
+                }
                 BodyInformation Body = NewCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
                 Body.id = i * MapCardWidth + j;
                 Map[i].Add(NewCard);

@@ -6,6 +6,7 @@ namespace Cards
 {
     public class EnemyCard : Card
     {
+        [SerializeField] private string name = "Enemy";
         [SerializeField] private int _level;
         [SerializeField] private int _experience;
         [SerializeField] private Dictionary<ResourceType, int> _resources;
@@ -50,6 +51,11 @@ namespace Cards
         public int GetLevel()
         {
             return _level;
+        }
+
+        public override string ToString()
+        {
+            return name + " | Level " + _level;
         }
     }
 }
