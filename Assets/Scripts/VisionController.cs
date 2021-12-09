@@ -8,6 +8,12 @@ public class VisionController : MonoBehaviour
         List<List<Card>> map;
         //[SerializeField] Card firstCard;
 
+        public void Initialize(MapGeneration mapGeneration)
+        {
+                m = mapGeneration;
+                map = m.Map;
+        }
+
         public void OpenCardsInUnitVision(int vision, Card firstCard, Card previousCard)
         {
                 HashSet<Card> closeCards = GetCardsInVision(vision, previousCard);
@@ -24,9 +30,10 @@ public class VisionController : MonoBehaviour
                 {
                         if (!card.IsVisible)
                         {
+                                Debug.Log("aaaaa");
                                 card.IsVisible = true;
-                                card.isUnitVisible = true;
                         }
+                        card.isUnitVisible = true;
                 }
                 
                 // close cards in previous vision and not in new vision
@@ -34,6 +41,7 @@ public class VisionController : MonoBehaviour
                 {
                         if (card.IsVisible && !card.isTreeVisible && !card.isUnitVisible)
                         {
+                                Debug.Log("isvisible: "+card.IsVisible+" is unit visible " + card.isUnitVisible);
                                 card.IsVisible = false;
                         }
                 }

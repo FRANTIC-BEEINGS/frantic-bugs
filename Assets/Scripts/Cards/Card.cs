@@ -8,13 +8,13 @@ namespace Cards
     public class Card : MonoBehaviour
     {
         private bool _isCaptured;
-        private bool _isVisible = false;
+        private bool _isVisible = true;
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
         private Coroutine _rotateCard;
         private float _rotationTime = 0.5f;
-        public bool isUnitVisible;
+        public bool isUnitVisible = true;
         public bool isTreeVisible;
         
         public Unit GetCurrentUnit()

@@ -24,6 +24,8 @@ public class UnitsMoveController
         currentMovingUnit = path[0].GetCurrentUnit();
         if (currentMovingUnit == null)
             return;
+        
+        currentMovingUnit.Initialize(pathBuilder.Map);
         //не смотрите на эти две строки
         currentMovingUnit.FinishedMovement -= FinishedMovement;
         currentMovingUnit.FinishedMovement += FinishedMovement;

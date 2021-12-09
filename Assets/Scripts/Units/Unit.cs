@@ -28,12 +28,21 @@ public class Unit : MonoBehaviour
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
     public Action<int> OnLevelChange;
+    private bool initialized;
 
     private VisionController visionController;
 
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+    }
+
+    public void Initialize(MapGeneration mapGeneration)
+    {
+        if (initialized)
+            return;
+        visionController.Initialize(mapGeneration);
+        initialized = true;
     }
 
     public int FightEnergy
@@ -106,7 +115,8 @@ public class Unit : MonoBehaviour
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
 
-            //visionController.OpenCardsInUnitVision(vision, cards[i], cards[i - 1]);
+            Debug.Log("visibility: " + cards[i].IsVisible);
+            visionController.OpenCardsInUnitVision(vision, cards[i], cards[i - 1]);
 
             // temporary crutch
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);

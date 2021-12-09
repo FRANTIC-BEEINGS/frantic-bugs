@@ -31,7 +31,7 @@ public class PathBuilder : MonoBehaviour
 
     private int MapCardWidth, MapCardHeight;
 
-    private MapGeneration Map;
+    public MapGeneration Map;
     private bool initialized = false;
 
     void Update()
