@@ -59,7 +59,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -96,9 +96,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a9402b0fb5a04206a297289fed5588d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomSpeed: 1
+  zoomSpeed: 4
   zoomCursorSpeed: 300
-  movementSpeed: 3
+  movementSpeed: 6
   bordersWidth: 10
   minOrtho: 1
   maxOrtho: 20

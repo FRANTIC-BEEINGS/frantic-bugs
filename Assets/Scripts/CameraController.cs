@@ -6,6 +6,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Camera camera;
+    private bool canMoveCamera;
 
     // speed of camera
     [SerializeField] private float zoomSpeed = 1;
@@ -29,15 +30,18 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
+        canMoveCamera = true;
         camera = GetComponent<Camera>();
     }
 
     void Update()
     {
-        if (zoomEnabled) Zoom();
-        if (zoomToCursorEnabled) ZoomToCursor();
-        if (buttonsCameraMoveEnabled) ButtonsCameraMove();
-        if (cursorCameraMoveEnabled) CursorCameraMove();
+        if (canMoveCamera) {
+            if (zoomEnabled) Zoom();
+            if (zoomToCursorEnabled) ZoomToCursor();
+            if (buttonsCameraMoveEnabled) ButtonsCameraMove();
+            if (cursorCameraMoveEnabled) CursorCameraMove();
+        }
     }
 
     void Zoom()
@@ -46,8 +50,11 @@ public class CameraController : MonoBehaviour
 
         if (scroll != 0.0f)
         {
+            transform.position += transform.forward * scroll * zoomSpeed;
+            /*
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - scroll * zoomSpeed,
                 minOrtho, maxOrtho);
+            */
         }
     }
 
