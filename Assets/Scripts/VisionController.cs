@@ -14,6 +14,8 @@ public class VisionController : MonoBehaviour
                 map = m.Map;
         }
 
+        //first card - seed
+        //previous card - where unit was before the step
         public void OpenCardsInUnitVision(int vision, Card firstCard, Card previousCard)
         {
                 HashSet<Card> closeCards = GetCardsInVision(vision, previousCard);
