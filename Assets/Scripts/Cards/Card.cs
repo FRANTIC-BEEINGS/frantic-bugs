@@ -14,7 +14,6 @@ namespace Cards
         private Unit _currentUnit;
         private Coroutine _rotateCard;
         private float _rotationTime = 0.5f;
-        public bool isUnitVisible = true;   //whether the card is visible during current step (revise later)
         public bool isTreeVisible;  //whether tree gives vision on the card
         
         public Unit GetCurrentUnit()

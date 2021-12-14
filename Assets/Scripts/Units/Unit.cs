@@ -114,8 +114,7 @@ public class Unit : MonoBehaviour
             endPosition = cards[i].gameObject.transform.position; // find destination position
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
-
-            Debug.Log("visibility: " + cards[i].IsVisible);
+            
             visionController.OpenCardsInUnitVision(vision, cards[i], cards[i - 1]);
 
             // temporary crutch

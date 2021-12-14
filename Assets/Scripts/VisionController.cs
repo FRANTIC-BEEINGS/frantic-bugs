@@ -21,10 +21,9 @@ public class VisionController : MonoBehaviour
                 HashSet<Card> closeCards = GetCardsInVision(vision, previousCard);
                 HashSet<Card> openCards = GetCardsInVision(vision, firstCard);
 
-                // set isUnitVisible false for previous vision
-                foreach (Card card in closeCards)
+                foreach (Card card in openCards)
                 {
-                        card.isUnitVisible = false;
+                        closeCards.Remove(card);
                 }
 
                 // open cards in new vision
@@ -32,18 +31,15 @@ public class VisionController : MonoBehaviour
                 {
                         if (!card.IsVisible)
                         {
-                                Debug.Log("aaaaa");
                                 card.IsVisible = true;
                         }
-                        card.isUnitVisible = true;
                 }
                 
                 // close cards in previous vision and not in new vision
                 foreach (Card card in closeCards)
                 {
-                        if (card.IsVisible && !card.isTreeVisible && !card.isUnitVisible)
+                        if (card.IsVisible && !card.isTreeVisible)
                         {
-                                Debug.Log("isvisible: "+card.IsVisible+" is unit visible " + card.isUnitVisible);
                                 card.IsVisible = false;
                         }
                 }
