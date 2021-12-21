@@ -16,7 +16,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - CardEffects
   - 
   - 
   - 
@@ -43,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: CardSprites
+    uniqueID: 1324066507
     locked: 0
