@@ -16,18 +16,34 @@ public class Unit : MonoBehaviour
     [SerializeField] int resourceEnergy;
     [SerializeField] double increaseCoef;
     [SerializeField] double decreaseCoef;
-    [SerializeField] int sight;
+    [SerializeField] int vision;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
     [SerializeField] private float movingTime = 0.5f;
     private bool isStopMovement = false;
     public AllegianceType Allegiance = AllegianceType.A;
-    private int experience;
+    private int experience = 0;
     [SerializeField] private int experienceLimit;
     public Action FinishedMovement;
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
     public Action<int> OnLevelChange;
+    private bool initialized;
+
+    private VisionController visionController;
+
+    private void Start()
+    {
+        visionController = GetComponent<VisionController>();
+    }
+
+    public void Initialize(MapGeneration mapGeneration)
+    {
+        if (initialized)
+            return;
+        visionController.Initialize(mapGeneration);
+        initialized = true;
+    }
 
     public int FightEnergy
     {
@@ -98,11 +114,13 @@ public class Unit : MonoBehaviour
             endPosition = cards[i].gameObject.transform.position; // find destination position
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
+            
+            visionController.OpenCardsInUnitVision(vision, cards[i], cards[i - 1]);
 
             // temporary crutch
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             //BI.SetHighlight(false);
-
+            
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
 
             //if card is enemy break movement

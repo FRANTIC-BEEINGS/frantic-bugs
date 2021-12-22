@@ -6,19 +6,86 @@ public class VisionController : MonoBehaviour
 {
         [SerializeField] private MapGeneration m;
         List<List<Card>> map;
-        [SerializeField] Card firstCard;
+        //[SerializeField] Card firstCard;
 
-        public void OpenCardsInVision(int vision/*, Card firstCard*/)
+        public void Initialize(MapGeneration mapGeneration)
         {
-                UpdateCardsInVision(vision, true);
+                m = mapGeneration;
+                map = m.Map;
         }
-        
-        public void CloseCardsInVision(int vision/*, Card firstCard*/)
+
+        //first card - seed
+        //previous card - where unit was before the step
+        public void OpenCardsInUnitVision(int vision, Card firstCard, Card previousCard)
         {
-                UpdateCardsInVision(vision, false);
+                HashSet<Card> closeCards = GetCardsInVision(vision, previousCard);
+                HashSet<Card> openCards = GetCardsInVision(vision, firstCard);
+
+                foreach (Card card in openCards)
+                {
+                        closeCards.Remove(card);
+                }
+
+                // open cards in new vision
+                foreach (Card card in openCards)
+                {
+                        if (!card.IsVisible)
+                        {
+                                card.IsVisible = true;
+                        }
+                }
+                
+                // close cards in previous vision and not in new vision
+                foreach (Card card in closeCards)
+                {
+                        if (card.IsVisible && !card.isTreeVisible)
+                        {
+                                card.IsVisible = false;
+                        }
+                }
         }
-        
-        private void UpdateCardsInVision(int vision, bool open/*, Card firstCard*/)
+
+        public void OpenCardsInTreeVision(int vision, Card firstCard)
+        {
+                HashSet<Card> openCards = GetCardsInVision(vision, firstCard);
+                foreach (Card card in openCards)
+                {
+                        if (!card.IsVisible)
+                        {
+                                card.IsVisible = true;
+                                card.isTreeVisible = true;
+                        }
+                }
+        }
+
+        // get list of cards in vision
+        private HashSet<Card> GetCardsInVision(int vision, Card firstCard)
+        {
+                Vector2 card = FindCardOnMap(firstCard);
+                int x = (int) card.x;
+                int y = (int) card.y;
+                HashSet<Card> cards = new HashSet<Card>();
+
+                for (int i = 0; i <= vision; i++)
+                {
+                        for (int j = 0; j <= vision - i; j++)
+                        {
+                                if (x + i < map.Count && y + j < map[x + i].Count)
+                                        cards.Add(map[x + i][y + j]);
+                                if (x + i < map.Count && y - j >= 0)
+                                        cards.Add(map[x + i][y - j]);
+                                if (x - i >= 0 && y + j < map[x - i].Count)
+                                        cards.Add(map[x - i][y + j]);
+                                if (x - i >= 0 && y - j >= 0)
+                                        cards.Add(map[x - i][y - j]);
+                        }
+                }
+
+                return cards;
+        }
+
+        // return coordinates of card in map
+        private Vector2 FindCardOnMap(Card firstCard)
         {
                 int x = 0;
                 int y = 0;
@@ -29,25 +96,10 @@ public class VisionController : MonoBehaviour
                         if (y > -1)
                         {
                                 x = i;
-                                Debug.Log(x.ToString()+y.ToString());
                                 break;
                         }
-                        
                 }
 
-                for (int i = 0; i <= vision; i++)
-                {
-                        for (int j = 0; j <= vision - i; j++)
-                        {
-                                if (x + i < map.Count && y + j < map[x + i].Count && map[x + i][y + j].IsVisible != open)
-                                        map[x + i][y + j].IsVisible = open;
-                                if (x + i < map.Count && y - j >= 0 && map[x + i][y - j].IsVisible != open)
-                                        map[x + i][y - j].IsVisible = open;
-                                if (x - i >= 0 && y + j < map[x - i].Count && map[x - i][y + j].IsVisible != open)
-                                        map[x - i][y + j].IsVisible = open;
-                                if (x - i >= 0 && y - j >= 0 && map[x - i][y - j].IsVisible != open)
-                                        map[x - i][y - j].IsVisible = open;
-                        }
-                }
+                return new Vector2(x, y);
         }
 }
