@@ -6,23 +6,32 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     private Camera camera;
+    private double angle;
     private bool canMoveCamera;
+    private float distanceToCards;
+    // projection - point at which camera ray intersects plane with cards
+    private float projectionX, projectionY, projectionZ;
 
     // speed of camera
-    [SerializeField] private float zoomSpeed = 1;
-    [SerializeField] private float zoomCursorSpeed = 300;
-    [SerializeField] private float movementSpeed = 5f;
+    [SerializeField] private float zoomSpeed;
+    [SerializeField] private float movementSpeed;
 
     // borders on the edge of the screen on which cursor moves camera (in pixels)
-    [SerializeField] private float bordersWidth = 10f;
+    [SerializeField] private float bordersWidth;
 
-    // min and max camera.orthographicSize
-    [SerializeField] private float minOrtho = 1.0f;
-    [SerializeField] private float maxOrtho = 20.0f;
+    //
+    [SerializeField] private float minZPoint;
+    [SerializeField] private float maxZPoint;
+
+    // extreme points that camera can see
+    [SerializeField] private float minXPoint;
+    [SerializeField] private float maxXPoint;
+    [SerializeField] private float minYPoint;
+    [SerializeField] private float maxYPoint;
 
     // switchers
-    [SerializeField] public bool zoomToCursorEnabled;
     [SerializeField] public bool zoomEnabled;
+    [SerializeField] public bool zoomToCursorEnabled;
     [SerializeField] public bool buttonsCameraMoveEnabled;
     [SerializeField] public bool cursorCameraMoveEnabled;
 
@@ -32,40 +41,45 @@ public class CameraController : MonoBehaviour
     {
         canMoveCamera = true;
         camera = GetComponent<Camera>();
+        angle = (this.transform.rotation.x / 360) * Math.PI;
     }
 
     void Update()
     {
-        if (canMoveCamera) {
+        if (canMoveCamera)
+        {
+            UpdateCoordinates();
             if (zoomEnabled) Zoom();
-            if (zoomToCursorEnabled) ZoomToCursor();
             if (buttonsCameraMoveEnabled) ButtonsCameraMove();
             if (cursorCameraMoveEnabled) CursorCameraMove();
         }
     }
 
+    void UpdateCoordinates()
+    {
+        // distanceToCards * cos(angle) = z
+        distanceToCards = (float)((-this.transform.position.z) / Math.Cos(angle));
+        projectionX = this.transform.position.x;
+        projectionY = (float)(this.transform.position.y - distanceToCards * Math.Sin(angle));
+        projectionZ = 0;
+    }
+
     void Zoom()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-
         if (scroll != 0.0f)
         {
-            transform.position += transform.forward * scroll * zoomSpeed;
-            /*
-            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - scroll * zoomSpeed,
-                minOrtho, maxOrtho);
-            */
-        }
-    }
+            Vector3 direction;
+            if (zoomToCursorEnabled)
+                direction = Camera.main.ScreenPointToRay(Input.mousePosition).direction * scroll * zoomSpeed * Time.deltaTime;
+            else
+                direction = transform.forward * scroll * zoomSpeed * Time.deltaTime;
 
-    void ZoomToCursor()
-    {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-        if (scroll != 0.0f && camera.orthographicSize > minOrtho && camera.orthographicSize < maxOrtho)
-        {
-            transform.position = Vector3.MoveTowards(transform.position,
-                camera.ScreenToWorldPoint(Input.mousePosition), Time.deltaTime * scroll * zoomCursorSpeed);
+            if ((direction[2] > 0 && this.transform.position.z < maxZPoint) ||
+                (direction[2] < 0 && this.transform.position.z > minZPoint))
+            {
+                transform.position += direction;
+            }
         }
     }
 
@@ -75,49 +89,44 @@ public class CameraController : MonoBehaviour
         float vertical = Input.GetAxis("Camera Vertical");
 
         if (horizontal != 0.0f || vertical != 0.0f)
-            MoveCamera(horizontal, vertical);
+        {
+            Vector3 direction = new Vector3(horizontal, vertical, 0);
+            MoveCamera(direction);
+        }
     }
 
     void CursorCameraMove()
     {
-        if (Input.mousePosition.x >= Screen.width - bordersWidth ||
-            Input.mousePosition.x <= 0 + bordersWidth ||
-            Input.mousePosition.y >= Screen.height - bordersWidth ||
-            Input.mousePosition.y <= 0 + bordersWidth) {
-              Vector3 Direction = Vector3.Normalize(Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2, 0));
-              transform.position += Direction * movementSpeed * Time.deltaTime;
+        if (Input.mousePosition.x >= Screen.width  - bordersWidth || Input.mousePosition.x <= 0 + bordersWidth ||
+            Input.mousePosition.y >= Screen.height - bordersWidth || Input.mousePosition.y <= 0 + bordersWidth)
+        {
+            Vector3 direction = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            MoveCamera(direction);
         }
     }
-/*
-        float horizontal = 0.0f;
-        float vertical = 0.0f;
 
-        if (Input.mousePosition.x >= Screen.width - bordersWidth)
-        {
-            horizontal = 1f;
-        }
-        else if (Input.mousePosition.x <= 0 + bordersWidth)
-        {
-            horizontal = -1f;
-        }
-
-        if ( Input.mousePosition.y >= Screen.height - bordersWidth )
-        {
-            vertical = 1f;
-        }
-        else if ( Input.mousePosition.y <= 0 + bordersWidth )
-        {
-            vertical = -1f;
-        }
-        if (horizontal != 0.0f || vertical != 0.0f)
-            MoveCamera(horizontal, vertical);
-    }
-*/
-
-    void MoveCamera(float horizontalSpeed, float verticalSpeed)
+    void MoveCamera(Vector3 direction)
     {
-        transform.Translate(new Vector2(horizontalSpeed, verticalSpeed)
-                            * (movementSpeed * Time.deltaTime));
-    }
+        direction = Vector3.Normalize(direction);
+        direction *= Time.deltaTime;
+        direction *= movementSpeed;
 
+        if  ((direction[0] < 0 && projectionX <= minXPoint) ||
+             (direction[0] > 0 && projectionX >= maxXPoint))
+        {
+            direction[0] = 0;
+        }
+        if  ((direction[1] < 0 && projectionY <= minYPoint) ||
+             (direction[1] > 0 && projectionY >= maxYPoint))
+        {
+            direction[1] = 0;
+        }
+        if  ((direction[2] < 0 && this.transform.position.z <= minZPoint) ||
+             (direction[2] > 0 && this.transform.position.z >= maxZPoint))
+        {
+            direction[2] = 0;
+        }
+
+        transform.position += direction;
+    }
 }
