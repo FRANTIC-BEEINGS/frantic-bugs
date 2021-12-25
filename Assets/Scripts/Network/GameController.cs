@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
-	private const int UnitPositionZ = -1;
+	private const int UnitPositionZ = 0;
 	private bool gameStarted = false;
 	private bool gameOver = false;
 	[SerializeField] private GameStartController _gameStartController;
@@ -30,7 +30,7 @@ public class GameController : NetworkBehaviour
 	private Unit unit;
 
 	[SerializeField] private UIController uiController;
-	
+
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
 	[SerializeField] private Button readyButton;
@@ -259,5 +259,5 @@ public class GameController : NetworkBehaviour
 	{
 		uiController.GetGameInfoUI().UpdateLevel(level);
 	}
-	
+
 }
