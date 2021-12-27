@@ -25,7 +25,7 @@ namespace UI
             activePanel = newActivePanel;
         }
 
-        public void Login(InputField nickname)
+        public void Login(Text nickname)
         {
             if (nickname.text.Length < 1)
             {
@@ -35,10 +35,8 @@ namespace UI
             
             PhotonNetwork.NickName = nickname.text;
             _messageLog.AddMessage("Logging in as " + nickname.text + "...");
-            if(PhotonNetwork.ConnectUsingSettings())
-                _messageLog.AddMessage("Connecting...");
-            else
-                _messageLog.AddMessage("Server not responding...");
+            bool connectSuccessful = PhotonNetwork.ConnectUsingSettings();
+            _messageLog.AddMessage(connectSuccessful ? "Connecting..." : "Server not responding...");
         }
 
         public void Quit()

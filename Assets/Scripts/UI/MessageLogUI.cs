@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -48,6 +49,8 @@ namespace UI
             GameObject.FindWithTag("UIController").GetComponent<UIController>().AddMessageLog(this);
             if (SceneManager.GetActiveScene().name == "Lobby")
                 AddMessage("Connected");
+            if (SceneManager.GetActiveScene().name == "Game")
+                AddMessage("Joined room " + PhotonNetwork.CurrentRoom);
         }
 
         #endregion

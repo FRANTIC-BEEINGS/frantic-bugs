@@ -289,15 +289,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5172579358003939673, guid: 9ab1a2912759b474eb5c36cece5a2c5d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIButtonFunctions, Assembly-CSharp
+      value: UI.UIMainMenuFunctions, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5172579358003939673, guid: 9ab1a2912759b474eb5c36cece5a2c5d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 517233435}
+      objectReference: {fileID: 1066669367}
     - target: {fileID: 5172579358003939673, guid: 9ab1a2912759b474eb5c36cece5a2c5d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.UI.InputField, UnityEngine.UI
+      value: UnityEngine.UI.Text, UnityEngine.UI
       objectReference: {fileID: 0}
     - target: {fileID: 5172579358003939674, guid: 9ab1a2912759b474eb5c36cece5a2c5d, type: 3}
       propertyPath: m_Pivot.x
