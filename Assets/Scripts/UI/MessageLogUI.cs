@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,18 +11,26 @@ namespace UI
     {
         [SerializeField] private GameObject messageContainer;
         [SerializeField] private GameObject messageItem;
-        private List<string> _systemMessages = new List<string>();
+        //private List<string> _systemMessages = new List<string>();
+        private ScrollRect _scrollRect;
 
-        public void Refresh()
+        private void Start()
         {
-        
+            _scrollRect = gameObject.GetComponentInChildren<ScrollRect>();
         }
 
         public void AddMessage(string message)
         {
-            _systemMessages.Add(message);
+            //_systemMessages.Add(message);
             GameObject newMessage = Instantiate(messageItem, messageContainer.transform);
             newMessage.GetComponent<Text>().text = message;
+            ScrollToBottom();
+        }
+
+        private void ScrollToBottom()
+        {
+            Canvas.ForceUpdateCanvases();
+            _scrollRect.verticalNormalizedPosition = 0;
         }
 
         #region SceneChangeHandling
