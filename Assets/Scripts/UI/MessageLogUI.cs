@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace UI
@@ -22,5 +23,24 @@ namespace UI
             GameObject newMessage = Instantiate(messageItem, messageContainer.transform);
             newMessage.GetComponent<Text>().text = message;
         }
+
+        #region SceneChangeHandling
+
+        void OnEnable() {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+ 
+        void OnDisable() {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            GameObject.FindWithTag("UIController").GetComponent<UIController>().AddMessageLog(this);
+            if (SceneManager.GetActiveScene().name == "Lobby")
+                AddMessage("Connected");
+        }
+
+        #endregion
     }
 }

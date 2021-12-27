@@ -32,8 +32,8 @@ public class BodyInformation : MonoBehaviour {
         }
         if (Input.GetMouseButtonDown(0))
         {
-            UIController uiController = GameObject.FindWithTag("UIController").GetComponent<UIController>();
-            uiController.UpdateCardInfo(_card);
+            GUIController guiController = GameObject.FindWithTag("UIController").GetComponent<GUIController>();
+            guiController.UpdateCardInfo(_card);
         }
     }
 }
