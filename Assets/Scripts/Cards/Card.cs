@@ -77,6 +77,9 @@ namespace Cards
         private void UpdateCardView(bool visibility)
         {
             if (visibility == _isVisible) return;
+            //todo: debugging?
+            if(_rotateCard!=null)
+                StopCoroutine(_rotateCard);
             _rotateCard = StartCoroutine(RotateCardY(Quaternion.Euler(transform.eulerAngles + 180f * Vector3.up), _rotationTime));
             _isVisible = visibility;
         }
