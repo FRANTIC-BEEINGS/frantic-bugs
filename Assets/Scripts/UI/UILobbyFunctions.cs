@@ -40,7 +40,10 @@ namespace UI
         public void FindRoomByName(InputField roomName)
         {
             if(roomName.text.Length<1)
+            {
                 _messageLog.AddMessage("Please enter a room name");
+                return;
+            }
             //todo
         }
 

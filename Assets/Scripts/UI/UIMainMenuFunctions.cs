@@ -28,7 +28,10 @@ namespace UI
         public void Login(InputField nickname)
         {
             if (nickname.text.Length < 1)
+            {
                 _messageLog.AddMessage("Please enter a name");
+                return;
+            }
             
             PhotonNetwork.NickName = nickname.text;
             _messageLog.AddMessage("Logging in as " + nickname.text + "...");
