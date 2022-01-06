@@ -43,17 +43,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92631e132e9a2814b9c7afd5eeaff10b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapCardHeight: 10
-  MapCardWidth: 19
-  CardHeight: 3
-  CardWidth: 2
-  CardToCardDistance: 0.2
-  fluctuation: 1
-  CardPrefabs:
+  _cardPrefabs:
   - {fileID: 8284019897818107672, guid: 33847528fc7c1544da2df9d2ff08541f, type: 3}
   - {fileID: 1662601610067456762, guid: 751a6411c32693f4389791fad00995f0, type: 3}
   - {fileID: 5319531521658111253, guid: 4ee449507634deb42b73a394ed4e1659, type: 3}
-  CardTypeCnt: 000000000a00000014000000
-  FoodResourceSprite: {fileID: 21300000, guid: 313b9edfc4ec48f41b2461f066fb769c, type: 3}
-  EnergyResourceSprite: {fileID: 21300000, guid: ebd5b269de090b7418102f529bad9bfb, type: 3}
-  MoneyResourceSprite: {fileID: 21300000, guid: fd33d2553dd3b4048beaf9d1f456ad73, type: 3}
+  - {fileID: 5354331520021831468, guid: 8b3bb467c7dd573449cd0fbb3411d26a, type: 3}
+  - {fileID: 7334641432997557698, guid: 91cd9cfb9c11a804996f36971f6a93ae, type: 3}
+  _cardTypeCnt: 000000000a0000000a000000

@@ -104,7 +104,8 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
-			Card card = map.Map[0][map.MapCardWidth/2];
+			// IT SHOULD BE REWRITEN
+			Card card = map.GetMap()[0][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
@@ -118,7 +119,8 @@ public class GameController : NetworkBehaviour
 
 		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
 		{
-			Card card = map.Map[map.MapCardHeight-1][map.MapCardWidth/2];
+			// IT SHOULD BE REWRITEN
+			Card card = map.GetMap()[map.GetMapCardHeight()-1][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,

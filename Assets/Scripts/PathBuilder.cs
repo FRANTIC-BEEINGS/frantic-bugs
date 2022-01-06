@@ -50,8 +50,8 @@ public class PathBuilder : MonoBehaviour
         OnCard = false;
 
         Map = mapGeneration;
-        MapCardWidth = Map.MapCardWidth;
-        MapCardHeight = Map.MapCardHeight;
+        MapCardWidth = Map.GetMapCardWidth();
+        MapCardHeight = Map.GetMapCardHeight();
         SelectedCards = new List<bool>();
         for (int i = 0; i < MapCardWidth * MapCardHeight; ++i) {
             SelectedCards.Add(false);
@@ -166,7 +166,8 @@ public class PathBuilder : MonoBehaviour
                     j2 += dj;
                 }
             }
-            Middle = Map.Map[i2][j2].gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
+            // IT SHOULD BE REWRITEN
+            Middle = Map.GetMap()[i2][j2].gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
         }
     }
 
@@ -233,7 +234,7 @@ public class PathBuilder : MonoBehaviour
             }
         }
     }
-    
+
     void UpdateMouseState() {
         if (Input.GetMouseButton((int)MouseButtons.Left)) {
             if (Input.GetMouseButton((int)MouseButtons.Right)) {

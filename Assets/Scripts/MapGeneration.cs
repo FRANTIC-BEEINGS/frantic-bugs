@@ -6,155 +6,267 @@ using Cards;
 using ResourceManagment;
 using Random = UnityEngine.Random;
 
-/*
-этот скрипт должен сработать один раз, чтобы установить карточки.
-*/
+// Change its name
 
-public class MapGeneration : MonoBehaviour  {
 
-    // MapCardHeight и MapCardWidth - размеры поля в карточках
-    [SerializeField] public int MapCardHeight;
-    [SerializeField] public int MapCardWidth;
-    // CardHeight и CardWidth - размеры одной карточки
-    [SerializeField] private float CardHeight;
-    [SerializeField] private float CardWidth;
-    // CardToCardDistance - растояние между соседними карточками
-    [SerializeField] private float CardToCardDistance;
+public class MapGeneration : MonoBehaviour
+{
 
-    [SerializeField] private bool fluctuation = false;
+    [SerializeField] private List<GameObject> _cardPrefabs;
+    [SerializeField] private List<int> _cardTypeCnt;
 
-    // MapId - то, как видит данное поле игрок (содержит в себе id карточек) (должно приходить от сервера)
-    // CardPrefabs - список всевозможных карточек
-    [SerializeField] private List<GameObject> CardPrefabs;
-    [SerializeField] private List<int> CardTypeCnt;
+    private enum CardId: ushort
+    {
+        Empty = 0,
+        Enemy = 1,
+        Resource = 2,
+        Tree = 3,
+        Spawn = 4
+    }
 
-    public List<List<Card>> Map;
-    private List<List<int>> MapId;
+    private int _numberOfPlayers = 0;
+    private List<List<int>> _playerIJPositions;
+    // Map size in cards.
+    private int _mapCardHeight;
+    private int _mapCardWidth;
+    private float _cardToCardDistance;
+    // 0.05f recommended
+    private float _fluctuatePosition;
+    // 2.0f recommended
+    private float _fluctuateAngle;
 
+    private List<List<int>> _mapId;
+    private List<List<Card>> _mapObject;
     public Action MapGenerated;
 
+    private void Start()
+    {
+        Initialize(2, 10, 20, 0.2f, 0.05f, 2f);
+    }
 
-    void Start() {
+    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle)
+    {
+        _numberOfPlayers = numberOfPlayers;
+        _mapCardWidth = mapCardWidth;
+        _mapCardHeight = mapCardHeight;
+        _cardToCardDistance = cardToCardDistance;
+        _fluctuatePosition = fluctuatePosition;
+        _fluctuateAngle = fluctuateAngle;
+
+        ClearAll();
         SetMapId();
         InstantiateCards();
         MapGenerated?.Invoke();
     }
 
-    bool CorrectCoordinates(int x, int y) {
-        return ((0 <= x) && (x < MapCardHeight) && (0 <= y) && (y < MapCardWidth));
-    }
-
-    void SetMapId() {
-        CardTypeCnt[0] = MapCardHeight * MapCardWidth;
-        for (int i = 1; i < CardTypeCnt.Count; ++i) {
-            CardTypeCnt[0] -= CardTypeCnt[i];
+    private void ClearAll()
+    {
+        if (_playerIJPositions != null)
+        {
+            _playerIJPositions.Clear();
         }
-
-        MapId = new List<List<int>>();
-        for (int i = 0; i < MapCardHeight; ++i) {
-            MapId.Add(new List<int>());
-            for (int j = 0; j < MapCardWidth; ++j) {
-                MapId[i].Add(-1);
-            }
+        if (_mapId != null)
+        {
+            _mapId.Clear();
         }
-
-        int MainUnitPosx = 0;
-        int MainUnitPosy = MapCardWidth / 2;
-
-        int PeacefulRadius = 2;
-        for (int x = MainUnitPosx - PeacefulRadius; x <= MainUnitPosx + PeacefulRadius; ++x) {
-            for (int y = MainUnitPosy - PeacefulRadius; y <= MainUnitPosy + PeacefulRadius; ++y) {
-                if (CorrectCoordinates(x, y)) {
-                    MapId[x][y] = 0;
+        if (_mapObject != null)
+        {
+            for (int i = 0; i < _mapObject.Count; ++i)
+            {
+                for (int j = 0; j < _mapObject[i].Count; ++j)
+                {
+                    Destroy(_mapObject[i][j]);
                 }
             }
-        }
-
-        for (int CardId = 1; CardId < CardTypeCnt.Count; ++CardId) {
-            for (int cnt = 0; cnt < CardTypeCnt[CardId]; ++cnt) {
-                int i = Random.Range(0, MapId.Count);
-                int j = Random.Range(0, MapId[i].Count);
-                while (MapId[i][j] != -1) {
-                    i = Random.Range(0, MapId.Count);
-                    j = Random.Range(0, MapId[i].Count);
-                }
-                MapId[i][j] = CardId;
-            }
-        }
-        for (int i = 0; i < MapCardHeight; ++i) {
-            for (int j = 0; j < MapCardWidth; ++j) {
-                if (MapId[i][j] == -1) {
-                    MapId[i][j] = 0;
-                }
-            }
+            _mapObject.Clear();
         }
     }
 
+    private bool CorrectCoordinates(int i, int j)
+    {
+        return ((0 <= i) && (i < _mapCardHeight) && (0 <= j) && (j < _mapCardWidth));
+    }
 
-    void InstantiateCards() {
-        Map = new List<List<Card>>();
-        for (int i = 0; i < MapCardHeight; ++i) {
-            Map.Add(new List<Card>());
-            for (int j = 0; j < MapCardWidth; ++j) {
-                float MapUnitWidth  = (MapCardWidth  - 1) * CardWidth  + (MapCardWidth  - 1) * CardToCardDistance;
-                float MapUnitHeight = (MapCardHeight - 1) * CardHeight + (MapCardHeight - 1) * CardToCardDistance;
-                float PosX = - MapUnitWidth  / 2 + (MapUnitWidth  / (MapCardWidth  - 1)) * j;
-                float PosY = - MapUnitHeight / 2 + (MapUnitHeight / (MapCardHeight - 1)) * i;
+    private void SetMapId()
+    {
+        _cardTypeCnt[0] = _mapCardHeight * _mapCardWidth;
+        for (int i = 1; i < _cardTypeCnt.Count; ++i)
+        {
+            _cardTypeCnt[0] -= _cardTypeCnt[i];
+        }
 
-                float deltaX = 0;
-                float deltaY = 0;
-                if (fluctuation) {
-                    deltaX = Random.Range(-0.05f, 0.05f);
-                    deltaY = Random.Range(-0.05f, 0.05f);
+        _mapId = new List<List<int>>();
+        for (int i = 0; i < _mapCardHeight; ++i)
+        {
+            _mapId.Add(new List<int>());
+            for (int j = 0; j < _mapCardWidth; ++j)
+            {
+                _mapId[i].Add(-1);
+            }
+        }
+
+        if (_numberOfPlayers == 1)
+        {
+            SetSingleplayerSpawn();
+        }
+        else
+        {
+            SetMultiplayerSpawns();
+        }
+
+        int _peacefulRadius = 2;
+
+        for (int id = 0; id < _playerIJPositions.Count; ++id)
+        {
+            _mapId[_playerIJPositions[id][0]][_playerIJPositions[id][1]] = 4;
+            for (int i = _playerIJPositions[id][0] - _peacefulRadius; i <= _playerIJPositions[id][0] + _peacefulRadius; ++i)
+            {
+                for (int j = _playerIJPositions[id][1] - _peacefulRadius; j <= _playerIJPositions[id][1] + _peacefulRadius; ++j)
+                {
+                    if (CorrectCoordinates(i, j) && _mapId[i][j] == -1)
+                    {
+                        _mapId[i][j] = 0;
+                    }
                 }
+            }
+        }
 
-                GameObject NewCardObject = Instantiate(CardPrefabs[MapId[i][j]], new Vector3(PosX + deltaX, PosY + deltaY, 0f), Quaternion.identity);
-                if (fluctuation) {
-                    NewCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+        for (int cardId = 1; cardId < _cardTypeCnt.Count; ++cardId)
+        {
+            for (int cnt = 0; cnt < _cardTypeCnt[cardId]; ++cnt)
+            {
+                int i = Random.Range(0, _mapCardHeight);
+                int j = Random.Range(0, _mapCardWidth);
+                while (_mapId[i][j] != -1)
+                {
+                    i = Random.Range(0, _mapCardHeight);
+                    j = Random.Range(0, _mapCardWidth);
                 }
-                NewCardObject.transform.parent = gameObject.transform;
+                _mapId[i][j] = cardId;
+            }
+        }
+        for (int i = 0; i < _mapCardHeight; ++i) {
+            for (int j = 0; j < _mapCardWidth; ++j) {
+                if (_mapId[i][j] == -1) {
+                    _mapId[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private void SetSingleplayerSpawn() {
+        _playerIJPositions = new List<List<int>>();
+        int _spawnPosI = Random.Range(0, _mapCardHeight);
+        int _spawnPosJ = Random.Range(0, _mapCardWidth);
+        _playerIJPositions.Add(new List<int>());
+        _playerIJPositions[0].Add(_spawnPosI);
+        _playerIJPositions[0].Add(_spawnPosJ);
+    }
+
+    private void SetMultiplayerSpawns() {
+        _playerIJPositions = new List<List<int>>();
+        int _firstSpawnPosI, _firstSpawnPosJ, _secondSpawnPosI, _secondSpawnPosJ;
+
+        int r;
+        //*magic*
+        r = Random.Range(0, 2);
+        _firstSpawnPosI = Random.Range(0, _mapCardHeight);
+        _firstSpawnPosJ = Random.Range(0, _mapCardWidth);
+        _firstSpawnPosI *= r;
+        _firstSpawnPosJ *= (1 - r);
+        _secondSpawnPosI = _mapCardHeight - _firstSpawnPosI - 1;
+        _secondSpawnPosJ = _mapCardWidth - _firstSpawnPosJ - 1;
+        r = Random.Range(0, 2);
+        if (r == 1)
+        {
+            r = _firstSpawnPosI;
+            _firstSpawnPosI = _secondSpawnPosI;
+            _secondSpawnPosI = r;
+            r = _firstSpawnPosJ;
+            _firstSpawnPosJ = _secondSpawnPosJ;
+            _secondSpawnPosJ = r;
+        }
+
+
+        _playerIJPositions.Add(new List<int>());
+        _playerIJPositions[0].Add(_firstSpawnPosI);
+        _playerIJPositions[0].Add(_firstSpawnPosJ);
+        _playerIJPositions.Add(new List<int>());
+        _playerIJPositions[1].Add(_secondSpawnPosI);
+        _playerIJPositions[1].Add(_secondSpawnPosJ);
+    }
+
+    void InstantiateCards()
+    {
+        _mapObject = new List<List<Card>>();
+        for (int i = 0; i < _mapCardHeight; ++i)
+        {
+            _mapObject.Add(new List<Card>());
+            for (int j = 0; j < _mapCardWidth; ++j)
+            {
+                float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
+                float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
+                float _posI = - _mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * j;
+                float _posJ = - _mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * i;
+
+                float _deltaI = Random.Range(-_fluctuatePosition, _fluctuatePosition);
+                float _deltaJ = Random.Range(-_fluctuatePosition, _fluctuatePosition);
+
+                GameObject _newCardObject = Instantiate(_cardPrefabs[_mapId[i][j]], new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
+                _newCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                _newCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
-                Card NewCard = NewCardObject.GetComponent<Card>();
-                if (NewCard is EnemyCard)
+                Card _newCard = _newCardObject.GetComponent<Card>();
+                if (_newCard is EnemyCard)
                 {
-                    int level = Random.Range(1, 3);
-                    ((EnemyCard)NewCard).Initialize(level, 50,
-                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10*level}, {ResourceType.Money, 100*level}});
+                    int _level = Random.Range(1, 3);
+                    ((EnemyCard)_newCard).Initialize(_level, 50,
+                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10 * _level}, {ResourceType.Money, 100 * _level}});
                 }
-                else if (NewCard is ResourceCard)
+                else if (_newCard is ResourceCard)
                 {
                     var resourceTypes = Enum.GetValues (typeof (ResourceType));
                     var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length));
                     switch (resourceType)
                     {
                         case ResourceType.Food:
-                            NewCardObject.transform.GetChild(4).gameObject.SetActive(true);
-                            ((ResourceCard)NewCard).Initialize(ResourceType.Food, Random.Range(5, 20));
+                            _newCardObject.transform.GetChild(4).gameObject.SetActive(true);
+                            ((ResourceCard)_newCard).Initialize(ResourceType.Food, Random.Range(5, 20));
                             break;
                         case ResourceType.Energy:
-                            NewCardObject.transform.GetChild(3).gameObject.SetActive(true);
-                            ((ResourceCard)NewCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
+                            _newCardObject.transform.GetChild(3).gameObject.SetActive(true);
+                            ((ResourceCard)_newCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
                             break;
                         case ResourceType.Money:
-                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
-                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
+                            ((ResourceCard)_newCard).Initialize(ResourceType.Money, Random.Range(180, 300));
                             break;
                         default:
-                            NewCardObject.transform.GetChild(2).gameObject.SetActive(true);
-                            ((ResourceCard)NewCard).Initialize(ResourceType.Money, Random.Range(180, 300));
+                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
+                            ((ResourceCard)_newCard).Initialize(ResourceType.Money, Random.Range(180, 300));
                             break;
                     }
                 }
-                BodyInformation Body = NewCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
-                Body.id = i * MapCardWidth + j;
-                Map[i].Add(NewCard);
+                BodyInformation _body = _newCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
+                _body.id = i * _mapCardWidth + j;
+                _mapObject[i].Add(_newCard);
             }
         }
     }
 
+    public List<List<Card>> GetMap()
+    {
+        return _mapObject;
+    }
 
-    void Update() {
+    public int GetMapCardWidth()
+    {
+        return _mapCardWidth;
+    }
 
+    public int GetMapCardHeight()
+    {
+        return _mapCardHeight;
     }
 }
