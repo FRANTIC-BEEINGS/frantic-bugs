@@ -38,7 +38,8 @@ public class MapGeneration : MonoBehaviour
     private int _fluctuateSpawn;
 
     private List<List<int>> _mapId;
-    private List<List<Card>> _mapObject;
+    private List<List<Card>> _mapCard;
+    private List<List<GameObject>> _mapObject;
     public Action MapGenerated;
 
     private void Start()
@@ -71,6 +72,10 @@ public class MapGeneration : MonoBehaviour
         if (_mapId != null)
         {
             _mapId.Clear();
+        }
+        if (_mapCard != null)
+        {
+            _mapCard.Clear();
         }
         if (_mapObject != null)
         {
@@ -157,7 +162,8 @@ public class MapGeneration : MonoBehaviour
         }
     }
 
-    private void SetSingleplayerSpawn() {
+    private void SetSingleplayerSpawn()
+    {
         _playerIJPositions = new List<List<int>>();
         int _spawnPosI = Random.Range(0, _mapCardHeight);
         int _spawnPosJ = Random.Range(0, _mapCardWidth);
@@ -166,7 +172,8 @@ public class MapGeneration : MonoBehaviour
         _playerIJPositions[0].Add(_spawnPosJ);
     }
 
-    private void SetMultiplayerSpawns() {
+    private void SetMultiplayerSpawns()
+    {
         _playerIJPositions = new List<List<int>>();
         int _firstSpawnPosI, _firstSpawnPosJ, _secondSpawnPosI, _secondSpawnPosJ;
 
@@ -202,7 +209,7 @@ public class MapGeneration : MonoBehaviour
         _firstSpawnPosJ += _dJ1;
         int _dI2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
         int _dJ2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
-        while (!CorrectCoordinates(_secondSpawnPosI + _dI2, _secondSpawnPosJ + _dJ2))
+        while (!CorrectCoordinates(_secondSpawnPosI + _dI2, _secondSpawnPosJ + _dJ2) && (_secondSpawnPosI + _dI2 != _firstSpawnPosI || _secondSpawnPosJ + _dJ2 != _firstSpawnPosJ))
         {
             _dI2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
             _dJ2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
@@ -220,10 +227,12 @@ public class MapGeneration : MonoBehaviour
 
     void InstantiateCards()
     {
-        _mapObject = new List<List<Card>>();
+        _mapCard = new List<List<Card>>();
+        _mapObject = new List<List<GameObject>>();
         for (int i = 0; i < _mapCardHeight; ++i)
         {
-            _mapObject.Add(new List<Card>());
+            _mapCard.Add(new List<Card>());
+            _mapObject.Add(new List<GameObject>());
             for (int j = 0; j < _mapCardWidth; ++j)
             {
                 float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
@@ -272,14 +281,15 @@ public class MapGeneration : MonoBehaviour
                 }
                 BodyInformation _body = _newCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
                 _body.id = i * _mapCardWidth + j;
-                _mapObject[i].Add(_newCard);
+                _mapCard[i].Add(_newCard);
+                _mapObject[i].Add(_newCardObject);
             }
         }
     }
 
     public List<List<Card>> GetMap()
     {
-        return _mapObject;
+        return _mapCard;
     }
 
     public int GetMapCardWidth()
