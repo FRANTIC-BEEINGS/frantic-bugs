@@ -34,6 +34,8 @@ public class MapGeneration : MonoBehaviour
     private float _fluctuatePosition;
     // 2.0f recommended
     private float _fluctuateAngle;
+    // 3 recommended
+    private int _fluctuateSpawn;
 
     private List<List<int>> _mapId;
     private List<List<Card>> _mapObject;
@@ -41,10 +43,10 @@ public class MapGeneration : MonoBehaviour
 
     private void Start()
     {
-        Initialize(2, 10, 20, 0.2f, 0.05f, 2f);
+        Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3);
     }
 
-    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle)
+    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle, int fluctuateSpawn)
     {
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
@@ -52,6 +54,7 @@ public class MapGeneration : MonoBehaviour
         _cardToCardDistance = cardToCardDistance;
         _fluctuatePosition = fluctuatePosition;
         _fluctuateAngle = fluctuateAngle;
+        _fluctuateSpawn = fluctuateSpawn;
 
         ClearAll();
         SetMapId();
@@ -187,6 +190,25 @@ public class MapGeneration : MonoBehaviour
             _secondSpawnPosJ = r;
         }
 
+
+        int _dI1 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        int _dJ1 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        while (!CorrectCoordinates(_firstSpawnPosI + _dI1, _firstSpawnPosJ + _dJ1))
+        {
+            _dI1 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+            _dJ1 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        }
+        _firstSpawnPosI += _dI1;
+        _firstSpawnPosJ += _dJ1;
+        int _dI2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        int _dJ2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        while (!CorrectCoordinates(_secondSpawnPosI + _dI2, _secondSpawnPosJ + _dJ2))
+        {
+            _dI2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+            _dJ2 = Random.Range(-_fluctuateSpawn, _fluctuateSpawn);
+        }
+        _secondSpawnPosI += _dI2;
+        _secondSpawnPosJ += _dJ2;
 
         _playerIJPositions.Add(new List<int>());
         _playerIJPositions[0].Add(_firstSpawnPosI);
