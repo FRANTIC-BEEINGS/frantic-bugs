@@ -6,12 +6,8 @@ using Cards;
 using ResourceManagment;
 using Random = UnityEngine.Random;
 
-// Change its name
-
-
 public class MapGeneration : MonoBehaviour
 {
-
     [SerializeField] private List<GameObject> _cardPrefabs;
     [SerializeField] private List<int> _cardTypeCnt;
 
@@ -43,6 +39,12 @@ public class MapGeneration : MonoBehaviour
     public Action MapGenerated;
 
     private void Start()
+    {
+        Initialize();
+        //Initialize(Random.Range(0, 3), Random.Range(5, 10), Random.Range(5, 20), Random.Range(0.0f, 0.4f), Random.Range(0.0f, 0.1f), Random.Range(0f, 4f), Random.Range(0, 3));
+    }
+
+    public void Initialize()
     {
         Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3);
     }
@@ -287,6 +289,37 @@ public class MapGeneration : MonoBehaviour
         }
     }
 
+    // For singleplayer
+    public Vector3 GetSpawnCoords()
+    {
+        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
+        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
+        return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[0][1],
+                           -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[0][0],
+                           0f);
+    }
+
+    // For multiplayer
+    public Vector3 GetFirstSpawnCoords()
+    {
+        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
+        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
+        return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[0][1],
+                           -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[0][0],
+                           0f);
+    }
+
+    // For multiplayer
+    public Vector3 GetSecondSpawnCoords()
+    {
+        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
+        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
+        return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[1][1],
+                           -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[1][0],
+                           0f);
+    }
+
+    // It is temporary. We should not use it.
     public List<List<Card>> GetMap()
     {
         return _mapCard;

@@ -50,3 +50,6 @@ MonoBehaviour:
   - {fileID: 5354331520021831468, guid: 8b3bb467c7dd573449cd0fbb3411d26a, type: 3}
   - {fileID: 7334641432997557698, guid: 91cd9cfb9c11a804996f36971f6a93ae, type: 3}
   _cardTypeCnt: 000000000a0000000a000000
+  Singleplayer: {fileID: 6798283078210315212, guid: 2a1910dc3458c85469bc0793b3f9e1b7, type: 3}
+  Multiplayer1: {fileID: 4848890925792734281, guid: 36a68702ed2cdce46b8e5a750f9dc8f3, type: 3}
+  Multiplayer2: {fileID: 3165615213875008103, guid: fa177b425b4187044ad6c687e9eb2028, type: 3}
