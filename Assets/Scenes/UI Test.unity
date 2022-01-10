@@ -400,6 +400,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &849146303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 849146304}
+  m_Layer: 0
+  m_Name: Sounds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &849146304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849146303}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1187341979}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &864342272 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5921477908760479034, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
@@ -411,6 +441,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fbd8c5eb82344b4781a3f408a7c12bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1187341977 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2010367550247793987, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+  m_PrefabInstance: {fileID: 2010367550661148401}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1187341979 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2010367550247793989, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+  m_PrefabInstance: {fileID: 2010367550661148401}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1187341980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187341977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd11881820ca9204bb93ad88541038b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _sounds: {fileID: 849146303}
+  _music: {fileID: 0}
+  _goldSound: {fileID: 8300000, guid: 0520da267d1ad8c4eaf816362b1a7bc3, type: 3}
 --- !u!114 &1207787628 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 924453399885772628, guid: a02af1d61d542e247b0734e391fa63e5, type: 3}
@@ -675,7 +730,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
   m_PrefabInstance: {fileID: 2010367550661148401}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1187341977}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6ca178d33b3244e22a297284ef3be33a, type: 3}
