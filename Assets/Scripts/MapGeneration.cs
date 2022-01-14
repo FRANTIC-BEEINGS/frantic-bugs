@@ -524,13 +524,13 @@ public class MapGeneration : MonoBehaviour
         return _mapCardHeight;
     }
 
-    public int GetMapUnityWidth()
+    public float GetMapUnityWidth()
     {
-        return _mapCardWidth;
+        return _mapUnityWidth;
     }
 
-    public int GetMapUnityHeight()
+    public float GetMapUnityHeight()
     {
-        return _mapCardHeight;
+        return _mapUnityHeight;
     }
 }

@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955748, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955748, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_LocalRotation.w
@@ -278,6 +278,18 @@ PrefabInstance:
     - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: minDistance
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: targetObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: projectionObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: cursorCameraMoveEnabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
@@ -751,7 +763,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: TurnDuration
-      value: 20
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: uiController
