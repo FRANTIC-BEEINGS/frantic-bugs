@@ -114,13 +114,13 @@ public class Unit : MonoBehaviour
             endPosition = cards[i].gameObject.transform.position; // find destination position
             resourceManager.AddResource(ResourceType.Energy, -moveEnergy);
             cards[i - 1].LeaveCard();
-            
+
             visionController.OpenCardsInUnitVision(vision, cards[i], cards[i - 1]);
 
             // temporary crutch
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             //BI.SetHighlight(false);
-            
+
             yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
 
             //if card is enemy break movement
