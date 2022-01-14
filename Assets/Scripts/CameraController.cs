@@ -20,14 +20,14 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float bordersWidth;
 
     //
-    [SerializeField] private float minZPoint;
-    [SerializeField] private float maxZPoint;
+    [SerializeField] private float minDistance;
+    [SerializeField] private float maxDistance;
 
     // extreme points that camera can see
-    [SerializeField] private float minXPoint;
-    [SerializeField] private float maxXPoint;
-    [SerializeField] private float minYPoint;
-    [SerializeField] private float maxYPoint;
+    private float minXPoint;
+    private float maxXPoint;
+    private float minYPoint;
+    private float maxYPoint;
 
     // switchers
     [SerializeField] public bool zoomEnabled;
@@ -36,12 +36,26 @@ public class CameraController : MonoBehaviour
     [SerializeField] public bool cursorCameraMoveEnabled;
 
 
+    // coords.z must be 0
+    public void SetViewAtCoords(Vector3 coords)
+    {
+        UpdateCoordinates();
+        Vector3 projection = new Vector3(projectionX, projectionY, projectionZ);
+        transform.position = transform.position + coords - projection;
+    }
+
+    public void SetViewBorders(float mapUnityWidth, float mapUnityHeight) {
+        minXPoint = -mapUnityWidth + Constants.CARD_WIDTH;
+        maxXPoint = -minXPoint;
+        minYPoint = -mapUnityHeight + Constants.CARD_HEIGHT;
+        maxYPoint = -minYPoint;
+    }
 
     void Awake()
     {
         canMoveCamera = true;
         camera = GetComponent<Camera>();
-        angle = (this.transform.rotation.x / 360) * Math.PI;
+        angle = this.transform.rotation.x;//(this.transform.rotation.x / 360.0) * Math.PI;
     }
 
     void Update()
@@ -75,8 +89,8 @@ public class CameraController : MonoBehaviour
             else
                 direction = transform.forward * scroll * zoomSpeed * Time.deltaTime;
 
-            if ((direction[2] > 0 && this.transform.position.z < maxZPoint) ||
-                (direction[2] < 0 && this.transform.position.z > minZPoint))
+            if ((direction[2] > 0 && this.transform.position.z < -minDistance) ||
+                (direction[2] < 0 && this.transform.position.z > -maxDistance))
             {
                 transform.position += direction;
             }
@@ -121,8 +135,8 @@ public class CameraController : MonoBehaviour
         {
             direction[1] = 0;
         }
-        if  ((direction[2] < 0 && this.transform.position.z <= minZPoint) ||
-             (direction[2] > 0 && this.transform.position.z >= maxZPoint))
+        if  ((direction[2] < 0 && this.transform.position.z <= minDistance) ||
+             (direction[2] > 0 && this.transform.position.z >= maxDistance))
         {
             direction[2] = 0;
         }

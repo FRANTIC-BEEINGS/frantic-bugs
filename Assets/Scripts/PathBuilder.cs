@@ -166,7 +166,7 @@ public class PathBuilder : MonoBehaviour
                     j2 += dj;
                 }
             }
-            // IT SHOULD BE REWRITEN
+            
             Middle = Map.GetMap()[i2][j2].gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
         }
     }

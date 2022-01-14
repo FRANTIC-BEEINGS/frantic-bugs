@@ -15,16 +15,21 @@ public class MapGeneration : MonoBehaviour
     {
         Empty = 0,
         Enemy = 1,
+        // 11 - 1 lvl enemy
+        // 21 - 2 lvl enemy
+        // 31 - 3 lvl enemy
         Resource = 2,
         Tree = 3,
         Spawn = 4
     }
 
-    private int _numberOfPlayers = 0;
+    private int _numberOfPlayers;
     private List<List<int>> _playerIJPositions;
     // Map size in cards.
-    private int _mapCardHeight;
     private int _mapCardWidth;
+    private int _mapCardHeight;
+    private float _mapUnityWidth;
+    private float _mapUnityHeight;
     private float _cardToCardDistance;
     // 0.05f recommended
     private float _fluctuatePosition;
@@ -32,6 +37,12 @@ public class MapGeneration : MonoBehaviour
     private float _fluctuateAngle;
     // 3 recommended
     private int _fluctuateSpawn;
+    // 3 recommended
+    private int _peacefulRadius;
+
+    private List<int> _additionalContentPercentage;
+
+    private List<int> _numberOfEnemy;
 
     private List<List<int>> _mapId;
     private List<List<Card>> _mapCard;
@@ -46,10 +57,10 @@ public class MapGeneration : MonoBehaviour
 
     public void Initialize()
     {
-        Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3);
+        Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3, 3);
     }
 
-    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle, int fluctuateSpawn)
+    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle, int fluctuateSpawn, int peacefulRadius)
     {
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
@@ -58,11 +69,36 @@ public class MapGeneration : MonoBehaviour
         _fluctuatePosition = fluctuatePosition;
         _fluctuateAngle = fluctuateAngle;
         _fluctuateSpawn = fluctuateSpawn;
+        _peacefulRadius = peacefulRadius;
+
+        _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
+        _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
 
         ClearAll();
+        SetAdditionalContentPercentage();
+        SetNumberOfEachEnemy();
         SetMapId();
         InstantiateCards();
         MapGenerated?.Invoke();
+    }
+
+    private void SetAdditionalContentPercentage()
+    {
+        _additionalContentPercentage = new List<int>();
+        _additionalContentPercentage.Add(0);
+        _additionalContentPercentage.Add(10);
+        _additionalContentPercentage.Add(60);
+        _additionalContentPercentage.Add(30);
+        _additionalContentPercentage.Add(0);
+    }
+
+    private void SetNumberOfEachEnemy()
+    {
+        _numberOfEnemy = new List<int>();
+        _numberOfEnemy.Add(0);
+        _numberOfEnemy.Add(2 * 2);
+        _numberOfEnemy.Add(2 * 2);
+        _numberOfEnemy.Add(2 * 2);
     }
 
     private void ClearAll()
@@ -70,6 +106,14 @@ public class MapGeneration : MonoBehaviour
         if (_playerIJPositions != null)
         {
             _playerIJPositions.Clear();
+        }
+        if (_additionalContentPercentage != null)
+        {
+            _additionalContentPercentage.Clear();
+        }
+        if (_numberOfEnemy != null)
+        {
+            _numberOfEnemy.Clear();
         }
         if (_mapId != null)
         {
@@ -124,8 +168,6 @@ public class MapGeneration : MonoBehaviour
             SetMultiplayerSpawns();
         }
 
-        int _peacefulRadius = 2;
-
         for (int id = 0; id < _playerIJPositions.Count; ++id)
         {
             _mapId[_playerIJPositions[id][0]][_playerIJPositions[id][1]] = 4;
@@ -133,7 +175,7 @@ public class MapGeneration : MonoBehaviour
             {
                 for (int j = _playerIJPositions[id][1] - _peacefulRadius; j <= _playerIJPositions[id][1] + _peacefulRadius; ++j)
                 {
-                    if (CorrectCoordinates(i, j) && _mapId[i][j] == -1)
+                    if (CorrectCoordinates(i, j) && _mapId[i][j] == -1 && Math.Abs(_playerIJPositions[id][0] - i) + Math.Abs(_playerIJPositions[id][1] - j) <= _peacefulRadius)
                     {
                         _mapId[i][j] = 0;
                     }
@@ -141,25 +183,151 @@ public class MapGeneration : MonoBehaviour
             }
         }
 
-        for (int cardId = 1; cardId < _cardTypeCnt.Count; ++cardId)
+        if (_numberOfPlayers == 1)
         {
-            for (int cnt = 0; cnt < _cardTypeCnt[cardId]; ++cnt)
+            SetSingleplayerEnemies();
+        }
+        if (_numberOfPlayers == 2)
+        {
+            SetMultiplayerEnemies();
+        }
+
+        int _additionalContent = _mapCardWidth * _mapCardHeight / 6;
+        for (int _try = 0; _try < _additionalContent; ++_try)
+        {
+            int i = Random.Range(0, _mapCardHeight);
+            int j = Random.Range(0, _mapCardWidth);
+            if (CorrectCoordinates(i, j) && _mapId[i][j] == -1)
             {
-                int i = Random.Range(0, _mapCardHeight);
-                int j = Random.Range(0, _mapCardWidth);
-                while (_mapId[i][j] != -1)
+                int _cardType = Random.Range(0, 101);
+                for (int percentage = 0; percentage < _additionalContentPercentage.Count; ++percentage)
                 {
-                    i = Random.Range(0, _mapCardHeight);
-                    j = Random.Range(0, _mapCardWidth);
+                    if (_cardType <= _additionalContentPercentage[percentage])
+                    {
+                        _cardType = percentage;
+                        break;
+                    }
+                    _cardType -= _additionalContentPercentage[percentage];
                 }
-                _mapId[i][j] = cardId;
+                if (_cardType == 1)
+                {
+                    _cardType += Random.Range(1, 4) * 10;
+                }
+                _mapId[i][j] = _cardType;
             }
         }
+
         for (int i = 0; i < _mapCardHeight; ++i) {
             for (int j = 0; j < _mapCardWidth; ++j) {
                 if (_mapId[i][j] == -1) {
                     _mapId[i][j] = 0;
                 }
+            }
+        }
+    }
+
+    private void SetSingleplayerEnemies()
+    {
+        int _amountOfEnemies = 0;
+        for (int i = 0; i < _numberOfEnemy.Count; ++i)
+        {
+            _amountOfEnemies += _numberOfEnemy[i];
+        }
+        List<Tuple<int, Tuple<int, int>>> _enemyInformation = new List<Tuple<int, Tuple<int, int>>>();
+        for (int enemy = 0; enemy < _amountOfEnemies; ++enemy)
+        {
+            int i = Random.Range(0, _mapCardHeight);
+            int j = Random.Range(0, _mapCardWidth);
+            while (_mapId[i][j] != -1)
+            {
+                i = Random.Range(0, _mapCardHeight);
+                j = Random.Range(0, _mapCardWidth);
+            }
+            _mapId[i][j] = 1;
+            int _distance = Math.Abs(_playerIJPositions[0][0] - i) + Math.Abs(_playerIJPositions[0][1] - j);
+            _enemyInformation.Add(new Tuple<int, Tuple<int, int>>(_distance, new Tuple<int, int>(i, j)));
+        }
+        _enemyInformation.Sort();
+        int ind = 0;
+        for (int _level = 0; _level < _numberOfEnemy.Count; ++_level)
+        {
+            for (int i = 0; i < _numberOfEnemy[_level]; ++i)
+            {
+                _mapId[_enemyInformation[ind].Item2.Item1][_enemyInformation[ind].Item2.Item2] = _level * 10 + 1;
+                ind++;
+            }
+        }
+    }
+
+    private void SetMultiplayerEnemies()
+    {
+        int _amountOfEnemies = 0;
+        for (int i = 0; i < _numberOfEnemy.Count; ++i)
+        {
+            _amountOfEnemies += _numberOfEnemy[i];
+        }
+        List<Tuple<Tuple<int, int>, Tuple<int, int>>> _enemyInformation = new List<Tuple<Tuple<int, int>, Tuple<int, int>>>();
+        for (int enemy = 0; enemy < _amountOfEnemies; ++enemy)
+        {
+            int i1 = Random.Range(0, _mapCardHeight);
+            int j1 = Random.Range(0, _mapCardWidth);
+            int i2, j2;
+            while (_mapId[i1][j1] != -1)
+            {
+                i1 = Random.Range(0, _mapCardHeight);
+                j1 = Random.Range(0, _mapCardWidth);
+            }
+
+            int _distance1 = Math.Abs(_playerIJPositions[0][0] - i1) + Math.Abs(_playerIJPositions[0][1] - j1);
+            int _distance2 = Math.Abs(_playerIJPositions[1][0] - i1) + Math.Abs(_playerIJPositions[1][1] - j1);
+
+            int p1i, p1j, p2i, p2j, _distance;
+            if (_distance1 < _distance2)
+            {
+                _distance = _distance1;
+                p1i = _playerIJPositions[0][0];
+                p1j = _playerIJPositions[0][1];
+                p2i = _playerIJPositions[1][0];
+                p2j = _playerIJPositions[1][1];
+            }
+            else
+            {
+                _distance = _distance2;
+                p1i = _playerIJPositions[1][0];
+                p1j = _playerIJPositions[1][1];
+                p2i = _playerIJPositions[0][0];
+                p2j = _playerIJPositions[0][1];
+            }
+            // i1, j1 -> p1i, p1j   i2, j2 -> p2i, p2j;
+
+            i2 = i1;
+            j2 = j1;
+            int d2i, d2j;
+            while ((i1 == i2 && j1 == j2) || !CorrectCoordinates(i2, j2) || _mapId[i2][j2] != -1)
+            {
+                d2i = Random.Range(-_distance, _distance + 1);
+                i2 = p2i + d2i;
+                d2j = _distance - Math.Abs(d2i);
+                if (Random.Range(0, 2) == 1)
+                {
+                    d2j *= -1;
+                }
+                j2 = p2j + d2j;
+            }
+            _enemyInformation.Add(new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(_distance, enemy * 2 + 1), new Tuple<int, int>(i1, j1)));
+            _enemyInformation.Add(new Tuple<Tuple<int, int>, Tuple<int, int>>(new Tuple<int, int>(_distance, enemy * 2 + 2), new Tuple<int, int>(i2, j2)));
+
+            _mapId[i1][j1] = 1;
+            _mapId[i2][j2] = 1;
+        }
+        _enemyInformation.Sort();
+        int ind = 0;
+        for (int _level = 0; _level < _numberOfEnemy.Count; ++_level)
+        {
+            for (int i = 0; i < _numberOfEnemy[_level] * 2; ++i)
+            {
+                _mapId[_enemyInformation[ind].Item2.Item1][_enemyInformation[ind].Item2.Item2] = _level * 10 + 1;
+                ind++;
             }
         }
     }
@@ -237,15 +405,13 @@ public class MapGeneration : MonoBehaviour
             _mapObject.Add(new List<GameObject>());
             for (int j = 0; j < _mapCardWidth; ++j)
             {
-                float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
-                float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
                 float _posI = - _mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * j;
                 float _posJ = - _mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * i;
 
                 float _deltaI = Random.Range(-_fluctuatePosition, _fluctuatePosition);
                 float _deltaJ = Random.Range(-_fluctuatePosition, _fluctuatePosition);
 
-                GameObject _newCardObject = Instantiate(_cardPrefabs[_mapId[i][j]], new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
+                GameObject _newCardObject = Instantiate(_cardPrefabs[_mapId[i][j] % 10], new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
                 _newCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
                 _newCardObject.transform.parent = gameObject.transform;
 
@@ -253,7 +419,21 @@ public class MapGeneration : MonoBehaviour
                 Card _newCard = _newCardObject.GetComponent<Card>();
                 if (_newCard is EnemyCard)
                 {
-                    int _level = Random.Range(1, 3);
+                    int _level = _mapId[i][j] / 10;
+
+                    switch (_level)
+                    {
+                        case 1:
+                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
+                            break;
+                        case 2:
+                            _newCardObject.transform.GetChild(3).gameObject.SetActive(true);
+                            break;
+                        case 3:
+                            _newCardObject.transform.GetChild(4).gameObject.SetActive(true);
+                            break;
+                    }
+
                     ((EnemyCard)_newCard).Initialize(_level, 50,
                         new Dictionary<ResourceType, int>() {{ResourceType.Food, 10 * _level}, {ResourceType.Money, 100 * _level}});
                 }
@@ -292,31 +472,40 @@ public class MapGeneration : MonoBehaviour
     // For singleplayer
     public Vector3 GetSpawnCoords()
     {
-        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
-        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
         return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[0][1],
                            -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[0][0],
                            0f);
+    }
+
+    public Card GetSpawnCard()
+    {
+        return _mapCard[_playerIJPositions[0][0]][_playerIJPositions[0][1]];
     }
 
     // For multiplayer
     public Vector3 GetFirstSpawnCoords()
     {
-        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
-        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
         return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[0][1],
                            -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[0][0],
                            0f);
     }
 
+    public Card GetFirstSpawnCard()
+    {
+        return _mapCard[_playerIJPositions[0][0]][_playerIJPositions[0][1]];
+    }
+
     // For multiplayer
     public Vector3 GetSecondSpawnCoords()
     {
-        float _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
-        float _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
         return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[1][1],
                            -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[1][0],
                            0f);
+    }
+
+    public Card GetSecondSpawnCard()
+    {
+        return _mapCard[_playerIJPositions[1][0]][_playerIJPositions[1][1]];
     }
 
     // It is temporary. We should not use it.
@@ -331,6 +520,16 @@ public class MapGeneration : MonoBehaviour
     }
 
     public int GetMapCardHeight()
+    {
+        return _mapCardHeight;
+    }
+
+    public int GetMapUnityWidth()
+    {
+        return _mapCardWidth;
+    }
+
+    public int GetMapUnityHeight()
     {
         return _mapCardHeight;
     }

@@ -22,6 +22,9 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int TurnDuration;
 	[SerializeField] public int TurnEnergy;
 
+	[SerializeField] GameObject camera;
+	CameraController cameraController;
+
 	[SerializeField] private GameObject mapPrefab;
 	[SerializeField] private GameObject pathBuilderPrefab;
 	[SerializeField] private GameObject unitPrefab;
@@ -61,12 +64,19 @@ public class GameController : NetworkBehaviour
 			uiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
+
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
 
 	private void StartAfterMapGenerated()
 	{
+		cameraController = camera.GetComponent<CameraController>();
+		cameraController.SetViewAtCoords(map.GetSpawnCoords());
+		//cameraController.SetViewAtCoords(map.GetFirstSpawnCoords());
+		//cameraController.SetViewAtCoords(map.GetSecondSpawnCoords());
+		cameraController.SetViewBorders(map.GetMapUnityWidth(), map.GetMapUnityHeight());
+
 		currentTurnPlayer = -1;
 		_gameTimer.StartTimer(GameDuration);
 		SetNetworkPlayers();
@@ -104,22 +114,21 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
-			// IT SHOULD BE REWRITEN
 			Card card = map.GetMap()[0][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
+			  new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			unit.OnDeath += Death;
 			unit.OnLevelChange += ChangeLevelUI;
 			UnitCardInteractionController.StepOnCard(unit, card);
+
 		}
 
 		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
 		{
-			// IT SHOULD BE REWRITEN
 			Card card = map.GetMap()[map.GetMapCardHeight()-1][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
