@@ -50,7 +50,7 @@ namespace UI
             if (SceneManager.GetActiveScene().name == "Lobby")
                 AddMessage("Connected");
             if (SceneManager.GetActiveScene().name == "Game")
-                AddMessage("Joined room " + PhotonNetwork.CurrentRoom);
+                AddMessage("Joined room " + PhotonNetwork.CurrentRoom.Name);
         }
 
         #endregion

@@ -1,3 +1,4 @@
+using System;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine;
@@ -13,8 +14,13 @@ namespace UI
         private bool _roomIsPrivate;
         public const int MaxPlayerCount = 2;
         private readonly RoomOptions _publicRoomOptions = new RoomOptions() {MaxPlayers = MaxPlayerCount, IsVisible = true};
-        private readonly RoomOptions _privateRoomOptions = new RoomOptions() {MaxPlayers = MaxPlayerCount, IsVisible = true};
-    
+        private readonly RoomOptions _privateRoomOptions = new RoomOptions() {MaxPlayers = MaxPlayerCount, IsVisible = false};
+
+        private void Start()
+        {
+            PhotonNetwork.JoinLobby();
+        }
+
         public void AddMessageLog(MessageLogUI messageLog)
         {
             _messageLog = messageLog;
@@ -38,9 +44,9 @@ namespace UI
         {
             PhotonNetwork.CreateRoom(roomName.text, _roomIsPrivate ? _privateRoomOptions : _publicRoomOptions);
         }
-        public void SetRoomPrivacy()
+        public void SetRoomPrivacy(Toggle toggle)
         {
-            _roomIsPrivate = GetComponent<Toggle>().isOn;
+            _roomIsPrivate = toggle.isOn;
         }
 
         public void FindRoomByName(Text roomName)
@@ -75,9 +81,7 @@ namespace UI
 
         public override void OnJoinedRoom()
         {
-            _messageLog.AddMessage("Joined " + PhotonNetwork.CurrentRoom.Name);
-            PhotonNetwork.LeaveRoom();
-            //SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Game");
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)

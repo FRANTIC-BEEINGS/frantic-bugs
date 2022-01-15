@@ -1,6 +1,4 @@
-﻿using UnityEditorInternal.Profiling.Memory.Experimental;
-
-namespace UI
+﻿namespace UI
 {
     public interface UIController
     {
