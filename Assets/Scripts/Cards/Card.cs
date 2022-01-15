@@ -7,6 +7,10 @@ namespace Cards
 {
     public class Card : MonoBehaviour
     {
+        //[SerializeField] private AnimationCurve RotationCurve;
+        private Quaternion _openCard = Quaternion.Euler(new Vector3(0, 0, 0));
+        private Quaternion _closedCard = Quaternion.Euler(new Vector3(0, 180f, 0));
+
         private bool _isCaptured;
         private bool _isVisible = true;
         [SerializeField] protected Sprite FaceSprite;
@@ -15,7 +19,7 @@ namespace Cards
         private Coroutine _rotateCard;
         private float _rotationTime = 0.5f;
         public bool isTreeVisible;  //whether tree gives vision on the card
-        
+
         public Unit GetCurrentUnit()
         {
             return _currentUnit;
@@ -77,7 +81,14 @@ namespace Cards
         private void UpdateCardView(bool visibility)
         {
             if (visibility == _isVisible) return;
-            _rotateCard = StartCoroutine(RotateCardY(Quaternion.Euler(transform.eulerAngles + 180f * Vector3.up), _rotationTime));
+            if (visibility == true)
+            {
+                _rotateCard = StartCoroutine(RotateCardY(_openCard, _rotationTime));
+            }
+            else
+            {
+                _rotateCard = StartCoroutine(RotateCardY(_closedCard, _rotationTime));
+            }
             _isVisible = visibility;
         }
 

@@ -383,7 +383,7 @@ MonoBehaviour:
   decreaseCoef: 0.8
   vision: 2
   sprite: {fileID: 0}
-  movingTime: 0.5
+  movingTime: 0.3
   Allegiance: 1
   experienceLimit: 50
 --- !u!114 &3267859211188247002
