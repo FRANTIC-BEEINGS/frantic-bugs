@@ -49,7 +49,7 @@ namespace UI
             GameObject.FindWithTag("UIController").GetComponent<UIController>().AddMessageLog(this);
             if (SceneManager.GetActiveScene().name == "Lobby")
                 AddMessage("Connected");
-            if (SceneManager.GetActiveScene().name == "Game")
+            if (SceneManager.GetActiveScene().name == "GameRoom")
                 AddMessage("Joined room " + PhotonNetwork.CurrentRoom.Name);
         }
 

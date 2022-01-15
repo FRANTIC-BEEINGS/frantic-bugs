@@ -33,7 +33,13 @@ public class MapGeneration : MonoBehaviour  {
 
     public Action MapGenerated;
 
-
+    public void StartMapGeneration()
+    {
+        SetMapId();
+        InstantiateCards();
+        MapGenerated?.Invoke();
+    }
+    
     void Start() {
         SetMapId();
         InstantiateCards();

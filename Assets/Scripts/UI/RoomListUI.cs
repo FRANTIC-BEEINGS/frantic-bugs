@@ -14,7 +14,6 @@ namespace UI
 
         private void Awake()
         {
-            Debug.Log(PhotonNetwork.CountOfRooms);
             _roomItemsList = new List<RoomItemUI>();
         }
 

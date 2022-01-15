@@ -37,7 +37,8 @@ namespace UI
 
         public void StartSoloGame()
         {
-            //todo
+            GameSettings.Multiplayer = false;
+            SceneManager.LoadScene("Game");
         }
 
         public void CreateRoom(Text roomName)
@@ -81,7 +82,7 @@ namespace UI
 
         public override void OnJoinedRoom()
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("GameRoom");
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
