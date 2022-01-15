@@ -11,7 +11,7 @@ public class VisionController : MonoBehaviour
         public void Initialize(MapGeneration mapGeneration)
         {
                 m = mapGeneration;
-                map = m.Map;
+                map = m.GetMap();
         }
 
         //first card - seed
@@ -34,7 +34,7 @@ public class VisionController : MonoBehaviour
                                 card.IsVisible = true;
                         }
                 }
-                
+
                 // close cards in previous vision and not in new vision
                 foreach (Card card in closeCards)
                 {
@@ -92,7 +92,7 @@ public class VisionController : MonoBehaviour
                 for (int i = 0; i < map.Count; i++)
                 {
                         y = map[i].IndexOf(firstCard);
-                        
+
                         if (y > -1)
                         {
                                 x = i;
