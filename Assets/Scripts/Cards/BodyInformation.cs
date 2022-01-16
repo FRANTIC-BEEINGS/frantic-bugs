@@ -6,6 +6,20 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class BodyInformation : MonoBehaviour {
+
+    [SerializeField] private AnimationCurve RotationCurve;
+    [SerializeField] private AnimationCurve JumpCurve;
+
+    public AnimationCurve GetRotationCurve()
+    {
+        return RotationCurve;
+    }
+
+    public AnimationCurve GetJumpCurve()
+    {
+        return JumpCurve;
+    }
+
     public int id;
     public GameObject Highlight;
     public GameObject Selection;

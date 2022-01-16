@@ -87,8 +87,8 @@ public class MapGeneration : MonoBehaviour
         _additionalContentPercentage = new List<int>();
         _additionalContentPercentage.Add(0);
         _additionalContentPercentage.Add(10);
-        _additionalContentPercentage.Add(60);
-        _additionalContentPercentage.Add(30);
+        _additionalContentPercentage.Add(90);
+        _additionalContentPercentage.Add(0); //30
         _additionalContentPercentage.Add(0);
     }
 
