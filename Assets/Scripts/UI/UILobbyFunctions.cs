@@ -20,7 +20,12 @@ namespace UI
         {
             _messageLog = messageLog;
         }
-        
+
+        private void Awake()
+        {
+            PhotonNetwork.Reconnect();
+        }
+
         #region ButtonOnClickFunctions
 
         public void SwitchActivePanel(GameObject newActivePanel)
@@ -83,6 +88,12 @@ namespace UI
         public override void OnJoinRoomFailed(short returnCode, string message)
         {
             _messageLog.AddMessage("Could not join");
+        }
+
+        public override void OnConnectedToMaster()
+        {
+            PhotonNetwork.JoinLobby();
+            Debug.Log(this);
         }
 
         #endregion
