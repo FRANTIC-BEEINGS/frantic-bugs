@@ -457,7 +457,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _jumpHeight: 1
+  _jumpHeight: 0.5
   moveEnergy: 5
   captureEnergy: 10
   forceCoef: 1

@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour
 {
     [SerializeField] private AnimationCurve MoveCurve;
     [SerializeField] private AnimationCurve JumpCurve;
-    [SerializeField] private float _jumpHeight = 1f;
+    [SerializeField] private float _jumpHeight;
 
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
