@@ -33,7 +33,6 @@ namespace Cards
         protected ulong CaptorId;
         private Unit _currentUnit;
         private Coroutine _rotateCard;
-        private float _rotationTime = 0.5f;
         public bool isTreeVisible;  //whether tree gives vision on the card
 
         public Unit GetCurrentUnit()
@@ -99,16 +98,16 @@ namespace Cards
             if (visibility == _isVisible) return;
             if (visibility == true)
             {
-                _rotateCard = StartCoroutine(RotateCardY(_openCard, _upPosition, Constants.STEP_DURATION));
+                _rotateCard = StartCoroutine(RotateCardY(_openCard, Constants.STEP_DURATION));
             }
             else
             {
-                _rotateCard = StartCoroutine(RotateCardY(_closedCard, _upPosition, Constants.STEP_DURATION));
+                _rotateCard = StartCoroutine(RotateCardY(_closedCard, Constants.STEP_DURATION));
             }
             _isVisible = visibility;
         }
 
-        IEnumerator RotateCardY(Quaternion endRotationValue, Vector3 endJumpValue, float duration)
+        IEnumerator RotateCardY(Quaternion endRotationValue, float duration)
         {
             float time = 0;
             Quaternion startRotationValue = transform.rotation;
@@ -117,7 +116,7 @@ namespace Cards
             while (time < duration)
             {
                 transform.rotation = Quaternion.Lerp(startRotationValue, endRotationValue, RotationCurve.Evaluate(time / duration));
-                transform.position = Vector3.Lerp(startJumpValue, endJumpValue, JumpCurve.Evaluate(time / duration));
+                transform.position = Vector3.Lerp(startJumpValue, _upPosition, JumpCurve.Evaluate(time / duration));
                 time += Time.deltaTime;
                 yield return null;
             }

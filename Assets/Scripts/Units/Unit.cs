@@ -8,6 +8,10 @@ using UnityEngine.Serialization;
 
 public class Unit : MonoBehaviour
 {
+    [SerializeField] private AnimationCurve MoveCurve;
+    [SerializeField] private AnimationCurve JumpCurve;
+    [SerializeField] private float _jumpHeight = 1f;
+
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
     [SerializeField] double forceCoef;
@@ -19,7 +23,6 @@ public class Unit : MonoBehaviour
     [SerializeField] int vision;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
-    [SerializeField] private float movingTime = 0.5f;
     private bool isStopMovement = false;
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience = 0;
@@ -121,7 +124,7 @@ public class Unit : MonoBehaviour
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             //BI.SetHighlight(false);
 
-            yield return StartCoroutine(MoveTo(endPosition, movingTime)); //start one movement
+            yield return StartCoroutine(MoveTo(endPosition, Constants.STEP_DURATION)); //start one movement
 
             //if card is enemy break movement
             if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated())
@@ -137,20 +140,29 @@ public class Unit : MonoBehaviour
         FinishedMovement?.Invoke();
     }
 
-    IEnumerator MoveTo(Vector3 position, float time)
+    IEnumerator MoveTo(Vector3 endPosition, float duration)
     {
-        Vector3 start = transform.position;
-        Vector3 end = new Vector3(position.x, position.y, start.z);
-        float t = 0;
+        float time = 0;
+        Vector3 currentPosition = transform.position;
+        Vector3 startXYPosition = transform.position;
+        startXYPosition.z = 0;
+        Vector3 startZPosition = transform.position;
+        startZPosition.x = 0;
+        startZPosition.y = 0;
+        Vector3 endZPosition = startZPosition;
+        endZPosition.z -= _jumpHeight;
 
         //in every moment move to destination
-        while(t < 1)
+        while(time < duration)
         {
+            currentPosition = Vector3.Lerp(startXYPosition, endPosition, MoveCurve.Evaluate(time / duration));
+            currentPosition += Vector3.Lerp(startZPosition, endZPosition, JumpCurve.Evaluate(time / duration));
+            transform.position = currentPosition;
+            time += Time.deltaTime;
             yield return null;
-            t += Time.deltaTime / time;
-            transform.position = Vector3.Lerp(start, end, t);
+            transform.position = currentPosition;
         }
-        transform.position = end;
+        transform.position = endPosition;
     }
 
     public void Death()
