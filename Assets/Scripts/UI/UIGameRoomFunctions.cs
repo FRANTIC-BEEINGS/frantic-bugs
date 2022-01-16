@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -15,6 +16,11 @@ namespace UI
         public void AddMessageLog(MessageLogUI messageLog)
         {
             _messageLog = messageLog;
+        }
+
+        private void Awake()
+        {
+            UpdatePlayerList(); //called here instead of onJoined due to it being called prior to the script loading
         }
 
         private void UpdatePlayerList()
@@ -52,16 +58,6 @@ namespace UI
         {
             UpdatePlayerList();
             SceneManager.LoadScene("Lobby");
-        }
-
-        public override void OnJoinedRoom()
-        {
-            UpdatePlayerList();
-        }
-
-        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
-        {
-            
         }
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)

@@ -16,11 +16,6 @@ namespace UI
         private readonly RoomOptions _publicRoomOptions = new RoomOptions() {MaxPlayers = MaxPlayerCount, IsVisible = true};
         private readonly RoomOptions _privateRoomOptions = new RoomOptions() {MaxPlayers = MaxPlayerCount, IsVisible = false};
 
-        private void Start()
-        {
-            PhotonNetwork.JoinLobby();
-        }
-
         public void AddMessageLog(MessageLogUI messageLog)
         {
             _messageLog = messageLog;

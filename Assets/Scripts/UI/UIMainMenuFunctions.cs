@@ -50,6 +50,7 @@ namespace UI
 
         public override void OnConnectedToMaster()
         {
+            PhotonNetwork.JoinLobby();
             SceneManager.LoadScene("Lobby");
         }
 
