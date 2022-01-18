@@ -38,7 +38,7 @@ namespace UI
         public void StartSoloGame()
         {
             GameSettings.Multiplayer = false;
-            SceneManager.LoadScene("Game");
+            PhotonNetwork.CreateRoom(null, _privateRoomOptions);
         }
 
         public void CreateRoom(Text roomName)
@@ -82,7 +82,10 @@ namespace UI
 
         public override void OnJoinedRoom()
         {
-            SceneManager.LoadScene("GameRoom");
+            if (GameSettings.Multiplayer)
+                SceneManager.LoadScene("GameRoom");
+            else
+                SceneManager.LoadScene("Game");
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -93,7 +96,6 @@ namespace UI
         public override void OnConnectedToMaster()
         {
             PhotonNetwork.JoinLobby();
-            Debug.Log(this);
         }
 
         #endregion

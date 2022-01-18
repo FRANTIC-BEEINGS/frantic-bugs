@@ -86,7 +86,7 @@ public class GameController : NetworkBehaviour
 			player.Initialize(TurnEnergy, pathBuilder);
 			player.GetResourceManager().OnResourceChange = guiController.UpdateResourceDisplay;
 			player.GetResourceManager().OnResourceChange += CheckWinCondition;
-			guiController.GetGameInfoUI().SetGameGoals(foodToWin,moneyToWin);
+			guiController.SetGameGoals(foodToWin,moneyToWin);
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -268,7 +268,7 @@ public class GameController : NetworkBehaviour
 
 	private void ChangeLevelUI(int level)
 	{
-		guiController.GetGameInfoUI().UpdateLevel(level);
+		guiController.UpdateLevelDisplay(level);
 	}
 
 }
