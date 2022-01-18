@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    private Camera camera;
     private double angle;
     private bool canMoveCamera;
     private float distanceToCards;
@@ -65,8 +64,7 @@ public class CameraController : MonoBehaviour
         projection = new Vector3(0, 0, 0);
         target = new Vector3(0, 0, 0);
         canMoveCamera = true;
-        camera = GetComponent<Camera>();
-        angle = this.transform.rotation.x * 2;//(this.transform.rotation.x / 360.0) * Math.PI;
+        angle = transform.rotation.x * 2;//(this.transform.rotation.x / 360.0) * Math.PI;
     }
 
     void Update()
@@ -103,8 +101,8 @@ public class CameraController : MonoBehaviour
     {
         // distanceToCards * cos(angle) = z
         distanceToCards = (float)((-this.transform.position.z) / Math.Cos(angle));
-        projection[0] = this.transform.position.x;
-        projection[1] = (float)(this.transform.position.y - distanceToCards * Math.Sin(angle));
+        projection[0] = transform.position.x;
+        projection[1] = (float)(transform.position.y - distanceToCards * Math.Sin(angle));
         projection[2] = 0;
         //projectionObject.transform.position = projection;
         //targetObject.transform.position = target;
@@ -121,14 +119,14 @@ public class CameraController : MonoBehaviour
             else
                 direction = transform.forward * scroll * zoomSpeed * Time.deltaTime;
 
-            if ((direction[2] > 0 && this.transform.position.z < -minDistance) ||
-                (direction[2] < 0 && this.transform.position.z > -maxDistance))
+            if ((direction[2] > 0 && transform.position.z < -minDistance) ||
+                (direction[2] < 0 && transform.position.z > -maxDistance))
             {
                 target[0] += direction[0];
                 target[1] += direction[1] + direction[2] * (float)Math.Tan(angle);
                 projection[0] += direction[0];
                 projection[1] += direction[1] + direction[2] * (float)Math.Tan(angle);
-                this.transform.position = this.transform.position + direction;
+                transform.position = transform.position + direction;
             }
         }
     }
@@ -150,7 +148,7 @@ public class CameraController : MonoBehaviour
         if (Input.mousePosition.x >= Screen.width  - bordersWidth || Input.mousePosition.x <= 0 + bordersWidth ||
             Input.mousePosition.y >= Screen.height - bordersWidth || Input.mousePosition.y <= 0 + bordersWidth)
         {
-            Vector3 direction = Input.mousePosition - new Vector3(Screen.width / 2, Screen.height / 2, 0);
+            Vector3 direction = Input.mousePosition - new Vector3(Screen.width / 2f, Screen.height / 2f, 0);
             MoveTarget(direction);
         }
     }

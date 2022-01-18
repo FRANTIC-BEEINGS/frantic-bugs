@@ -51,16 +51,16 @@ public class MapGeneration : MonoBehaviour
 
     private void Start()
     {
-        Initialize();
+        //Initialize();
         //Initialize(Random.Range(0, 3), Random.Range(5, 10), Random.Range(5, 20), Random.Range(0.0f, 0.4f), Random.Range(0.0f, 0.1f), Random.Range(0f, 4f), Random.Range(0, 3));
     }
 
-    public void Initialize()
-    {
-        Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3, 3);
-    }
+    // public void Initialize()
+    // {
+    //     Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3, 3);
+    // }
 
-    public void Initialize(int numberOfPlayers, int mapCardHeight, int mapCardWidth, float cardToCardDistance, float fluctuatePosition, float fluctuateAngle, int fluctuateSpawn, int peacefulRadius)
+    public void Initialize(int numberOfPlayers=2, int mapCardHeight=10, int mapCardWidth=20, float cardToCardDistance=0.2f, float fluctuatePosition=0.05f, float fluctuateAngle=2f, int fluctuateSpawn=3, int peacefulRadius=3)
     {
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
