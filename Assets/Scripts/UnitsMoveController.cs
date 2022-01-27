@@ -13,6 +13,7 @@ public class UnitsMoveController
 
     public UnitsMoveController(PathBuilder pathBuilder, ResourceManager resourceManager)
     {
+        Debug.Log($"pathBuilder {pathBuilder}, resourceManager {resourceManager}");
         this.pathBuilder = pathBuilder;
         pathBuilder.pathBuilt += Move;
         this.resourceManager = resourceManager;
@@ -20,8 +21,10 @@ public class UnitsMoveController
 
     public void Move(List<Card> path)
     {
+        Debug.Log("MOVE");
         pathBuilder.CanBuild = false;
         currentMovingUnit = path[0].GetCurrentUnit();
+        Debug.Log($"currentMovingUnit {currentMovingUnit}");
         if (currentMovingUnit == null)
             return;
         

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using Photon.Pun;
 using ResourceManagment;
 using Random = UnityEngine.Random;
 
@@ -62,6 +63,8 @@ public class MapGeneration : MonoBehaviour
 
     public void Initialize(int numberOfPlayers=2, int mapCardHeight=10, int mapCardWidth=20, float cardToCardDistance=0.2f, float fluctuatePosition=0.05f, float fluctuateAngle=2f, int fluctuateSpawn=3, int peacefulRadius=3)
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
         _mapCardHeight = mapCardHeight;
@@ -397,12 +400,9 @@ public class MapGeneration : MonoBehaviour
 
     void InstantiateCards()
     {
-        _mapCard = new List<List<Card>>();
-        _mapObject = new List<List<GameObject>>();
+        
         for (int i = 0; i < _mapCardHeight; ++i)
         {
-            _mapCard.Add(new List<Card>());
-            _mapObject.Add(new List<GameObject>());
             for (int j = 0; j < _mapCardWidth; ++j)
             {
                 float _posI = - _mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * j;
@@ -411,60 +411,9 @@ public class MapGeneration : MonoBehaviour
                 float _deltaI = Random.Range(-_fluctuatePosition, _fluctuatePosition);
                 float _deltaJ = Random.Range(-_fluctuatePosition, _fluctuatePosition);
 
-                GameObject _newCardObject = Instantiate(_cardPrefabs[_mapId[i][j] % 10], new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
-                _newCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
-                _newCardObject.transform.parent = gameObject.transform;
-
-                //Spawn();
-                Card _newCard = _newCardObject.GetComponent<Card>();
-                if (_newCard is EnemyCard)
-                {
-                    int _level = _mapId[i][j] / 10;
-
-                    switch (_level)
-                    {
-                        case 1:
-                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
-                            break;
-                        case 2:
-                            _newCardObject.transform.GetChild(3).gameObject.SetActive(true);
-                            break;
-                        case 3:
-                            _newCardObject.transform.GetChild(4).gameObject.SetActive(true);
-                            break;
-                    }
-
-                    ((EnemyCard)_newCard).Initialize(_level, 50,
-                        new Dictionary<ResourceType, int>() {{ResourceType.Food, 10 * _level}, {ResourceType.Money, 100 * _level}});
-                }
-                else if (_newCard is ResourceCard)
-                {
-                    var resourceTypes = Enum.GetValues (typeof (ResourceType));
-                    var resourceType = (ResourceType)resourceTypes.GetValue(Random.Range(0, resourceTypes.Length));
-                    switch (resourceType)
-                    {
-                        case ResourceType.Food:
-                            _newCardObject.transform.GetChild(4).gameObject.SetActive(true);
-                            ((ResourceCard)_newCard).Initialize(ResourceType.Food, Random.Range(5, 20));
-                            break;
-                        case ResourceType.Energy:
-                            _newCardObject.transform.GetChild(3).gameObject.SetActive(true);
-                            ((ResourceCard)_newCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
-                            break;
-                        case ResourceType.Money:
-                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
-                            ((ResourceCard)_newCard).Initialize(ResourceType.Money, Random.Range(180, 300));
-                            break;
-                        default:
-                            _newCardObject.transform.GetChild(2).gameObject.SetActive(true);
-                            ((ResourceCard)_newCard).Initialize(ResourceType.Money, Random.Range(180, 300));
-                            break;
-                    }
-                }
-                BodyInformation _body = _newCardObject.transform.GetChild(0).GetComponent<BodyInformation>();
-                _body.id = i * _mapCardWidth + j;
-                _mapCard[i].Add(_newCard);
-                _mapObject[i].Add(_newCardObject);
+                GameObject _newCardObject = PhotonNetwork.InstantiateSceneObject(_cardPrefabs[_mapId[i][j] % 10].name, new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
+                int _level = _mapId[i][j] / 10;
+                _newCardObject.GetComponent<CardSpawner>().Initialize(i, j, _level, _mapCardWidth, Random.Range(3, 1488));
             }
         }
     }
@@ -532,5 +481,24 @@ public class MapGeneration : MonoBehaviour
     public float GetMapUnityHeight()
     {
         return _mapUnityHeight;
+    }
+
+    public void AddCardToRow(int i, Card _newCard)
+    {
+        if (_mapCard == null) _mapCard = new List<List<Card>>();
+        if (_mapObject == null) _mapObject = new List<List<GameObject>>();
+        
+        if (_mapCard.Count == i)
+            _mapCard.Add(new List<Card>());
+        else if (_mapCard.Count < i) 
+            return;
+        
+        if (_mapObject.Count == i)
+            _mapObject.Add(new List<GameObject>());
+        else if (_mapObject.Count < i) 
+            return;
+
+        _mapCard[i].Add(_newCard);
+        _mapObject[i].Add(_newCard.gameObject);
     }
 }

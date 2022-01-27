@@ -48,51 +48,51 @@ public class ButtonOnClickAdd : MonoBehaviour
     private void SetPlayerReady()
     {
         //tmp add host game feature on ready button (for single player)
-        NetworkManager.Singleton.StartHost();
-        
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        {
-            Button btn = gameObject.GetComponent<Button>();
-            btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
-                .GetComponent<NetworkPlayerController>().Ready);
-            onClickAdded = true;
-        }
+        // NetworkManager.Singleton.StartHost();
+        //
+        // if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        // {
+        //     Button btn = gameObject.GetComponent<Button>();
+        //     btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
+        //         .GetComponent<NetworkPlayerController>().Ready);
+        //     onClickAdded = true;
+        // }
     }
     
     private void SetEndTurn()
     {
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        {
-            Button btn = gameObject.GetComponent<Button>();
-            btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
-                .GetComponent<NetworkPlayerController>().EndTurn);
-            onClickAdded = true;
-        }
+        // if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        // {
+        //     Button btn = gameObject.GetComponent<Button>();
+        //     btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
+        //         .GetComponent<NetworkPlayerController>().EndTurn);
+        //     onClickAdded = true;
+        // }
     }
     
     private void CaptureCard()
     {
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        {
-            Button btn = gameObject.GetComponent<Button>();
-            btn.onClick.AddListener(_gameController.CaptureCard);
-            onClickAdded = true;
-        }
+        // if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        // {
+        //     Button btn = gameObject.GetComponent<Button>();
+        //     btn.onClick.AddListener(_gameController.CaptureCard);
+        //     onClickAdded = true;
+        // }
     }
     
     private void GetResource()
     {
-        if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        {
-            Button btn = gameObject.GetComponent<Button>();
-            btn.onClick.AddListener(_gameController.GetResource);
-            onClickAdded = true;
-        }
+        // if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
+        // {
+        //     Button btn = gameObject.GetComponent<Button>();
+        //     btn.onClick.AddListener(_gameController.GetResource);
+        //     onClickAdded = true;
+        // }
     }
 
     private void Restart()
     {
-        Destroy(GameObject.Find("NetworkManager"));
-        SceneManager.LoadScene(0);
+        // Destroy(GameObject.Find("NetworkManager"));
+        // SceneManager.LoadScene(0);
     }
 }

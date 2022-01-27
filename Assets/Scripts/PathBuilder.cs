@@ -73,7 +73,8 @@ public class PathBuilder : MonoBehaviour
             }
             else if (MouseState == MouseButtons.Left && OnCard) {
                 if (PathBody.Count == 0) {
-                    if (Candidate != null && Candidate.id == CurBody.id && CurBody.gameObject.transform.parent.gameObject.GetComponent<Card>().GetCurrentUnit() != null) {
+                    if (Candidate != null && Candidate.id == CurBody.id && 
+                        CurBody.gameObject.transform.parent.gameObject.GetComponent<Card>().GetCurrentUnit() != null) {
                         Add(CurBody);
                     }
                 }

@@ -26,7 +26,7 @@ public class GUIController : MonoBehaviour, UIController
 
     private void Start()
     {
-        _logRenderer.enabled = false;
+        if (_logRenderer != null) _logRenderer.enabled = false;
     }
     
     public void OnGameStarted()

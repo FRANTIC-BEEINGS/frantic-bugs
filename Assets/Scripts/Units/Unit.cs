@@ -100,12 +100,14 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
+        Debug.Log("MoveAlongPath");
         isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));
     }
 
     IEnumerator Move(List<Card> cards, ResourceManager resourceManager)
     {
+        Debug.Log($"cards size {cards.Count}, resourceManager {resourceManager.GetResource(ResourceType.Energy)}");
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
