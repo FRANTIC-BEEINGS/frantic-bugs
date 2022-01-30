@@ -20,14 +20,14 @@ namespace GameLogic
         //network
         private Photon.Realtime.Player[] _players;
         
-        //tmp player
+        //player
         [SerializeField] private GameObject playerPrefab;
+        //unit
         [SerializeField] private GameObject fighterPrefab;
         
         // Network
         private List<int> playerIds;
 
-        public GameObject testPref;
         private void Start()
         {
             
@@ -37,12 +37,7 @@ namespace GameLogic
                 SingleplayerStart();
 
             // //set camera location and borders
-            // CameraController cameraController = mainCamera.GetComponent<CameraController>();
-            // cameraController.SetViewAtCoords(mapGeneration.GetSpawnCoords());
-            // cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
-            //
-            // // set path builder map
-            // pathBuilder.Map = mapGeneration;
+            
             //
             // Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         }
@@ -75,15 +70,46 @@ namespace GameLogic
         private void MultiplayerSetup()
         {
             setPlayerIds();
-            
+            mapGeneration.MapGenerated += SpawnSecond;
             mapGeneration.Initialize(PhotonNetwork.PlayerList.Length);
-            pathBuilder.Initialize(mapGeneration: mapGeneration);
         }
 
         private void TestSpawner()
         {
             MultiplayerSetup();
-            // PhotonNetwork.Instantiate(testPref.name, new Vector3(Random.Range(-3, 3), Random.Range(-3, 3), Random.Range(-3, 3)), Quaternion.identity);
+        }
+
+        private void SpawnSecond()
+        {
+            GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+
+            if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
+            {
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
+                Unit unit = unitGO.GetComponent<Unit>();
+                UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetFirstSpawnCard());
+                
+                //set camera
+                CameraController cameraController = mainCamera.GetComponent<CameraController>();
+                cameraController.SetViewAtCoords(mapGeneration.GetFirstSpawnCoords());
+                cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
+                
+            }
+            else if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[1])
+            {
+                Debug.Log("spawn second");
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
+                Unit unit = unitGO.GetComponent<Unit>();
+                UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());
+                
+                //set camera
+                CameraController cameraController = mainCamera.GetComponent<CameraController>();
+                cameraController.SetViewAtCoords(mapGeneration.GetSecondSpawnCoords());
+                cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
+            }
+            // set path builder map
+            // pathBuilder.Map = mapGeneration;
+            pathBuilder.Initialize(mapGeneration: mapGeneration);
         }
 
         private void setPlayerIds()

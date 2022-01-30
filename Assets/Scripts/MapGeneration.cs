@@ -25,7 +25,7 @@ public class MapGeneration : MonoBehaviour
     }
 
     private int _numberOfPlayers;
-    private List<List<int>> _playerIJPositions;
+    public List<List<int>> _playerIJPositions;
     // Map size in cards.
     private int _mapCardWidth;
     private int _mapCardHeight;
@@ -63,8 +63,7 @@ public class MapGeneration : MonoBehaviour
 
     public void Initialize(int numberOfPlayers=2, int mapCardHeight=10, int mapCardWidth=20, float cardToCardDistance=0.2f, float fluctuatePosition=0.05f, float fluctuateAngle=2f, int fluctuateSpawn=3, int peacefulRadius=3)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
         _mapCardHeight = mapCardHeight;
@@ -76,13 +75,15 @@ public class MapGeneration : MonoBehaviour
 
         _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
         _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
-
+        
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         ClearAll();
         SetAdditionalContentPercentage();
         SetNumberOfEachEnemy();
         SetMapId();
         InstantiateCards();
-        MapGenerated?.Invoke();
+        // MapGenerated?.Invoke();
     }
 
     private void SetAdditionalContentPercentage()
@@ -389,13 +390,24 @@ public class MapGeneration : MonoBehaviour
         }
         _secondSpawnPosI += _dI2;
         _secondSpawnPosJ += _dJ2;
+        
+        PhotonView photonView = PhotonView.Get(this);
+        photonView.RPC("SetMultiplayerSpawnsRpc", RpcTarget.AllBuffered, _firstSpawnPosI, _firstSpawnPosJ, _secondSpawnPosI, _secondSpawnPosJ);
+    }
 
-        _playerIJPositions.Add(new List<int>());
-        _playerIJPositions[0].Add(_firstSpawnPosI);
-        _playerIJPositions[0].Add(_firstSpawnPosJ);
-        _playerIJPositions.Add(new List<int>());
-        _playerIJPositions[1].Add(_secondSpawnPosI);
-        _playerIJPositions[1].Add(_secondSpawnPosJ);
+    [PunRPC]
+    private void SetMultiplayerSpawnsRpc(int _firstSpawnPosI, int _firstSpawnPosJ, int _secondSpawnPosI, int _secondSpawnPosJ)
+    {
+        MapGeneration mg = gameObject.GetComponent<MapGeneration>();
+        mg._playerIJPositions = new List<List<int>>();
+        
+        mg._playerIJPositions.Add(new List<int>());
+        mg._playerIJPositions[0].Add(_firstSpawnPosI);
+        mg._playerIJPositions[0].Add(_firstSpawnPosJ);
+        mg._playerIJPositions.Add(new List<int>());
+        mg._playerIJPositions[1].Add(_secondSpawnPosI);
+        mg._playerIJPositions[1].Add(_secondSpawnPosJ);
+        Debug.Log(mg._playerIJPositions[1][0]);
     }
 
     void InstantiateCards()
@@ -447,6 +459,9 @@ public class MapGeneration : MonoBehaviour
     // For multiplayer
     public Vector3 GetSecondSpawnCoords()
     {
+        Debug.Log($"GetSecondSpawnCoords {_playerIJPositions[1][0]}");
+        // while (_playerIJPositions == null)
+        //     Debug.Log("_playerIJPositions is null, waiting for initialization");
         return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[1][1],
                            -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[1][0],
                            0f);
@@ -500,5 +515,11 @@ public class MapGeneration : MonoBehaviour
 
         _mapCard[i].Add(_newCard);
         _mapObject[i].Add(_newCard.gameObject);
+        Debug.Log($"_mapCard.Count {_mapCard.Count}, i {i}, _mapCardHeight {_mapCardHeight}, _mapCardWidth {_mapCardWidth}");
+        if (_mapCard.Count == _mapCardHeight && _mapCard[i].Count == _mapCardWidth - 1)
+        {
+            Debug.Log("MapGenerated");
+            MapGenerated.Invoke();
+        }
     }
 }
