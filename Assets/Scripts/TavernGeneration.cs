@@ -22,14 +22,28 @@ public class TavernGeneration : MonoBehaviour
     [SerializeField] private List<GameObject> StuffPrefabs;
     [SerializeField] private List<int> AmountOfObjects;
     private List<GameObject> StuffObjects;
+    private List<GameObject> TablesObjects;
 
-    void Start()
-    {
-        StuffObjects = new List<GameObject>();
-    }
 
     public void Initialize(float mapUnityWidth, float mapUnityHeight)
     {
+        if (StuffObjects != null)
+        {
+            for (int i = 0; i < StuffObjects.Count; ++i)
+            {
+                Destroy(StuffObjects[i]);
+            }
+            StuffObjects.Clear();
+        }
+        if (TablesObjects != null)
+        {
+            for (int i = 0; i < TablesObjects.Count; ++i)
+            {
+                Destroy(TablesObjects[i]);
+            }
+            TablesObjects.Clear();
+        }
+        StuffObjects = new List<GameObject>();
         _mapWidth = mapUnityWidth + Constants.CARD_WIDTH;
         _mapHeight = mapUnityHeight + Constants.CARD_HEIGHT;
         _requiredWidth = _mapWidth + 2 * _borderX;
@@ -58,6 +72,7 @@ public class TavernGeneration : MonoBehaviour
                     float _posX = -_fieldWidth  / 2 + _tableWidth  / 2 + _tableWidth  * j;
                     float _posY = -_fieldHeight / 2 + _tableHeight / 2 + _tableHeight * i;
                     GameObject Table = Instantiate(TablePrefab, new Vector3(_posX, _posY, 0f), Quaternion.identity);
+                    TablesObjects.Add(Table);
                     Table.transform.parent = gameObject.transform;
                 }
             }
