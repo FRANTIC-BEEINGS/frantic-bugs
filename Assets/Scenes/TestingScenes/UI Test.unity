@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955748, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -10
+      value: -20
       objectReference: {fileID: 0}
     - target: {fileID: 3117324825687955748, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
       propertyPath: m_LocalRotation.w
@@ -271,8 +271,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: maxDistance
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: minDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: targetObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: projectionObject
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3117324825687955755, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+      propertyPath: cursorCameraMoveEnabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+--- !u!1 &687384979 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3117324825687955751, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
+  m_PrefabInstance: {fileID: 669610848}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &799023247
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -748,6 +773,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 687384979}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
+      propertyPath: camera
+      value: 
+      objectReference: {fileID: 687384979}
+    - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: MapPrefab
       value: 
       objectReference: {fileID: 5695871948990192135, guid: babeef8ef85437b41aeb9da84462f2ef, type: 3}
@@ -785,7 +818,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: TurnDuration
-      value: 20
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 2010367550247793986, guid: 330d2f10762904103bfd8c81e1885a64, type: 3}
       propertyPath: uiController
@@ -899,7 +932,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2476533487762383636, guid: ce0393e18e98b47a8b14c06821b7f260, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 81514770
+      value: 497623798
       objectReference: {fileID: 0}
     - target: {fileID: 2476533487762383637, guid: ce0393e18e98b47a8b14c06821b7f260, type: 3}
       propertyPath: m_RootOrder

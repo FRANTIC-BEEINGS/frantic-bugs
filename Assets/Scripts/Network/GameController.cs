@@ -22,6 +22,9 @@ public class GameController : NetworkBehaviour
 	[SerializeField] public int TurnDuration;
 	[SerializeField] public int TurnEnergy;
 
+	[SerializeField] GameObject camera;
+	CameraController cameraController;
+
 	[SerializeField] private GameObject mapPrefab;
 	[SerializeField] private GameObject pathBuilderPrefab;
 	[SerializeField] private GameObject unitPrefab;
@@ -29,7 +32,7 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
-	[SerializeField] private UIController uiController;
+	[SerializeField] private GUIController guiController;
 
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
@@ -58,15 +61,22 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
-			uiController.OnGameStarted();
+			guiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
+
 			map.MapGenerated += StartAfterMapGenerated;
 		}
 	}
 
 	private void StartAfterMapGenerated()
 	{
+		cameraController = camera.GetComponent<CameraController>();
+		cameraController.SetViewAtCoords(map.GetSpawnCoords());
+		//cameraController.SetViewAtCoords(map.GetFirstSpawnCoords());
+		//cameraController.SetViewAtCoords(map.GetSecondSpawnCoords());
+		cameraController.SetViewBorders(map.GetMapUnityWidth(), map.GetMapUnityHeight());
+
 		currentTurnPlayer = -1;
 		_gameTimer.StartTimer(GameDuration);
 		SetNetworkPlayers();
@@ -74,9 +84,9 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
-			player.GetResourceManager().OnResourceChange = uiController.UpdateResourceDisplay;
+			player.GetResourceManager().OnResourceChange = guiController.UpdateResourceDisplay;
 			player.GetResourceManager().OnResourceChange += CheckWinCondition;
-			uiController.GetGameInfoUI().SetGameGoals(foodToWin,moneyToWin);
+			guiController.GetGameInfoUI().SetGameGoals(foodToWin,moneyToWin);
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -104,21 +114,22 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
-			Card card = map.Map[0][map.MapCardWidth/2];
+			Card card = map.GetMap()[0][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
-				new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
+			  new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
 				Quaternion.identity);
 			unit = u.GetComponent<Unit>();
 			unit.OnDeath += Death;
 			unit.OnLevelChange += ChangeLevelUI;
 			UnitCardInteractionController.StepOnCard(unit, card);
+
 		}
 
 		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
 		{
-			Card card = map.Map[map.MapCardHeight-1][map.MapCardWidth/2];
+			Card card = map.GetMap()[map.GetMapCardHeight()-1][map.GetMapCardWidth()/2];
 
 			Vector3 cardPosition = card.gameObject.transform.position;
 			GameObject u = Instantiate(unitPrefab,
@@ -236,7 +247,7 @@ public class GameController : NetworkBehaviour
 				{
 					foodToWin = 0;
 					if (moneyToWin == 0)
-						uiController.OnWin();
+						guiController.OnWin();
 				}
 				break;
 			case ResourceType.Money:
@@ -244,7 +255,7 @@ public class GameController : NetworkBehaviour
 				{
 					moneyToWin = 0;
 					if (foodToWin == 0)
-						uiController.OnWin();
+						guiController.OnWin();
 				}
 				break;
 		}
@@ -252,12 +263,12 @@ public class GameController : NetworkBehaviour
 
 	private void Death()
 	{
-		uiController.OnLoss();
+		guiController.OnLoss();
 	}
 
 	private void ChangeLevelUI(int level)
 	{
-		uiController.GetGameInfoUI().UpdateLevel(level);
+		guiController.GetGameInfoUI().UpdateLevel(level);
 	}
 
 }

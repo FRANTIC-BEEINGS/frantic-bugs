@@ -7,15 +7,34 @@ namespace Cards
 {
     public class Card : MonoBehaviour
     {
+        private AnimationCurve RotationCurve;
+        private AnimationCurve JumpCurve;
+        private Quaternion _openCard;
+        private Quaternion _closedCard;
+        private Vector3 _downPosition;
+        private Vector3 _upPosition;
+        private float _jumpHeight;
+
+        private void Start ()
+        {
+            _jumpHeight = 1.5f;
+            RotationCurve = gameObject.transform.GetChild(0).gameObject.GetComponent<BodyInformation>().GetRotationCurve();
+            JumpCurve = gameObject.transform.GetChild(0).gameObject.GetComponent<BodyInformation>().GetJumpCurve();
+            _openCard = Quaternion.Euler(new Vector3(0, 0, 0));
+            _closedCard = Quaternion.Euler(new Vector3(0, 180f, 0));
+            _downPosition = transform.position;
+            _upPosition = _downPosition;
+            _upPosition.z -= _jumpHeight;
+        }
+
         private bool _isCaptured;
         private bool _isVisible = true;
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
         private Coroutine _rotateCard;
-        private float _rotationTime = 0.5f;
         public bool isTreeVisible;  //whether tree gives vision on the card
-        
+
         public Unit GetCurrentUnit()
         {
             return _currentUnit;
@@ -77,23 +96,31 @@ namespace Cards
         private void UpdateCardView(bool visibility)
         {
             if (visibility == _isVisible) return;
-            _rotateCard = StartCoroutine(RotateCardY(Quaternion.Euler(transform.eulerAngles + 180f * Vector3.up), _rotationTime));
+            if (visibility == true)
+            {
+                _rotateCard = StartCoroutine(RotateCardY(_openCard, Constants.STEP_DURATION));
+            }
+            else
+            {
+                _rotateCard = StartCoroutine(RotateCardY(_closedCard, Constants.STEP_DURATION));
+            }
             _isVisible = visibility;
         }
 
-        IEnumerator RotateCardY(Quaternion endValue, float duration)
+        IEnumerator RotateCardY(Quaternion endRotationValue, float duration)
         {
-            Debug.Log("rotating");
             float time = 0;
-            Quaternion startValue = transform.rotation;
+            Quaternion startRotationValue = transform.rotation;
+            Vector3 startJumpValue = transform.position;
 
             while (time < duration)
             {
-                transform.rotation = Quaternion.Lerp(startValue, endValue, time / duration);
+                transform.rotation = Quaternion.Lerp(startRotationValue, endRotationValue, RotationCurve.Evaluate(time / duration));
+                transform.position = Vector3.Lerp(startJumpValue, _upPosition, JumpCurve.Evaluate(time / duration));
                 time += Time.deltaTime;
                 yield return null;
             }
-            transform.rotation = endValue;
+            transform.position = _downPosition;
         }
     }
 }
