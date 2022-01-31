@@ -12,8 +12,20 @@ public class SoundController : MonoBehaviour
     [SerializeField] private AudioClip _goldSound;
     public AudioClip GoldSound => _goldSound;
 
+    [SerializeField] private AudioClip _energySound;
+    public AudioClip EnergySound => _energySound;
+
+    [SerializeField] private AudioClip _buttonSnd;
+    public AudioClip ButtonSnd => _buttonSnd;
+
+    [SerializeField] private AudioClip _levelMusic;
+    public AudioClip LevelMusic => _levelMusic;
+
+    [SerializeField] private AudioClip _lobbyMusic;
+    public AudioClip LobbyMusic => _lobbyMusic; 
+
     private readonly List<AudioSource> _soundSources = new List<AudioSource>();
-    private float _soundVolume = 2;
+    private float _soundVolume = 5;
     public float SoundVolume {
         get => _soundVolume;
         set {
@@ -28,7 +40,7 @@ public class SoundController : MonoBehaviour
         }
     }
 
-    private float _musicVolume;
+    private float _musicVolume = 1;
     public float MusicVolume {
         get => _musicVolume;
         set {
@@ -44,8 +56,8 @@ public class SoundController : MonoBehaviour
     public static SoundController Instance { get; private set; }
 
     public SoundController() {
-        if (Instance != null)
-            throw new ApplicationException("ONLY ONE SOUNDCONTROLLER ALLOWED");
+        // if (Instance != null)
+        //     throw new ApplicationException("ONLY ONE SOUNDCONTROLLER ALLOWED");
         Instance = this;
     }
 
