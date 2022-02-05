@@ -25,6 +25,11 @@ public class TavernGeneration : MonoBehaviour
     private List<GameObject> TablesObjects;
 
 
+    void Start()
+    {
+        Initialize(30,40);
+    }
+
     public void Initialize(float mapUnityWidth, float mapUnityHeight)
     {
         if (StuffObjects != null)
@@ -44,6 +49,7 @@ public class TavernGeneration : MonoBehaviour
             TablesObjects.Clear();
         }
         StuffObjects = new List<GameObject>();
+        TablesObjects = new List<GameObject>();
         _mapWidth = mapUnityWidth + Constants.CARD_WIDTH;
         _mapHeight = mapUnityHeight + Constants.CARD_HEIGHT;
         _requiredWidth = _mapWidth + 2 * _borderX;
