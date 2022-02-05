@@ -27,6 +27,8 @@ public class GUIController : MonoBehaviour, UIController
 
     private void Start()
     {
+        var soundController = SoundController.Instance;
+        soundController.PlayMusic(soundController.LobbyMusic);
         //turnControlPanel.SetActive(false);
         curtain.SetActive(true);
         buttonStart.SetActive(true);

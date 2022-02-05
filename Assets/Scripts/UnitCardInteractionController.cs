@@ -63,8 +63,18 @@ public static class UnitCardInteractionController
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
         resourceCard.GetResource();
-        var soundController = SoundController.Instance;
-        soundController.PlaySound(soundController.GoldSound);
+        if (resourceCard.GetResource() == ResourceType.Money)
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.GoldSound);
+        }
+        else
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.EnergySound);
+        }
+
+        
     }
     
     public static bool StepOnCard(Unit unit, Card card)

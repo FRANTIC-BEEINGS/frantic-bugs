@@ -61,6 +61,8 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
+			var soundController = SoundController.Instance;
+			soundController.PlayMusic(soundController.LevelMusic);
 			guiController.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
