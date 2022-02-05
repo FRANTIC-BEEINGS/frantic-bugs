@@ -27,7 +27,7 @@ public class TavernGeneration : MonoBehaviour
 
     void Start()
     {
-        Initialize(30,40);
+        //Initialize(30,40);
     }
 
     public void Initialize(float mapUnityWidth, float mapUnityHeight)
