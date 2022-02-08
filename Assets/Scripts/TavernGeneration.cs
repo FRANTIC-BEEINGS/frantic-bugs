@@ -83,7 +83,7 @@ public class TavernGeneration : MonoBehaviour
                 }
             }
         }
-        else // rotate the table
+        else // rotate the table 
         {
             _fieldWidth = _fieldRotatedTableWidth * _tableHeight;
             _fieldHeight = _fieldRotatedTableHeight * _tableWidth;
