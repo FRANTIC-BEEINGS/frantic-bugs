@@ -5,7 +5,6 @@ using UnityEngine;
 public class CardMainTexture : MonoBehaviour {
     MeshFilter cubeMesh;
     Mesh mesh;
-    float TextureResolution = 100f;
     float CardWidth = 2f;
     float CardHeight = 3f;
     float CardDepth = 0.05f;
