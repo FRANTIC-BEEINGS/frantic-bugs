@@ -15,6 +15,8 @@ namespace Cards
         private Vector3 _downPosition;
         private Vector3 _upPosition;
         private float _jumpHeight;
+        public Action OnStart;
+        public Action OnRotated;
 
         private void Start ()
         {
@@ -26,7 +28,7 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
-            //this.IsVisible = false;
+            OnStart?.Invoke();
         }
 
         private bool _isCaptured;
@@ -124,6 +126,7 @@ namespace Cards
             }
             transform.rotation = endRotationValue;
             transform.position = _downPosition;
+            OnRotated?.Invoke();
         }
     }
 }

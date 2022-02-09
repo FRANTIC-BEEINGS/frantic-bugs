@@ -32,7 +32,6 @@ public class Unit : MonoBehaviour
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
     public Action<int> OnLevelChange;
-    public Action OnStart;
     private bool initialized;
 
     public VisionController visionController;
@@ -40,7 +39,6 @@ public class Unit : MonoBehaviour
     private void Start()
     {
         visionController = GetComponent<VisionController>();
-        OnStart?.Invoke();
     }
 
     public void Initialize(MapGeneration mapGeneration)

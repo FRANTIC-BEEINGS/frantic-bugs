@@ -470,6 +470,7 @@ MonoBehaviour:
   sprite: {fileID: 0}
   Allegiance: 1
   experienceLimit: 50
+  visionController: {fileID: 0}
 --- !u!114 &3267859211188247002
 MonoBehaviour:
   m_ObjectHideFlags: 0

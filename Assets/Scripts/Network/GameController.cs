@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameController : NetworkBehaviour
 {
-	private const int UnitPositionZ = 0;
+	private const float UnitPositionZ = 0;
 	private bool gameStarted = false;
 	private bool gameOver = false;
 	[SerializeField] private GameStartController _gameStartController;
@@ -34,6 +34,7 @@ public class GameController : NetworkBehaviour
 
 	private PathBuilder pathBuilder;
 	private Unit unit;
+	private bool alreadyCalled;
 
 	[SerializeField] private GUIController guiController;
 
@@ -121,25 +122,36 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.ConnectedClients.Count > 0)
 		{
-			Card card = map.GetMap()[0][map.GetMapCardWidth()/2];
+			Card card = map.GetSpawnCard();
 
-			Vector3 cardPosition = card.gameObject.transform.position;
-			GameObject u = Instantiate(unitPrefab,
-			  new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
-				Quaternion.identity);
-			unit = u.GetComponent<Unit>();
-			unit.OnDeath += Death;
-			unit.OnLevelChange += ChangeLevelUI;
-			UnitCardInteractionController.StepOnCard(unit, card);
-			unit.OnStart += () =>
+			VisionController visionController = GetComponent<VisionController>();
+			visionController.Initialize(map);
+			HashSet<Card> firstCards = visionController.GetCardsInVision(2, card);
+			Debug.Log(firstCards.Count);
+			foreach (var c in firstCards)
 			{
-				unit.Initialize(map);
-				HashSet<Card> firstCards = unit.visionController.GetCardsInVision(unit.Vision, card);
-				foreach (var c in firstCards)
+				c.OnStart += () => c.IsVisible = true;
+			}
+
+			card.OnRotated += SpawnUnit;
+			
+
+			void SpawnUnit()
+			{
+				if (!alreadyCalled)
 				{
-					c.IsVisible = true;
+					Vector3 cardPosition = card.gameObject.transform.position;
+
+					GameObject u = Instantiate(unitPrefab,
+						new Vector3(cardPosition.x, cardPosition.y, UnitPositionZ),
+						Quaternion.identity);
+					unit = u.GetComponent<Unit>();
+					unit.OnDeath += Death;
+					unit.OnLevelChange += ChangeLevelUI;
+					UnitCardInteractionController.StepOnCard(unit, card);
+					alreadyCalled = true;
 				}
-			};
+			}
 		}
 
 		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
