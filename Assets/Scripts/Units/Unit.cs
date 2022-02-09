@@ -21,6 +21,7 @@ public class Unit : MonoBehaviour
     [SerializeField] double increaseCoef;
     [SerializeField] double decreaseCoef;
     [SerializeField] int vision;
+    public int Vision => vision;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
     private bool isStopMovement = false;
@@ -31,13 +32,15 @@ public class Unit : MonoBehaviour
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
     public Action<int> OnLevelChange;
+    public Action OnStart;
     private bool initialized;
 
-    private VisionController visionController;
+    public VisionController visionController;
 
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+        OnStart?.Invoke();
     }
 
     public void Initialize(MapGeneration mapGeneration)

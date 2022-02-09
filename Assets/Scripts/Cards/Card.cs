@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
+            this.IsVisible = false;
         }
 
         private bool _isCaptured;

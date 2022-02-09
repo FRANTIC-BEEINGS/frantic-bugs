@@ -68,7 +68,6 @@ public class GUIController : MonoBehaviour, UIController
             default:
                 break;
         }
-        Debug.Log("update rd");
     }
 
     public void OnWin()

@@ -28,7 +28,10 @@ public class GameController : NetworkBehaviour
 	[SerializeField] private GameObject mapPrefab;
 	[SerializeField] private GameObject pathBuilderPrefab;
 	[SerializeField] private GameObject unitPrefab;
+	[SerializeField] private GameObject tavernPrefab;
 	private MapGeneration map;
+	private TavernGeneration TG;
+	
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
@@ -78,6 +81,8 @@ public class GameController : NetworkBehaviour
 		//cameraController.SetViewAtCoords(map.GetFirstSpawnCoords());
 		//cameraController.SetViewAtCoords(map.GetSecondSpawnCoords());
 		cameraController.SetViewBorders(map.GetMapUnityWidth(), map.GetMapUnityHeight());
+		TG = Instantiate(tavernPrefab).GetComponent<TavernGeneration>();
+		TG.Initialize(map.GetMapUnityWidth(), map.GetMapUnityHeight());
 
 		currentTurnPlayer = -1;
 		_gameTimer.StartTimer(GameDuration);
@@ -126,7 +131,15 @@ public class GameController : NetworkBehaviour
 			unit.OnDeath += Death;
 			unit.OnLevelChange += ChangeLevelUI;
 			UnitCardInteractionController.StepOnCard(unit, card);
-
+			unit.OnStart += () =>
+			{
+				unit.Initialize(map);
+				HashSet<Card> firstCards = unit.visionController.GetCardsInVision(unit.Vision, card);
+				foreach (var c in firstCards)
+				{
+					c.IsVisible = true;
+				}
+			};
 		}
 
 		if (NetworkManager.Singleton.ConnectedClients.Count == 2)
