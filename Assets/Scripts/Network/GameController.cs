@@ -31,7 +31,7 @@ public class GameController : NetworkBehaviour
 	[SerializeField] private GameObject tavernPrefab;
 	private MapGeneration map;
 	private TavernGeneration TG;
-	
+
 	private PathBuilder pathBuilder;
 	private Unit unit;
 

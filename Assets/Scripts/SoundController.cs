@@ -8,7 +8,7 @@ public class SoundController : MonoBehaviour
 {
     [SerializeField] private GameObject _sounds;
     [SerializeField] private AudioSource _music;
-    
+
     [SerializeField] private AudioClip _goldSound;
     public AudioClip GoldSound => _goldSound;
 
@@ -22,7 +22,7 @@ public class SoundController : MonoBehaviour
     public AudioClip LevelMusic => _levelMusic;
 
     [SerializeField] private AudioClip _lobbyMusic;
-    public AudioClip LobbyMusic => _lobbyMusic; 
+    public AudioClip LobbyMusic => _lobbyMusic;
 
     private readonly List<AudioSource> _soundSources = new List<AudioSource>();
     private float _soundVolume = 5;
@@ -33,14 +33,14 @@ public class SoundController : MonoBehaviour
             foreach (var soundSource in _soundSources) {
                 soundSource.volume = _soundVolume;
             }
-            
+
             // for settings later
             /*PlayerPrefs.SetFloat(SOUNDS, _soundVolume);
             PlayerPrefs.Save();*/
         }
     }
 
-    private float _musicVolume = 1;
+    private float _musicVolume = 0.2f;
     public float MusicVolume {
         get => _musicVolume;
         set {

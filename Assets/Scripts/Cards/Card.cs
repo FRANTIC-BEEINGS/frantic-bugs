@@ -26,11 +26,11 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
-            this.IsVisible = false;
+            //this.IsVisible = false;
         }
 
         private bool _isCaptured;
-        private bool _isVisible = true;
+        private bool _isVisible = false;
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
@@ -122,6 +122,7 @@ namespace Cards
                 time += Time.deltaTime;
                 yield return null;
             }
+            transform.rotation = endRotationValue;
             transform.position = _downPosition;
         }
     }

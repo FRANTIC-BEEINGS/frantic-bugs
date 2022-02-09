@@ -412,7 +412,7 @@ public class MapGeneration : MonoBehaviour
                 float _deltaJ = Random.Range(-_fluctuatePosition, _fluctuatePosition);
 
                 GameObject _newCardObject = Instantiate(_cardPrefabs[_mapId[i][j] % 10], new Vector3(_posI + _deltaI, _posJ + _deltaJ, 0f), Quaternion.identity);
-                _newCardObject.transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+                _newCardObject.transform.eulerAngles = new Vector3(0, 180, Random.Range(-2, 2));
                 _newCardObject.transform.parent = gameObject.transform;
 
                 //Spawn();
