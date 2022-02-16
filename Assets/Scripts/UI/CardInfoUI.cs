@@ -11,7 +11,7 @@ public class CardInfoUI : MonoBehaviour
 
     public void DisplayCardInfo(Card card)
     {
-        if(card is EmptyCard)
+        if(card is EmptyCard || card is SpawnerCard)
         {
             gameObject.SetActive(false);
         }
