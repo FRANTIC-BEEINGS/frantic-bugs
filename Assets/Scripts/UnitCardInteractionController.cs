@@ -8,6 +8,9 @@ public static class UnitCardInteractionController
 {
     public static void FightEnemyCard(EnemyCard enemyCard, Unit unit, ResourceManager resourceManager)
     {
+        var soundController = SoundController.Instance;
+        soundController.PlaySound(soundController.FightSnd);
+        
         if (unit.Force < enemyCard.GetLevel() || resourceManager.GetResource(ResourceType.Energy) < unit.FightEnergy)
         {
             unit.Death();
@@ -67,6 +70,11 @@ public static class UnitCardInteractionController
         {
             var soundController = SoundController.Instance;
             soundController.PlaySound(soundController.GoldSound);
+        }
+        else if (resourceCard.GetResource() == ResourceType.Food)
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.NyomSnd);
         }
         else
         {

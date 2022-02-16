@@ -41,6 +41,8 @@ public class GUIController : MonoBehaviour, UIController
 
     public void OnGameStarted()
     {
+        var soundController = SoundController.Instance;
+        soundController.PlaySound(soundController.ButtonSnd);
         //turnControlPanel.SetActive(true);
         curtain.SetActive(false);
         buttonStart.SetActive(false);
@@ -72,6 +74,14 @@ public class GUIController : MonoBehaviour, UIController
 
     public void OnWin()
     {
+        var soundController = SoundController.Instance;
+        var source = soundController.PlaySound(soundController.WinSnd);
+        StartCoroutine(WaitWinSound(source));
+    }
+    
+    IEnumerator WaitWinSound(AudioSource source)
+    {
+        yield return new WaitWhile(() => source.isPlaying);
         curtain.SetActive(true);
         endText.gameObject.SetActive(true);
         endText.text = "You won!";
@@ -80,6 +90,14 @@ public class GUIController : MonoBehaviour, UIController
 
     public void OnLoss()
     {
+        var soundController = SoundController.Instance;
+        var source = soundController.PlaySound(soundController.LoseSnd);
+        StartCoroutine(WaitLoseSound(source));
+    }
+
+    IEnumerator WaitLoseSound(AudioSource source)
+    {
+        yield return new WaitWhile(() => source.isPlaying);
         curtain.SetActive(true);
         endText.gameObject.SetActive(true);
         endText.text = "You lost...";

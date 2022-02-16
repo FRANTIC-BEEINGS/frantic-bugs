@@ -18,6 +18,18 @@ public class SoundController : MonoBehaviour
     [SerializeField] private AudioClip _buttonSnd;
     public AudioClip ButtonSnd => _buttonSnd;
 
+    [SerializeField] private AudioClip _nyomSnd;
+    public AudioClip NyomSnd => _nyomSnd;
+
+    [SerializeField] private AudioClip _fightSnd;
+    public AudioClip FightSnd => _fightSnd;
+
+    [SerializeField] private AudioClip _loseSnd;
+    public AudioClip LoseSnd => _loseSnd;
+
+    [SerializeField] private AudioClip _winSnd;
+    public AudioClip WinSnd => _winSnd;
+
     [SerializeField] private AudioClip _levelMusic;
     public AudioClip LevelMusic => _levelMusic;
 
@@ -25,7 +37,7 @@ public class SoundController : MonoBehaviour
     public AudioClip LobbyMusic => _lobbyMusic;
 
     private readonly List<AudioSource> _soundSources = new List<AudioSource>();
-    private float _soundVolume = 5;
+    private float _soundVolume = 0.5f;
     public float SoundVolume {
         get => _soundVolume;
         set {

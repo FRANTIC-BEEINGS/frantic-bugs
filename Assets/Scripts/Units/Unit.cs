@@ -81,10 +81,10 @@ public class Unit : MonoBehaviour
         level += 1;
         OnLevelChange(level);
         forceCoef = (int)(forceCoef * increaseCoef);
-        moveEnergy = (int)(moveEnergy * decreaseCoef);
-        captureEnergy = (int)(captureEnergy * decreaseCoef);
-        fightEnergy = (int)(fightEnergy * decreaseCoef);
-        resourceEnergy = (int)(resourceEnergy * decreaseCoef);
+        moveEnergy = (int)(moveEnergy * decreaseCoef)>0?(int)(moveEnergy * decreaseCoef):1;
+        captureEnergy = (int)(captureEnergy * decreaseCoef)>0?(int)(captureEnergy * decreaseCoef):1;
+        fightEnergy = (int)(fightEnergy * decreaseCoef)>0?(int)(fightEnergy * decreaseCoef):1;
+        resourceEnergy = (int)(resourceEnergy * decreaseCoef)>0?(int)(resourceEnergy * decreaseCoef):1;
     }
 
     public void IncreaseExperience(int exp)
