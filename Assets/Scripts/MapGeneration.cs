@@ -407,7 +407,6 @@ public class MapGeneration : MonoBehaviour
         mg._playerIJPositions.Add(new List<int>());
         mg._playerIJPositions[1].Add(_secondSpawnPosI);
         mg._playerIJPositions[1].Add(_secondSpawnPosJ);
-        Debug.Log(mg._playerIJPositions[1][0]);
     }
 
     void InstantiateCards()
@@ -459,9 +458,6 @@ public class MapGeneration : MonoBehaviour
     // For multiplayer
     public Vector3 GetSecondSpawnCoords()
     {
-        Debug.Log($"GetSecondSpawnCoords {_playerIJPositions[1][0]}");
-        // while (_playerIJPositions == null)
-        //     Debug.Log("_playerIJPositions is null, waiting for initialization");
         return new Vector3(-_mapUnityWidth  / 2 + (_mapUnityWidth  / (_mapCardWidth  - 1)) * _playerIJPositions[1][1],
                            -_mapUnityHeight / 2 + (_mapUnityHeight / (_mapCardHeight - 1)) * _playerIJPositions[1][0],
                            0f);
@@ -515,7 +511,6 @@ public class MapGeneration : MonoBehaviour
 
         _mapCard[i].Add(_newCard);
         _mapObject[i].Add(_newCard.gameObject);
-        Debug.Log($"_mapCard.Count {_mapCard.Count}, i {i}, _mapCardHeight {_mapCardHeight}, _mapCardWidth {_mapCardWidth}");
         if (_mapCard.Count == _mapCardHeight && _mapCard[i].Count == _mapCardWidth - 1)
         {
             Debug.Log("MapGenerated");

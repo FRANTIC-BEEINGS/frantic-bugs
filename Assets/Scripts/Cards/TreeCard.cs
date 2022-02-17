@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 
 namespace Cards
 {
@@ -22,6 +23,18 @@ namespace Cards
         public override string ToString()
         {
             return "Tree | Vision range: " + _visionRadius;
+        }
+        
+        [PunRPC]
+        protected virtual void SetIsCaptured(bool value)
+        {
+            base.SetIsCaptured(value);
+        }
+        
+        [PunRPC]
+        protected virtual void SetCurrentUnitId(int value)
+        {
+            base.SetCurrentUnitId(value);
         }
     }
 }

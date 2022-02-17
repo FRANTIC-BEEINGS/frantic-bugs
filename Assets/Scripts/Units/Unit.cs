@@ -107,7 +107,6 @@ public class Unit : MonoBehaviour
 
     IEnumerator Move(List<Card> cards, ResourceManager resourceManager)
     {
-        Debug.Log($"cards size {cards.Count}, resourceManager {resourceManager.GetResource(ResourceType.Energy)}");
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop

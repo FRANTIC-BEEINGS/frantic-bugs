@@ -61,7 +61,7 @@ namespace GameLogic
 			_resourceManager = new ResourceManager(GameSettings.TurnEnergy);
 			PathBuilder pathBuilder = GameObject.FindWithTag("PathBuilder").GetComponent<PathBuilder>();
 			_unitsMoveController = new UnitsMoveController(pathBuilder, _resourceManager);
-			Debug.Log("_unitsMoveController");
+
 			_unitsMoveController.FinishedMovementAction += FinishedMovement;
 			// _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 		}

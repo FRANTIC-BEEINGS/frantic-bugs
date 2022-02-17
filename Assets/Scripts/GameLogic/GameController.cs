@@ -44,14 +44,13 @@ namespace GameLogic
 
         private void SingleplayerStart()
         {
-            TestSpawner();
+            // TestSpawner();
             // Setup();
         }
 
         private void MultiplayerStart()
         {
-            TestSpawner();
-            // Setup();
+            MultiplayerSetup();
         }
 
         private void Setup()
@@ -69,20 +68,22 @@ namespace GameLogic
 
         private void MultiplayerSetup()
         {
+            // сохраняем id игроков, чтобы потом понимать, какой игрок, за какую сторону играет
             setPlayerIds();
-            mapGeneration.MapGenerated += SpawnSecond;
+            
+            // генерация карты идет асинхронно
+            // action нужен, чтобы юниты спавнились после того, как места спавна определены
+            mapGeneration.MapGenerated += SpawnUnitsAndSetCamera;
+            //Начать генерацию карты для нужного количества игроков
             mapGeneration.Initialize(PhotonNetwork.PlayerList.Length);
         }
 
-        private void TestSpawner()
+        private void SpawnUnitsAndSetCamera()
         {
-            MultiplayerSetup();
-        }
-
-        private void SpawnSecond()
-        {
+            // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
 
+            // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
@@ -95,9 +96,9 @@ namespace GameLogic
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
                 
             }
-            else if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[1])
+            // спавн главного юнита второго игрока, если он есть
+            else if (playerIds.Count > 1 && PhotonNetwork.LocalPlayer.ActorNumber == playerIds[1])
             {
-                Debug.Log("spawn second");
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());
@@ -108,7 +109,6 @@ namespace GameLogic
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
             }
             // set path builder map
-            // pathBuilder.Map = mapGeneration;
             pathBuilder.Initialize(mapGeneration: mapGeneration);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
 
@@ -71,6 +72,18 @@ namespace Cards
         public override string ToString()
         {
             return _resource.ToString() + " | " + _quantity;
+        }
+        
+        [PunRPC]
+        protected virtual void SetIsCaptured(bool value)
+        {
+            base.SetIsCaptured(value);
+        }
+        
+        [PunRPC]
+        protected virtual void SetCurrentUnitId(int value)
+        {
+            base.SetCurrentUnitId(value);
         }
     }
 }
