@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -35,9 +36,12 @@ public class Unit : MonoBehaviour
 
     private VisionController visionController;
 
+    private PhotonView photonView;
+
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+        photonView = GetComponent<PhotonView>();
     }
 
     public void Initialize(MapGeneration mapGeneration)
@@ -100,6 +104,8 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
+        if (!photonView.IsMine)
+            return;
         Debug.Log("MoveAlongPath");
         isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));

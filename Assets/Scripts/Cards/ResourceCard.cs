@@ -74,16 +74,5 @@ namespace Cards
             return _resource.ToString() + " | " + _quantity;
         }
         
-        [PunRPC]
-        protected virtual void SetIsCaptured(bool value)
-        {
-            base.SetIsCaptured(value);
-        }
-        
-        [PunRPC]
-        protected virtual void SetCurrentUnitId(int value)
-        {
-            base.SetCurrentUnitId(value);
-        }
     }
 }
