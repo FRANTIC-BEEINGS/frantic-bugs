@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisPlayerTurn: 0
-  lastClickedCard: {fileID: 0}
+  _gameController: {fileID: 0}
 --- !u!114 &4850825595728573999
 MonoBehaviour:
   m_ObjectHideFlags: 0

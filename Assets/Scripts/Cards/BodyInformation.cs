@@ -14,7 +14,7 @@ public class BodyInformation : MonoBehaviour {
     [SerializeField] private AnimationCurve JumpCurve;
 
     private GUIFunctions _guiFunctions;
-    private PlayerController _playerController;
+    private GameLogic.GameController _gameController;
     
     public AnimationCurve GetRotationCurve()
     {
@@ -43,15 +43,7 @@ public class BodyInformation : MonoBehaviour {
     {
         _card = gameObject.GetComponentInParent<Card>();
         _guiFunctions = GameObject.FindWithTag("UIController").GetComponent<GUIFunctions>();
-        GameObject[] pcs = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var pc in pcs)
-        {
-            if (pc.GetPhotonView().IsMine)
-            {
-                _playerController = pc.GetComponent<PlayerController>();;
-                break;
-            }
-        }
+        _gameController = GameObject.FindWithTag("GameController").GetComponent<GameLogic.GameController>();
     }
 
     private void OnMouseUp()
@@ -61,7 +53,7 @@ public class BodyInformation : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0))
         {
-            _playerController.lastClickedCard = _card;
+            _gameController.lastClickedCard = _card;
             _guiFunctions.UpdateCardInfo(_card);
         }
     }

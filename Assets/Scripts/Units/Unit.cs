@@ -5,9 +5,8 @@ using Cards;
 using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IPunObservable
 {
     [SerializeField] private AnimationCurve MoveCurve;
     [SerializeField] private AnimationCurve JumpCurve;
@@ -34,6 +33,16 @@ public class Unit : MonoBehaviour
     public Action<int> OnLevelChange;
     private bool initialized;
 
+    public int Level
+    {
+        get => level;
+        set
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                photonView.RPC("SetLevel", RpcTarget.MasterClient, value);
+            level = value;
+        }
+    }
     private VisionController visionController;
 
     private PhotonView photonView;
@@ -42,6 +51,7 @@ public class Unit : MonoBehaviour
     {
         visionController = GetComponent<VisionController>();
         photonView = GetComponent<PhotonView>();
+        if (photonView) photonView.ObservedComponents.Add(this);
     }
 
     public void Initialize(MapGeneration mapGeneration)
@@ -59,7 +69,7 @@ public class Unit : MonoBehaviour
 
     public int Force
     {
-        get => (int)(level * forceCoef);
+        get => (int)(Level * forceCoef);
     }
 
     public int ResourceEnergy
@@ -81,8 +91,8 @@ public class Unit : MonoBehaviour
     // increase level and change characteristics
     public void IncreaseLevel()
     {
-        level += 1;
-        OnLevelChange?.Invoke(level);
+        Level += 1;
+        OnLevelChange?.Invoke(Level);
         forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
@@ -177,4 +187,30 @@ public class Unit : MonoBehaviour
         this.enabled = false;
         OnDeath?.Invoke();
     }
+
+    #region PunCallbacks
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(level);
+        }
+        else if (stream.IsReading)
+        {
+            level = (int) stream.ReceiveNext();
+        }
+    }
+
+    #endregion
+    
+    #region RPCs
+
+    [PunRPC]
+    protected void SetLevel(int value)
+    {
+        level = value;
+    }
+
+    #endregion
 }

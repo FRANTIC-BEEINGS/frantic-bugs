@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 530817649}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -269,8 +269,11 @@ MonoBehaviour:
   mainCamera: {fileID: 702974901}
   pathBuilder: {fileID: 481518550}
   guiFunctions: {fileID: 1806252369}
+  gameTimer: {fileID: 5597020951633499862}
+  turnTimer: {fileID: 6616788803473285301}
   playerPrefab: {fileID: 5329007487492173341, guid: 19ccaf032bea544189b10724267b576e, type: 3}
   fighterPrefab: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
+  lastClickedCard: {fileID: 0}
 --- !u!20 &702974901 stripped
 Camera:
   m_CorrespondingSourceObject: {fileID: 3117324825687955749, guid: 693a2f36358bf4456988d54e695228ae, type: 3}
@@ -430,6 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 774f6439c290c42feafbfa704a47e1f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  someData: 0
 --- !u!212 &869557120
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2005,7 +2009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actionButton: {fileID: 1922807023877649272}
   cardName: {fileID: 7195546319379402598}
-  buttonText: {fileID: 0}
+  buttonText: {fileID: 1922807023555048485}
 --- !u!222 &1047704356189594642
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2691,22 +2695,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2fbd8c5eb82344b4781a3f408a7c12bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5130519817498085309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5597020951633499818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 945654189
-  AlwaysReplicateAsRoot: 0
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!222 &5145140519309131827
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2990,8 +2978,6 @@ GameObject:
   - component: {fileID: 5597020951633499863}
   - component: {fileID: 5597020951633499860}
   - component: {fileID: 5597020951633499862}
-  - component: {fileID: 5921477907579563666}
-  - component: {fileID: 5130519817498085309}
   m_Layer: 5
   m_Name: GameTimer
   m_TagString: Untagged
@@ -3124,18 +3110,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &5921477907579563666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5597020951633499818}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2fbd8c5eb82344b4781a3f408a7c12bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &6218245157987978690
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3314,7 +3288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9857a205f241d4062a47c1cd0ae26419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gameController: {fileID: 0}
+  _gameController: {fileID: 530817649}
   buttonType: 1
 --- !u!114 &6534564530969781041
 MonoBehaviour:

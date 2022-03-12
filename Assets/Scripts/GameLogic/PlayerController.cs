@@ -9,11 +9,10 @@ namespace GameLogic
 	public class PlayerController : MonoBehaviourPunCallbacks
 	{
 		public bool thisPlayerTurn;
-		private GameController _gameController;
+		public GameController _gameController;
 		private ResourceManager _resourceManager;
 		private UnitsMoveController _unitsMoveController;
 		private PathBuilder _pathBuilder;
-		public Card lastClickedCard;
 
 		public ResourceManager GetResourceManager()
 		{
@@ -99,7 +98,7 @@ namespace GameLogic
 			{
 				_pathBuilder.CanBuild = false;
 			}
-			// _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
+			_gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 		}
 
 		public void EndTurn()
@@ -142,5 +141,10 @@ namespace GameLogic
 		// 	_unitsMoveController.FinishedMovementAction += FinishedMovement;
 		// }
 
+		[PunRPC] 
+		void EndTurnRpc()
+		{
+			_gameController.NextTurn();
+		}
 	}
 }

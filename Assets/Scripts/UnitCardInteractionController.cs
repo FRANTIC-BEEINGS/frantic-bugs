@@ -58,7 +58,7 @@ public static class UnitCardInteractionController
     
     public static void GetResource(ResourceCard resourceCard, Unit unit, ResourceManager resourceManager)
     {
-        if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy)
+        if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy || resourceCard.ResourceCollected)
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
