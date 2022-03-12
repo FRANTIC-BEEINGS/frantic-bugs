@@ -59,8 +59,8 @@ namespace GameLogic
 		{
 			thisPlayerTurn = true;
 			_resourceManager = new ResourceManager(GameSettings.TurnEnergy);
+			
 			GameObject pathBuilderGO = GameObject.FindWithTag("PathBuilder");
-			Debug.Log("pathBuilderGO = " + pathBuilderGO);
 			PathBuilder pathBuilder = pathBuilderGO.GetComponent<PathBuilder>();
 			_unitsMoveController = new UnitsMoveController(pathBuilder, _resourceManager);
 

@@ -82,7 +82,7 @@ public class Unit : MonoBehaviour
     public void IncreaseLevel()
     {
         level += 1;
-        OnLevelChange(level);
+        OnLevelChange?.Invoke(level);
         forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
@@ -106,7 +106,7 @@ public class Unit : MonoBehaviour
     {
         if (!photonView.IsMine)
             return;
-        Debug.Log("MoveAlongPath");
+        Debug.Log("MoveAlongPath" + resourceManager.GetResource(ResourceType.Energy));
         isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));
     }
@@ -134,7 +134,7 @@ public class Unit : MonoBehaviour
             yield return StartCoroutine(MoveTo(endPosition, Constants.STEP_DURATION)); //start one movement
 
             //if card is enemy break movement
-            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated())
+            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated)
             {
                 FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;

@@ -20,7 +20,6 @@ namespace UI
 
         private void Awake()
         {
-            Debug.Log(PhotonNetwork.LocalPlayer.ActorNumber);
             PhotonNetwork.AutomaticallySyncScene = true;
             UpdatePlayerList(); //called here instead of onJoined due to it being called prior to the script loading
         }

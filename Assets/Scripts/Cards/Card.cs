@@ -23,18 +23,17 @@ namespace Cards
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
-        private int _currentUnitId;
+        int _currentUnitId;
         private Coroutine _rotateCard;
         public bool isTreeVisible;  //whether tree gives vision on the card
         
-        PhotonView photonView;
+        protected PhotonView photonView;
 
         //синхронизация переменных
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+        public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
         {
             if (stream.IsWriting)
             {
-                Debug.Log($"writing _currentUnitId = {_currentUnitId}");
                 stream.SendNext(_isCaptured);
                 stream.SendNext(_currentUnitId);
             }
@@ -50,7 +49,6 @@ namespace Cards
                         _currentUnit = null;
                     } else
                     {
-                        Debug.Log($"reading unit id = {_currentUnitId}");
                         _currentUnit = PhotonView.Find(_currentUnitId).gameObject.GetComponent<Unit>();
                     }
                 }
@@ -97,7 +95,6 @@ namespace Cards
             get => _currentUnitId;
             set
             {
-                Debug.Log($"value = {value}");
                 if (!PhotonNetwork.IsMasterClient)
                     photonView.RPC("SetCurrentUnitId", RpcTarget.MasterClient, value);
                 _currentUnitId = value;
@@ -109,7 +106,6 @@ namespace Cards
             get => _isCaptured;
             set
             {
-                Debug.Log($"value = {value}");
                 if (!PhotonNetwork.IsMasterClient)
                     photonView.RPC("SetIsCaptured", RpcTarget.MasterClient, value);
                 _isCaptured = value;
@@ -134,9 +130,7 @@ namespace Cards
             }
 
             _currentUnit = unit;
-            Debug.Log($"unit.gameObject.GetPhotonView().ViewID = {unit.gameObject.GetPhotonView().ViewID}");
             CurrentUnitId = unit.gameObject.GetPhotonView().ViewID;
-            Debug.Log($"_currentUnitId = {_currentUnitId}");
             unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
             return true;
         }
@@ -194,7 +188,6 @@ namespace Cards
         [PunRPC]
         protected void SetCurrentUnitId(int value)
         {
-            Debug.Log($"RPC SetCurrentUnitId {value}");
             _currentUnitId = value;
         }
 
