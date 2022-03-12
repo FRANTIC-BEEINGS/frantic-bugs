@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cards;
 using ResourceManagment;
+using UI;
 using Unity.Netcode;
 using UnityEngine.UI;
 
@@ -32,7 +33,7 @@ public class GameController : NetworkBehaviour
 	private PathBuilder pathBuilder;
 	private Unit unit;
 
-	[SerializeField] private GUIController guiController;
+	[SerializeField] private GUIFunctions guiFunctions;
 
 	[SerializeField] private Button captureButton;
 	[SerializeField] private Button getResourceButton;
@@ -61,7 +62,7 @@ public class GameController : NetworkBehaviour
 	{
 		if (NetworkManager.Singleton.IsServer && !gameStarted)
 		{
-			guiController.OnGameStarted();
+			guiFunctions.OnGameStarted();
 			gameStarted = true;
 			map = Instantiate(mapPrefab).GetComponent<MapGeneration>();
 
@@ -84,9 +85,9 @@ public class GameController : NetworkBehaviour
 		foreach (var player in _networkPlayerControllers)
 		{
 			player.Initialize(TurnEnergy, pathBuilder);
-			player.GetResourceManager().OnResourceChange = guiController.UpdateResourceDisplay;
+			player.GetResourceManager().OnResourceChange = guiFunctions.UpdateResourceDisplay;
 			player.GetResourceManager().OnResourceChange += CheckWinCondition;
-			guiController.SetGameGoals(foodToWin,moneyToWin);
+			guiFunctions.SetGameGoals(foodToWin,moneyToWin);
 		}
 		SpawnMainUnits();
 		StartNextTurn();
@@ -247,7 +248,7 @@ public class GameController : NetworkBehaviour
 				{
 					foodToWin = 0;
 					if (moneyToWin == 0)
-						guiController.OnWin();
+						guiFunctions.OnWin();
 				}
 				break;
 			case ResourceType.Money:
@@ -255,7 +256,7 @@ public class GameController : NetworkBehaviour
 				{
 					moneyToWin = 0;
 					if (foodToWin == 0)
-						guiController.OnWin();
+						guiFunctions.OnWin();
 				}
 				break;
 		}
@@ -263,12 +264,12 @@ public class GameController : NetworkBehaviour
 
 	private void Death()
 	{
-		guiController.OnLoss();
+		guiFunctions.OnLoss();
 	}
 
 	private void ChangeLevelUI(int level)
 	{
-		guiController.UpdateLevelDisplay(level);
+		guiFunctions.UpdateLevelDisplay(level);
 	}
 
 }

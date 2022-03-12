@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IPunObservable
 {
     [SerializeField] private AnimationCurve MoveCurve;
     [SerializeField] private AnimationCurve JumpCurve;
@@ -33,11 +33,25 @@ public class Unit : MonoBehaviour
     public Action<int> OnLevelChange;
     private bool initialized;
 
+    public int Level
+    {
+        get => level;
+        set
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                photonView.RPC("SetLevel", RpcTarget.MasterClient, value);
+            level = value;
+        }
+    }
     private VisionController visionController;
+
+    private PhotonView photonView;
 
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+        photonView = GetComponent<PhotonView>();
+        if (photonView) photonView.ObservedComponents.Add(this);
     }
 
     public void Initialize(MapGeneration mapGeneration)
@@ -55,7 +69,7 @@ public class Unit : MonoBehaviour
 
     public int Force
     {
-        get => (int)(level * forceCoef);
+        get => (int)(Level * forceCoef);
     }
 
     public int ResourceEnergy
@@ -77,8 +91,8 @@ public class Unit : MonoBehaviour
     // increase level and change characteristics
     public void IncreaseLevel()
     {
-        level += 1;
-        OnLevelChange(level);
+        Level += 1;
+        OnLevelChange?.Invoke(Level);
         forceCoef = (int)(forceCoef * increaseCoef);
         moveEnergy = (int)(moveEnergy * decreaseCoef);
         captureEnergy = (int)(captureEnergy * decreaseCoef);
@@ -100,6 +114,9 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
+        if (!photonView.IsMine)
+            return;
+        Debug.Log("MoveAlongPath" + resourceManager.GetResource(ResourceType.Energy));
         isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));
     }
@@ -127,7 +144,7 @@ public class Unit : MonoBehaviour
             yield return StartCoroutine(MoveTo(endPosition, Constants.STEP_DURATION)); //start one movement
 
             //if card is enemy break movement
-            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated())
+            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated)
             {
                 FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;
@@ -170,4 +187,30 @@ public class Unit : MonoBehaviour
         this.enabled = false;
         OnDeath?.Invoke();
     }
+
+    #region PunCallbacks
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(level);
+        }
+        else if (stream.IsReading)
+        {
+            level = (int) stream.ReceiveNext();
+        }
+    }
+
+    #endregion
+    
+    #region RPCs
+
+    [PunRPC]
+    protected void SetLevel(int value)
+    {
+        level = value;
+    }
+
+    #endregion
 }

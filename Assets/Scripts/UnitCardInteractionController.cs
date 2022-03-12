@@ -36,7 +36,7 @@ public static class UnitCardInteractionController
     
     public static bool CanGetResource(Card card, Unit unit)
     {
-        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResurceСollected;
+        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResourceCollected;
     }
 
     public static bool HaveEnoughResourceToGetResourceCard(Card card, ResourceManager resourceManager, Unit unit)
@@ -58,11 +58,11 @@ public static class UnitCardInteractionController
     
     public static void GetResource(ResourceCard resourceCard, Unit unit, ResourceManager resourceManager)
     {
-        if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy)
+        if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy || resourceCard.ResourceCollected)
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
         resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
-        resourceCard.GetResource();
+        resourceCard.ConsumeResource();
     }
     
     public static bool StepOnCard(Unit unit, Card card)

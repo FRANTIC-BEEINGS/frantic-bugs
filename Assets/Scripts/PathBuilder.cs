@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using Cards;
+using Photon.Pun;
 using UnityEngine.EventSystems;
 
 enum MouseButtons {
@@ -72,8 +73,12 @@ public class PathBuilder : MonoBehaviour
                 Clear();
             }
             else if (MouseState == MouseButtons.Left && OnCard) {
-                if (PathBody.Count == 0) {
-                    if (Candidate != null && Candidate.id == CurBody.id && CurBody.gameObject.transform.parent.gameObject.GetComponent<Card>().GetCurrentUnit() != null) {
+                if (PathBody.Count == 0)
+                {
+                    Unit currentUnit = CurBody.gameObject.transform.parent.gameObject.GetComponent<Card>()
+                        .GetCurrentUnit();
+                    if (Candidate != null && Candidate.id == CurBody.id && 
+                        currentUnit != null && currentUnit.gameObject.GetPhotonView().IsMine) {
                         Add(CurBody);
                     }
                 }

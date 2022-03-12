@@ -105,6 +105,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8284019897818107654}
   - component: {fileID: 8284019897818107655}
+  - component: {fileID: 8488761893975319782}
+  - component: {fileID: -6096738342710425817}
   m_Layer: 0
   m_Name: EmptyCard
   m_TagString: Untagged
@@ -142,6 +144,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FaceSprite: {fileID: 21300000, guid: 2cfbf6619eb047545a425e8a31732c83, type: 3}
   isTreeVisible: 0
+--- !u!114 &8488761893975319782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8284019897818107672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 0
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
+--- !u!114 &-6096738342710425817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8284019897818107672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 961ece0ead2774f5c892d28a7817e6fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3747442463563806961
 PrefabInstance:
   m_ObjectHideFlags: 0

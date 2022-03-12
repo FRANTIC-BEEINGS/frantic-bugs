@@ -13,15 +13,12 @@ public class UITimerController : MonoBehaviour
     public string timeSeparator = ":";
     
     private Text timerText;
-    private CountDown timer;
     void Awake()
     {
-        timer = GetComponent<CountDown>();
         timerText = GetComponent<Text>();
-        timer.UpdateTimer += UpdateTime;
     }
 
-    private void UpdateTime(int timeInSeconds)
+    public void UpdateTime(int timeInSeconds)
     {
         if (showOnlyInSeconds)
         {

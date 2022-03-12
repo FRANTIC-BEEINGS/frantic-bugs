@@ -47,7 +47,8 @@ public class UnitsMoveController
 
     public void StopMovement()
     {
-        currentMovingUnit.stopMovement();
+        if (currentMovingUnit != null)
+            currentMovingUnit.stopMovement();
     }
 
     private void FightEnemy(EnemyCard card)
