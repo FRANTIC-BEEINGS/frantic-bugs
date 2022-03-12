@@ -45,6 +45,8 @@ MonoBehaviour:
   - SetMultiplayerSpawnsRpc
   - SetCurrentUnitId
   - SetIsCaptured
+  - SetIsDefeated
+  - "SetResource\u0421ollected"
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

@@ -13,7 +13,21 @@ namespace Cards
         [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
         public Action<ResourceCard> Replenish;
-        public bool ResourceCollected;
+        
+        private bool _resourceСollected;
+
+        public bool ResourceСollected
+        {
+            get => _resourceСollected;
+            set
+            {
+                if (!PhotonNetwork.IsMasterClient)
+                {
+                    photonView.RPC("SetResourceСollected", RpcTarget.MasterClient, value);
+                }
+                _resourceСollected = value;
+            }
+        }
 
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity = 0, int replenishmentSpeed = 0)
         {
@@ -23,7 +37,7 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResourceCollected = false;
+            ResourceСollected = false;
         }
 
         //use this in generation for setting default parameters
@@ -34,11 +48,12 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResourceCollected = false;
+            ResourceСollected = false;
         }
 
         public ResourceType GetResource()
         {
+            ResourceСollected = true;
             return _resource;
         }
 
@@ -49,7 +64,7 @@ namespace Cards
         
         public void ConsumeResource()
         {
-            ResourceCollected = true;
+            ResourceСollected = true;
         }
 
         //must be called every player turn (do not call when it is enemy's turn)
@@ -97,5 +112,27 @@ namespace Cards
             return result;
         }
         
+        public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+        {
+            base.OnPhotonSerializeView(stream, messageInfo);
+            if (stream.IsWriting)
+            {
+                stream.SendNext(_resourceСollected);
+            }
+            else if (stream.IsReading)
+            {
+                _resourceСollected = (bool) stream.ReceiveNext();
+            }
+        }
+
+        #region RPCs
+
+        [PunRPC]
+        protected void SetResourceСollected(bool value)
+        {
+            _resourceСollected = value;
+        }
+        
+        #endregion
     }
 }
