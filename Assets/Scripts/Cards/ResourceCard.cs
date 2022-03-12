@@ -14,18 +14,18 @@ namespace Cards
         private int _turnsToNextReplenishment;
         public Action<ResourceCard> Replenish;
         
-        private bool _resourceСollected;
+        private bool _resourceCollected;
 
-        public bool ResourceСollected
+        public bool ResourceCollected
         {
-            get => _resourceСollected;
+            get => _resourceCollected;
             set
             {
                 if (!PhotonNetwork.IsMasterClient)
                 {
                     photonView.RPC("SetResourceСollected", RpcTarget.MasterClient, value);
                 }
-                _resourceСollected = value;
+                _resourceCollected = value;
             }
         }
 
@@ -37,7 +37,7 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResourceСollected = false;
+            ResourceCollected = false;
         }
 
         //use this in generation for setting default parameters
@@ -48,18 +48,23 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResourceСollected = false;
+            ResourceCollected = false;
         }
 
         public ResourceType GetResource()
         {
-            ResourceСollected = true;
+            ResourceCollected = true;
             return _resource;
         }
 
         public int GetResourceCount()
         {
             return _quantity;
+        }
+        
+        public void ConsumeResource()
+        {
+            ResourceCollected = true;
         }
 
         //must be called every player turn (do not call when it is enemy's turn)
@@ -87,17 +92,36 @@ namespace Cards
         {
             return _resource.ToString() + " | " + _quantity;
         }
+
+        public string GetCollectButtonText()
+        {
+            string result = "";
+
+            switch (_resource)
+            {
+                case ResourceType.Energy:
+                    result = "Rest";
+                    break;
+                case ResourceType.Food:
+                    result = "Gather " + _resource.ToString();
+                    break;
+                case ResourceType.Money:
+                    result = "Collect " + _resource.ToString();
+                    break;
+            }
+            return result;
+        }
         
         public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
         {
             base.OnPhotonSerializeView(stream, messageInfo);
             if (stream.IsWriting)
             {
-                stream.SendNext(_resourceСollected);
+                stream.SendNext(_resourceCollected);
             }
             else if (stream.IsReading)
             {
-                _resourceСollected = (bool) stream.ReceiveNext();
+                _resourceCollected = (bool) stream.ReceiveNext();
             }
         }
 
@@ -106,7 +130,7 @@ namespace Cards
         [PunRPC]
         protected void SetResourceСollected(bool value)
         {
-            _resourceСollected = value;
+            _resourceCollected = value;
         }
         
         #endregion

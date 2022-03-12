@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UI;
 using Unity.Netcode;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.UI;
 
 public class ButtonOnClickAdd : MonoBehaviour
 {
-    [SerializeField] private GameController _gameController;
+    [SerializeField] private GameLogic.GameController _gameController;
     public ButtonType buttonType;
     private bool onClickAdded = false;
 
@@ -16,8 +17,7 @@ public class ButtonOnClickAdd : MonoBehaviour
     {
         if (!onClickAdded)
         {
-            // if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsHost)
-            //     onClickAdded = true;
+            onClickAdded = true;
             SetButtonOnClickMethod();
         }
     }
@@ -61,14 +61,24 @@ public class ButtonOnClickAdd : MonoBehaviour
     
     private void SetEndTurn()
     {
-        // if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsClient)
-        // {
-        //     Button btn = gameObject.GetComponent<Button>();
-        //     btn.onClick.AddListener(NetworkManager.Singleton.SpawnManager.GetLocalPlayerObject()
-        //         .GetComponent<NetworkPlayerController>().EndTurn);
-        //     onClickAdded = true;
-        // }
+        Button btn = gameObject.GetComponent<Button>();
+        btn.onClick.AddListener(EndTurn);
+        onClickAdded = true;
     }
+    private void EndTurn()
+    {
+        if (!_gameController.GetPlayerController().thisPlayerTurn)
+            return;
+        if (PhotonNetwork.IsMasterClient)
+        {
+            _gameController.NextTurn();
+            return;
+        }
+
+        PhotonView photonView = PhotonView.Get(_gameController.GetPlayerController());
+        photonView.RPC("EndTurnRpc", RpcTarget.MasterClient);
+    }
+    
     
     private void CaptureCard()
     {

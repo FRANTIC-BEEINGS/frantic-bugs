@@ -64,7 +64,7 @@ namespace Cards
 
         public override string ToString()
         {
-            return name + " | Level " + _level;
+            return (_isDefeated ? "Defeated " : "") + name + " | Level " + _level;
         }
         
         public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)

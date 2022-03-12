@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cards;
 using ExitGames.Client.Photon;
 using Photon.Pun;
+using UI;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
 
@@ -14,17 +17,46 @@ namespace GameLogic
         [SerializeField] private MapGeneration mapGeneration;
         [SerializeField] private Camera mainCamera;
         [SerializeField] private PathBuilder pathBuilder;
-        
+
         //UI
-        [SerializeField] private GUIController guiController;
+        [SerializeField] private GUIFunctions guiFunctions;
+        [SerializeField] private UITimerController gameTimer;
+        [SerializeField] private UITimerController turnTimer;
         
         //network
         private Photon.Realtime.Player[] _players;
         
-        //player
+        //prefabs
         [SerializeField] private GameObject playerPrefab;
-        //unit
         [SerializeField] private GameObject fighterPrefab;
+        
+        
+        private PlayerController _playerController;
+        public Card lastClickedCard;
+
+        public PlayerController GetPlayerController()
+        {
+            return _playerController;
+        }
+        public void CanGetResource()
+        {
+            UnitCardInteractionController.CanGetResource(lastClickedCard as ResourceCard,
+                lastClickedCard.GetCurrentUnit());
+        }
+        public void GetResource()
+        {
+            UnitCardInteractionController.GetResource(lastClickedCard as ResourceCard,
+                lastClickedCard.GetCurrentUnit(), _playerController.GetResourceManager());
+        }
+        private void Death()
+        {
+            guiFunctions.OnLoss();
+        }
+
+        private void ChangeLevelUI(int level)
+        {
+            guiFunctions.UpdateLevelDisplay(level);
+        }
         
         // Network
         private List<int> playerIds;
@@ -109,13 +141,17 @@ namespace GameLogic
         {
             // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-            player.GetComponent<PlayerController>().SetGameControllerAndSubscribe(this);
+            _playerController = player.GetComponent<PlayerController>();
+            _playerController.SetGameControllerAndSubscribe(this);
+            _playerController.GetResourceManager().OnResourceChange += guiFunctions.UpdateResourceDisplay;
 
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                unit.OnDeath += Death;
+                unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetFirstSpawnCard());
                 
                 //set camera
@@ -129,6 +165,8 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                unit.OnDeath += Death;
+                unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());
                 
                 //set camera
@@ -150,9 +188,12 @@ namespace GameLogic
             }
         }
 
-        private void NextTurn()
+        public bool CanEndTurn()
         {
-            //todo UI?
+            return _playerController.thisPlayerTurn;
+        }
+        public void NextTurn()
+        {
             if (PhotonNetwork.IsMasterClient)
             {
                 int newIndexOfCurrentPlayerTurn = (IndexOfCurrentPlayerTurn + 1) % playerIds.Count;
@@ -166,8 +207,10 @@ namespace GameLogic
         {
             //todo: game input updates
             timeToNextTurn = (int) (GameSettings.TurnDuration - (PhotonNetwork.Time - lastTurnStartTime));
+            turnTimer.UpdateTime((int)timeToNextTurn);
             timeToEndGame = (int) (GameSettings.GameDuration - (PhotonNetwork.Time - gameStartTime));
-            if (timeToNextTurn <= 0 && lastTurnStartTime > 0 && gameStartTime > 0)
+            gameTimer.UpdateTime((int)timeToEndGame);
+            if (timeToNextTurn < 0 && lastTurnStartTime > 0 && gameStartTime > 0)
             {
                 NextTurn();
             }
