@@ -55,7 +55,7 @@ namespace Cards
             }
         }
         
-        private void Start ()
+        private void Awake ()
         {
             //выставляются значения для генерации и правильного размещения карточки
             _jumpHeight = 1.5f;

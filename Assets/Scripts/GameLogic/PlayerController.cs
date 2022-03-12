@@ -12,6 +12,7 @@ namespace GameLogic
 		private GameController _gameController;
 		private ResourceManager _resourceManager;
 		private UnitsMoveController _unitsMoveController;
+		private PathBuilder _pathBuilder;
 		public Card lastClickedCard;
 
 		public ResourceManager GetResourceManager()
@@ -24,8 +25,38 @@ namespace GameLogic
 			return _unitsMoveController;
 		}
 
+		public void SetGameControllerAndSubscribe(GameController gameController)
+		{
+			_gameController = gameController;
+			_gameController.NextTurnPlayerId += StartNextTurn;
+		}
+
+		private void StartNextTurn(int playerId)
+		{
+			if (!photonView.IsMine)
+				return;
+			if (PhotonNetwork.LocalPlayer.ActorNumber != playerId)
+			{
+				thisPlayerTurn = false;
+				if (_pathBuilder != null)
+					_pathBuilder.CanBuild = false;
+				if (_unitsMoveController != null)
+					_unitsMoveController.StopMovement();
+			}
+			else
+			{
+				thisPlayerTurn = true;
+				if (_pathBuilder != null)
+					_pathBuilder.CanBuild = true;
+			}
+		}
+
 		void Update()
 		{
+			if (photonView.IsMine && !thisPlayerTurn)
+			{
+				_pathBuilder.CanBuild = false;
+			}
 			// if (Input.GetMouseButtonDown((int) MouseButtons.Right))
 			// {
 			// 	if (thisPlayerTurn)
@@ -57,14 +88,17 @@ namespace GameLogic
 
 		private void Start()
 		{
-			thisPlayerTurn = true;
 			_resourceManager = new ResourceManager(GameSettings.TurnEnergy);
 			
 			GameObject pathBuilderGO = GameObject.FindWithTag("PathBuilder");
-			PathBuilder pathBuilder = pathBuilderGO.GetComponent<PathBuilder>();
-			_unitsMoveController = new UnitsMoveController(pathBuilder, _resourceManager);
+			_pathBuilder = pathBuilderGO.GetComponent<PathBuilder>();
+			_unitsMoveController = new UnitsMoveController(_pathBuilder, _resourceManager);
 
 			_unitsMoveController.FinishedMovementAction += FinishedMovement;
+			if (!thisPlayerTurn)
+			{
+				_pathBuilder.CanBuild = false;
+			}
 			// _gameController = GameObject.FindWithTag("GameController").GetComponent<GameController>();
 		}
 

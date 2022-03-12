@@ -56,7 +56,6 @@ MonoBehaviour:
   name: Enemy
   _level: 1
   _experience: 10
-  _isDefeated: 0
 --- !u!114 &-7142370458354902286
 MonoBehaviour:
   m_ObjectHideFlags: 0

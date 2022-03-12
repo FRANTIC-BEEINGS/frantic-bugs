@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Random = UnityEngine.Random;
+using Photon.Realtime;
 
 namespace GameLogic
 {
-    public class GameController : MonoBehaviourPunCallbacks
+    public class GameController : MonoBehaviourPunCallbacks, IInRoomCallbacks
     {
         //gameplay
         [SerializeField] private MapGeneration mapGeneration;
@@ -27,6 +28,23 @@ namespace GameLogic
         
         // Network
         private List<int> playerIds;
+        private int IndexOfCurrentPlayerTurn = 0;
+        
+        // Actions
+        public Action<int> NextTurnPlayerId;
+        
+        //timers
+        private double gameStartTime = 0;
+        private double lastTurnStartTime = 0;
+        private double timeToNextTurn = 0;
+        private double timeToEndGame = 0;
+
+        public int GetCurrentPlayerTurnPhotonId()
+        {
+            if (IndexOfCurrentPlayerTurn < 0 || IndexOfCurrentPlayerTurn >= playerIds.Count)
+                return -1;
+            return playerIds[IndexOfCurrentPlayerTurn];
+        }
 
         private void Start()
         {
@@ -76,12 +94,22 @@ namespace GameLogic
             mapGeneration.MapGenerated += SpawnUnitsAndSetCamera;
             //Начать генерацию карты для нужного количества игроков
             mapGeneration.Initialize(PhotonNetwork.PlayerList.Length);
+            
+            //Set start time to room properties
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.AddCallbackTarget(this);
+                var timeTmp = PhotonNetwork.Time;
+                Hashtable ht = new Hashtable {{"GameStartTime", timeTmp}, {"LastTurnStartTime", timeTmp}};
+                PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
+            }
         }
 
         private void SpawnUnitsAndSetCamera()
         {
             // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
+            player.GetComponent<PlayerController>().SetGameControllerAndSubscribe(this);
 
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
@@ -110,6 +138,7 @@ namespace GameLogic
             }
             // set path builder map
             pathBuilder.Initialize(mapGeneration: mapGeneration);
+            NextTurn();
         }
 
         private void setPlayerIds()
@@ -119,6 +148,31 @@ namespace GameLogic
             {
                 playerIds.Add(player.ActorNumber);
             }
+        }
+
+        private void NextTurn()
+        {
+            //todo UI?
+            if (PhotonNetwork.IsMasterClient)
+            {
+                int newIndexOfCurrentPlayerTurn = (IndexOfCurrentPlayerTurn + 1) % playerIds.Count;
+                Hashtable ht = new Hashtable {{"LastTurnStartTime", PhotonNetwork.Time}, 
+                    {"IndexOfCurrentPlayerTurn", newIndexOfCurrentPlayerTurn}};
+                PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
+            }
+        }
+        
+        private void Update()
+        {
+            //todo: game input updates
+            timeToNextTurn = (int) (GameSettings.TurnDuration - (PhotonNetwork.Time - lastTurnStartTime));
+            timeToEndGame = (int) (GameSettings.GameDuration - (PhotonNetwork.Time - gameStartTime));
+            if (timeToNextTurn <= 0 && lastTurnStartTime > 0 && gameStartTime > 0)
+            {
+                NextTurn();
+            }
+            Debug.Log("Update: timeToNextTurn = " + timeToNextTurn + 
+                      ", turn of " + IndexOfCurrentPlayerTurn);
         }
 
         #region PunCallbacks
@@ -136,12 +190,28 @@ namespace GameLogic
                 SceneManager.LoadScene("GameRoom");
             }
         }
+        
+        public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+        {
+            object propsTime;
+            if (propertiesThatChanged.TryGetValue("GameStartTime", out propsTime))
+            {
+                gameStartTime = (double) propsTime;
+            }
+            
+            if (propertiesThatChanged.TryGetValue("LastTurnStartTime", out propsTime))
+            {
+                lastTurnStartTime = (double) propsTime;
+            }
+            
+            if (propertiesThatChanged.TryGetValue("IndexOfCurrentPlayerTurn", out propsTime))
+            {
+                IndexOfCurrentPlayerTurn = (int) propsTime;
+                NextTurnPlayerId?.Invoke(playerIds[IndexOfCurrentPlayerTurn]);
+            }
+        }
 
         #endregion
 
-        private void Update()
-        {
-            //todo: game input updates
-        }
     }
 }
