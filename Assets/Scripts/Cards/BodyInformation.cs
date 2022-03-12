@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using GameLogic;
+using Photon.Pun;
 using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,6 +14,7 @@ public class BodyInformation : MonoBehaviour {
     [SerializeField] private AnimationCurve JumpCurve;
 
     private GUIFunctions _guiFunctions;
+    private PlayerController _playerController;
     
     public AnimationCurve GetRotationCurve()
     {
@@ -40,6 +43,15 @@ public class BodyInformation : MonoBehaviour {
     {
         _card = gameObject.GetComponentInParent<Card>();
         _guiFunctions = GameObject.FindWithTag("UIController").GetComponent<GUIFunctions>();
+        GameObject[] pcs = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var pc in pcs)
+        {
+            if (pc.GetPhotonView().IsMine)
+            {
+                _playerController = pc.GetComponent<PlayerController>();;
+                break;
+            }
+        }
     }
 
     private void OnMouseUp()
@@ -49,6 +61,7 @@ public class BodyInformation : MonoBehaviour {
 
         if (Input.GetMouseButtonUp(0))
         {
+            _playerController.lastClickedCard = _card;
             _guiFunctions.UpdateCardInfo(_card);
         }
     }
