@@ -302,7 +302,7 @@ MonoBehaviour:
   _quantity: 2
   _replenishmentQuantity: 1
   _replenishmentSpeed: 1
-  "Resurce\u0421ollected": 0
+  ResourceCollected: 0
 --- !u!114 &5219846964135215613
 MonoBehaviour:
   m_ObjectHideFlags: 0

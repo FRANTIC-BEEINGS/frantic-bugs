@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using UI;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,6 +11,8 @@ public class BodyInformation : MonoBehaviour {
     [SerializeField] private AnimationCurve RotationCurve;
     [SerializeField] private AnimationCurve JumpCurve;
 
+    private GUIFunctions _guiFunctions;
+    
     public AnimationCurve GetRotationCurve()
     {
         return RotationCurve;
@@ -36,18 +39,25 @@ public class BodyInformation : MonoBehaviour {
     private void Start()
     {
         _card = gameObject.GetComponentInParent<Card>();
+        _guiFunctions = GameObject.FindWithTag("UIController").GetComponent<GUIFunctions>();
     }
 
-    private void OnMouseDown()
+    private void OnMouseUp()
     {
         if (EventSystem.current.IsPointerOverGameObject())
-        {
             return;
-        }
-        if (Input.GetMouseButtonDown(0))
+
+        if (Input.GetMouseButtonUp(0))
         {
-            GUIController guiController = GameObject.FindWithTag("UIController").GetComponent<GUIController>();
-            guiController.UpdateCardInfo(_card);
+            _guiFunctions.UpdateCardInfo(_card);
         }
+    }
+
+    private void OnMouseDrag()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+        
+        _guiFunctions.HideCardInfo();
     }
 }

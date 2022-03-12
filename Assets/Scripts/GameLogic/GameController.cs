@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Photon.Pun;
+using UI;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
@@ -15,7 +17,7 @@ namespace GameLogic
         [SerializeField] private PathBuilder pathBuilder;
         
         //UI
-        [SerializeField] private GUIController guiController;
+        [SerializeField] private GUIFunctions guiFunctions;
         
         //network
         private Photon.Realtime.Player[] _players;
@@ -24,6 +26,21 @@ namespace GameLogic
         [SerializeField] private GameObject playerPrefab;
         //unit
         [SerializeField] private GameObject fighterPrefab;
+
+        public void GetResource()
+        {
+            //TODO: ASAP
+            //UnitCardInteractionController.GetResource();
+        }
+        private void Death()
+        {
+            guiFunctions.OnLoss();
+        }
+
+        private void ChangeLevelUI(int level)
+        {
+            guiFunctions.UpdateLevelDisplay(level);
+        }
         
         // Network
         private List<int> playerIds;
@@ -88,6 +105,8 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                unit.OnDeath += Death;
+                unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetFirstSpawnCard());
                 
                 //set camera
@@ -101,6 +120,8 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                unit.OnDeath += Death;
+                unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());
                 
                 //set camera

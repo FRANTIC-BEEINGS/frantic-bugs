@@ -13,7 +13,7 @@ namespace Cards
         [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
         public Action<ResourceCard> Replenish;
-        public bool ResurceСollected;
+        public bool ResourceCollected;
 
         public void Initialize(Sprite face, ResourceType resource, int quantity, int replenishmentQuantity = 0, int replenishmentSpeed = 0)
         {
@@ -23,7 +23,7 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResurceСollected = false;
+            ResourceCollected = false;
         }
 
         //use this in generation for setting default parameters
@@ -34,18 +34,22 @@ namespace Cards
             _replenishmentQuantity = replenishmentQuantity;
             _replenishmentSpeed = replenishmentSpeed;
             _turnsToNextReplenishment = replenishmentSpeed;
-            ResurceСollected = false;
+            ResourceCollected = false;
         }
 
         public ResourceType GetResource()
         {
-            ResurceСollected = true;
             return _resource;
         }
 
         public int GetResourceCount()
         {
             return _quantity;
+        }
+        
+        public void ConsumeResource()
+        {
+            ResourceCollected = true;
         }
 
         //must be called every player turn (do not call when it is enemy's turn)
@@ -72,6 +76,25 @@ namespace Cards
         public override string ToString()
         {
             return _resource.ToString() + " | " + _quantity;
+        }
+
+        public string GetCollectButtonText()
+        {
+            string result = "";
+
+            switch (_resource)
+            {
+                case ResourceType.Energy:
+                    result = "Rest";
+                    break;
+                case ResourceType.Food:
+                    result = "Gather " + _resource.ToString();
+                    break;
+                case ResourceType.Money:
+                    result = "Collect " + _resource.ToString();
+                    break;
+            }
+            return result;
         }
         
     }

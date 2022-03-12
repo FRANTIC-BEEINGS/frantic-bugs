@@ -145,8 +145,10 @@ public class CameraController : MonoBehaviour
 
     void CursorCameraMove()
     {
-        if (Input.mousePosition.x >= Screen.width  - bordersWidth || Input.mousePosition.x <= 0 + bordersWidth ||
-            Input.mousePosition.y >= Screen.height - bordersWidth || Input.mousePosition.y <= 0 + bordersWidth)
+        if (Input.mousePosition.x >= Screen.width  - bordersWidth && Input.mousePosition.x <= Screen.width + bordersWidth
+            || Input.mousePosition.x <= 0 + bordersWidth && Input.mousePosition.x >= 0 - bordersWidth
+            || Input.mousePosition.y >= Screen.height - bordersWidth && Input.mousePosition.y <= Screen.height + bordersWidth
+            || Input.mousePosition.y <= 0 + bordersWidth && Input.mousePosition.y >= 0 - bordersWidth)
         {
             Vector3 direction = Input.mousePosition - new Vector3(Screen.width / 2f, Screen.height / 2f, 0);
             MoveTarget(direction);
