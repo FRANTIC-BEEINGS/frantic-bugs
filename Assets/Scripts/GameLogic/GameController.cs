@@ -126,7 +126,9 @@ namespace GameLogic
         {
             // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
-            player.GetComponent<PlayerController>().SetGameControllerAndSubscribe(this);
+            PlayerController playerController = player.GetComponent<PlayerController>();
+            playerController.SetGameControllerAndSubscribe(this);
+            playerController.GetResourceManager().OnResourceChange += guiFunctions.UpdateResourceDisplay;
 
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])

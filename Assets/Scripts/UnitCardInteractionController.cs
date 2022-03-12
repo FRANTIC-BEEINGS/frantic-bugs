@@ -36,7 +36,7 @@ public static class UnitCardInteractionController
     
     public static bool CanGetResource(Card card, Unit unit)
     {
-        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResourceСollected;
+        return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResourceCollected;
     }
 
     public static bool HaveEnoughResourceToGetResourceCard(Card card, ResourceManager resourceManager, Unit unit)

@@ -86,7 +86,7 @@ namespace GameLogic
 			return !_unitsMoveController.UnitIsMoving();
 		}
 
-		private void Start()
+		private void Awake()
 		{
 			_resourceManager = new ResourceManager(GameSettings.TurnEnergy);
 			
