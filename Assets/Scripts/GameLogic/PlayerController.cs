@@ -129,9 +129,11 @@ namespace GameLogic
 			_unitsMoveController.StopMovement();
 		}
 
-		void FinishedMovement()
+		void FinishedMovement(Card card)
 		{
-			// _gameController.ClickedCard(lastClickedCard);
+			//todo
+			_gameController.lastClickedCard = card;
+			_gameController.UpdateCardInfo();
 		}
 
 		// public void Initialize(int turnEnergy, PathBuilder pathBuilder)

@@ -71,6 +71,7 @@ public class ButtonOnClickAdd : MonoBehaviour
         if (PhotonNetwork.IsMasterClient)
         {
             _gameController.NextTurn();
+            _gameController.UpdateCardInfo();
             return;
         }
 

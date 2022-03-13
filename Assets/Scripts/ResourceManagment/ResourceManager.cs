@@ -7,6 +7,9 @@ namespace ResourceManagment
 {
     public class ResourceManager
     {
+        public const int FoodNeededForLevelUp = 100;
+        public const int MoneyNeededForLevelUp = 50;
+        
         private List<ResourceCard> _replenishableResources;
         private int _maxEnergy;
         private int _extraEnergy;
@@ -40,6 +43,20 @@ namespace ResourceManagment
             return 0;
         }
 
+        public void ConsumeResource(ResourceType resourceType, int resourceAmount)
+        {
+            for (int i = 0; i < resources.Count; ++i)
+            {
+                if (resources[i].ResourceType == resourceType)
+                {
+                    var tmp = resources[i];
+                    tmp.Amount = resources[i].Amount - resourceAmount;
+                    resources[i] = tmp;
+                    OnResourceChange?.Invoke(resources[i]);
+                }
+            }
+        }
+        
         public void ReplenishEnergy()
         {
             for (int i = 0; i < resources.Count; ++i)
