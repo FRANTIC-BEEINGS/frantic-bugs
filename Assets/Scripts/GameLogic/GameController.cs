@@ -31,7 +31,20 @@ namespace GameLogic
         //prefabs
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject fighterPrefab;
+        [SerializeField] private Material localPlayerMaterial;
         
+        // Network
+        private List<int> playerIds;
+        private int IndexOfCurrentPlayerTurn = 0;
+        
+        // Actions
+        public Action<int> NextTurnPlayerId;
+        
+        //timers
+        private double gameStartTime = 0;
+        private double lastTurnStartTime = 0;
+        private double timeToNextTurn = 0;
+        private double timeToEndGame = 0;
         
         private PlayerController _playerController;
         public Card lastClickedCard;
@@ -59,19 +72,6 @@ namespace GameLogic
         {
             guiFunctions.UpdateLevelDisplay(level);
         }
-        
-        // Network
-        private List<int> playerIds;
-        private int IndexOfCurrentPlayerTurn = 0;
-        
-        // Actions
-        public Action<int> NextTurnPlayerId;
-        
-        //timers
-        private double gameStartTime = 0;
-        private double lastTurnStartTime = 0;
-        private double timeToNextTurn = 0;
-        private double timeToEndGame = 0;
 
         public int GetCurrentPlayerTurnPhotonId()
         {
@@ -162,6 +162,13 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), 
                     Quaternion.identity);
+                // раскрашиваем своего юнита в другой цвет (локально)
+                Transform unitModel = unitGO.transform.Find("DefaultUnit");
+                for (int i = 0; i < unitModel.childCount; i++)
+                {
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                        new []{localPlayerMaterial};
+                }
                 Unit unit = unitGO.GetComponent<Unit>();
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
@@ -187,6 +194,13 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), 
                     Quaternion.identity);
+                // раскрашиваем своего юнита в другой цвет (локально)
+                Transform unitModel = unitGO.transform.Find("DefaultUnit");
+                for (int i = 0; i < unitModel.childCount; i++)
+                {
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                        new []{localPlayerMaterial};
+                }
                 Unit unit = unitGO.GetComponent<Unit>();
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
@@ -233,6 +247,23 @@ namespace GameLogic
                     {"IndexOfCurrentPlayerTurn", newIndexOfCurrentPlayerTurn}};
                 PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
             }
+        }
+
+        public void Loss(int playerId)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+                guiFunctions.OnLoss();
+            else 
+                guiFunctions.OnWin();
+        }
+        
+        public void Win(int playerId)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+                guiFunctions.OnWin();
+            else
+                guiFunctions.OnLoss();
+
         }
         
         private void Update()

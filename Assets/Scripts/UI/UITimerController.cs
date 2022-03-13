@@ -20,6 +20,8 @@ public class UITimerController : MonoBehaviour
 
     public void UpdateTime(int timeInSeconds)
     {
+        if (timeInSeconds < 0)
+            timeInSeconds = 0;
         if (showOnlyInSeconds)
         {
             // time in seconds

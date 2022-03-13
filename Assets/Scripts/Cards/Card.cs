@@ -127,8 +127,17 @@ namespace Cards
             if(!CanStepOn(unit)) return false;
             if (_currentUnit != null)
             {
-                //fight with enemy unit
-                //TODO:update current unit
+                // if (unit.Level == _currentUnit.Level)
+                //     return false;
+                if (unit.Level < _currentUnit.Level)
+                {
+                    unit.Death();
+                }
+                else
+                {
+                    unit.KillEnemyUnit();
+                }
+                    
             }
 
             _currentUnit = unit;
