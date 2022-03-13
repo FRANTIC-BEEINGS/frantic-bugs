@@ -32,6 +32,11 @@ namespace GameLogic
         //prefabs
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject fighterPrefab;
+        [SerializeField] private Material localPlayerMaterial;
+        
+        // Network
+        private List<int> playerIds;
+        private int IndexOfCurrentPlayerTurn = 0;
         
         private int _foodNeededForLevelUp = 8;
         private int _moneyNeededForLevelUp = 100;
@@ -39,8 +44,18 @@ namespace GameLogic
         private int _moneyNeededToWin = 500;
 
         private Unit _unit;
+        // Actions
+        public Action<int> NextTurnPlayerId;
+        
+        //timers
+        private double gameStartTime = 0;
+        private double lastTurnStartTime = 0;
+        private double timeToNextTurn = 0;
+        private double timeToEndGame = 0;
+        
         private PlayerController _playerController;
         public Card lastClickedCard;
+        private bool isLooser = false;
 
         public PlayerController GetPlayerController()
         {
@@ -120,19 +135,6 @@ namespace GameLogic
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
             guiFunctions.ShowManualLevelUpUI(false);
         }
-        
-        // Network
-        private List<int> playerIds;
-        private int IndexOfCurrentPlayerTurn = 0;
-        
-        // Actions
-        public Action<int> NextTurnPlayerId;
-        
-        //timers
-        private double gameStartTime = 0;
-        private double lastTurnStartTime = 0;
-        private double timeToNextTurn = 0;
-        private double timeToEndGame = 0;
 
         public int GetCurrentPlayerTurnPhotonId()
         {
@@ -239,6 +241,13 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), 
                     Quaternion.identity);
+                // раскрашиваем своего юнита в другой цвет (локально)
+                Transform unitModel = unitGO.transform.Find("DefaultUnit");
+                for (int i = 0; i < unitModel.childCount; i++)
+                {
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                        new []{localPlayerMaterial};
+                }
                 Unit unit = unitGO.GetComponent<Unit>();
                 _unit = unit;
                 unit.OnDeath += Death;
@@ -265,6 +274,13 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), 
                     Quaternion.identity);
+                // раскрашиваем своего юнита в другой цвет (локально)
+                Transform unitModel = unitGO.transform.Find("DefaultUnit");
+                for (int i = 0; i < unitModel.childCount; i++)
+                {
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                        new []{localPlayerMaterial};
+                }
                 Unit unit = unitGO.GetComponent<Unit>();
                 _unit = unit;
                 unit.OnDeath += Death;
@@ -313,6 +329,23 @@ namespace GameLogic
                 PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
             }
         }
+
+        public void Loss(int playerId)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+                guiFunctions.OnLoss();
+            else 
+                guiFunctions.OnWin();
+        }
+        
+        public void Win(int playerId)
+        {
+            if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
+                guiFunctions.OnWin();
+            else
+                guiFunctions.OnLoss();
+
+        }
         
         private void Update()
         {
@@ -324,6 +357,22 @@ namespace GameLogic
             if (timeToNextTurn < 0 && lastTurnStartTime > 0 && gameStartTime > 0)
             {
                 NextTurn();
+            }
+
+            if (timeToEndGame < 0 && lastTurnStartTime > 0 && gameStartTime > 0 && !isLooser)
+            {
+                var units = GameObject.FindGameObjectsWithTag("Unit");
+                var myLevel = units[0].GetComponent<Unit>().Level;
+                var enemyLevel = units[1].GetComponent<Unit>().Level;
+                if (units[1].GetComponent<PhotonView>().IsMine)
+                {
+                    (myLevel, enemyLevel) = (enemyLevel, myLevel);
+                }
+                isLooser = true;
+                if (myLevel > enemyLevel)
+                    guiFunctions.OnWin();
+                else
+                    guiFunctions.OnLoss();
             }
         }
 

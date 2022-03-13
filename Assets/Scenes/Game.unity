@@ -274,6 +274,7 @@ MonoBehaviour:
   turnTimer: {fileID: 6616788803473285301}
   playerPrefab: {fileID: 5329007487492173341, guid: 19ccaf032bea544189b10724267b576e, type: 3}
   fighterPrefab: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
+  localPlayerMaterial: {fileID: 2100000, guid: 35664d42661bea644b879cc789b32e95, type: 2}
   lastClickedCard: {fileID: 0}
 --- !u!1001 &654845935
 PrefabInstance:
