@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
 
@@ -10,11 +11,19 @@ namespace Cards
         [SerializeField] private int _level;
         [SerializeField] private int _experience;
         [SerializeField] private Dictionary<ResourceType, int> _resources;
-        private bool _isDefeated = false;
+        private bool _isDefeated;
 
-        public bool IsDefeated()
+        public bool IsDefeated
         {
-            return _isDefeated;
+            get => _isDefeated;
+            set
+            {
+                if (!PhotonNetwork.IsMasterClient)
+                {
+                    photonView.RPC("SetIsDefeated", RpcTarget.MasterClient, value);
+                }
+                _isDefeated = value;
+            }
         }
 
         public void Initialize(Sprite face, int level, int experience, Dictionary<ResourceType, int> resources)
@@ -45,7 +54,7 @@ namespace Cards
 
         public void OnDeath()
         {
-            _isDefeated = true;
+            IsDefeated = true;
         }
 
         public int GetLevel()
@@ -55,7 +64,30 @@ namespace Cards
 
         public override string ToString()
         {
-            return name + " | Level " + _level;
+            return (_isDefeated ? "Defeated " : "") + name + " | Level " + _level;
         }
+        
+        public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+        {
+            base.OnPhotonSerializeView(stream, messageInfo);
+            if (stream.IsWriting)
+            {
+                stream.SendNext(_isDefeated);
+            }
+            else if (stream.IsReading)
+            {
+                _isDefeated = (bool) stream.ReceiveNext();
+            }
+        }
+
+        #region RPCs
+
+        [PunRPC]
+        protected void SetIsDefeated(bool value)
+        {
+            _isDefeated = value;
+        }
+        
+        #endregion
     }
 }

@@ -24,6 +24,8 @@ namespace UI
         private void Awake()
         {
             PhotonNetwork.Reconnect();
+            var snd = SoundController.Instance;
+            snd.PlayMusic(snd.LobbyMusic);
         }
 
         #region ButtonOnClickFunctions
@@ -37,21 +39,29 @@ namespace UI
 
         public void StartSoloGame()
         {
+            var snd = SoundController.Instance;
+            snd.PlaySound(snd.ButtonSnd);
             GameSettings.Multiplayer = false;
-            SceneManager.LoadScene("Game");
+            PhotonNetwork.CreateRoom(null, _privateRoomOptions);
         }
 
         public void CreateRoom(Text roomName)
         {
+            var snd = SoundController.Instance;
+            snd.PlaySound(snd.ButtonSnd);
             PhotonNetwork.CreateRoom(roomName.text, _roomIsPrivate ? _privateRoomOptions : _publicRoomOptions);
         }
         public void SetRoomPrivacy(Toggle toggle)
         {
+            var snd = SoundController.Instance;
+            snd.PlaySound(snd.ButtonSnd);
             _roomIsPrivate = toggle.isOn;
         }
 
         public void FindRoomByName(Text roomName)
         {
+            var snd = SoundController.Instance;
+            snd.PlaySound(snd.ButtonSnd);
             if(roomName.text.Length<1)
             {
                 _messageLog.AddMessage("Please enter a room name");
@@ -82,7 +92,10 @@ namespace UI
 
         public override void OnJoinedRoom()
         {
-            SceneManager.LoadScene("GameRoom");
+            if (GameSettings.Multiplayer)
+                SceneManager.LoadScene("GameRoom");
+            else
+                SceneManager.LoadScene("Game");
         }
 
         public override void OnJoinRoomFailed(short returnCode, string message)
@@ -93,7 +106,6 @@ namespace UI
         public override void OnConnectedToMaster()
         {
             PhotonNetwork.JoinLobby();
-            Debug.Log(this);
         }
 
         #endregion

@@ -20,6 +20,7 @@ namespace ResourceManagment
         {
             InitializeResources();
             _maxEnergy = maxEnergy;
+            ReplenishEnergy();
         }
 
         private void InitializeResources()

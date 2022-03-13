@@ -2,15 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class Unit : MonoBehaviour
+public class Unit : MonoBehaviour, IPunObservable
 {
     [SerializeField] private AnimationCurve MoveCurve;
     [SerializeField] private AnimationCurve JumpCurve;
     [SerializeField] private float _jumpHeight;
+    private Quaternion _upDirection;
+    private Quaternion _downDirection;
+    private Quaternion _leftDirection;
+    private Quaternion _rightDirection;
 
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
@@ -21,8 +25,10 @@ public class Unit : MonoBehaviour
     [SerializeField] double increaseCoef;
     [SerializeField] double decreaseCoef;
     [SerializeField] int vision;
+    public int Vision => vision;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
+    private Quaternion endRotation;
     private bool isStopMovement = false;
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience = 0;
@@ -33,11 +39,29 @@ public class Unit : MonoBehaviour
     public Action<int> OnLevelChange;
     private bool initialized;
 
-    private VisionController visionController;
+    public int Level
+    {
+        get => level;
+        set
+        {
+            if (!PhotonNetwork.IsMasterClient)
+                photonView.RPC("SetLevel", RpcTarget.MasterClient, value);
+            level = value;
+        }
+    }
+    public VisionController visionController;
+
+    private PhotonView photonView;
 
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+        _upDirection = Quaternion.Euler(new Vector3(0, 0, 0));
+        _downDirection = Quaternion.Euler(new Vector3(0, 0, 180));
+        _leftDirection = Quaternion.Euler(new Vector3(0, 0, 90));
+        _rightDirection = Quaternion.Euler(new Vector3(0, 0, 270));
+        photonView = GetComponent<PhotonView>();
+        if (photonView) photonView.ObservedComponents.Add(this);
     }
 
     public void Initialize(MapGeneration mapGeneration)
@@ -55,7 +79,7 @@ public class Unit : MonoBehaviour
 
     public int Force
     {
-        get => (int)(level * forceCoef);
+        get => (int)(Level * forceCoef);
     }
 
     public int ResourceEnergy
@@ -77,13 +101,13 @@ public class Unit : MonoBehaviour
     // increase level and change characteristics
     public void IncreaseLevel()
     {
-        level += 1;
-        OnLevelChange(level);
+        Level += 1;
+        OnLevelChange?.Invoke(Level);
         forceCoef = (int)(forceCoef * increaseCoef);
-        moveEnergy = (int)(moveEnergy * decreaseCoef);
-        captureEnergy = (int)(captureEnergy * decreaseCoef);
-        fightEnergy = (int)(fightEnergy * decreaseCoef);
-        resourceEnergy = (int)(resourceEnergy * decreaseCoef);
+        moveEnergy = (int)(moveEnergy * decreaseCoef)>0?(int)(moveEnergy * decreaseCoef):1;
+        captureEnergy = (int)(captureEnergy * decreaseCoef)>0?(int)(captureEnergy * decreaseCoef):1;
+        fightEnergy = (int)(fightEnergy * decreaseCoef)>0?(int)(fightEnergy * decreaseCoef):1;
+        resourceEnergy = (int)(resourceEnergy * decreaseCoef)>0?(int)(resourceEnergy * decreaseCoef):1;
     }
 
     public void IncreaseExperience(int exp)
@@ -100,6 +124,9 @@ public class Unit : MonoBehaviour
 
     public void MoveAlongPath(List<Card> cards, ResourceManager resourceManager)
     {
+        if (!photonView.IsMine)
+            return;
+        Debug.Log("MoveAlongPath" + resourceManager.GetResource(ResourceType.Energy));
         isStopMovement = false;
         StartCoroutine(Move(cards, resourceManager));
     }
@@ -109,7 +136,7 @@ public class Unit : MonoBehaviour
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
-            if (isStopMovement || !cards[i].StepOn(this) || resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
+            if (isStopMovement || resourceManager.GetResource(ResourceType.Energy) < moveEnergy || !cards[i].StepOn(this))
             {
                 break;
             }
@@ -124,10 +151,23 @@ public class Unit : MonoBehaviour
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             //BI.SetHighlight(false);
 
-            yield return StartCoroutine(MoveTo(endPosition, Constants.STEP_DURATION)); //start one movement
+            float _dx = endPosition.x - transform.position.x;
+            float _dy = endPosition.y - transform.position.y;
+            if (Math.Abs(_dx) > Math.Abs(_dy))
+                if (_dx > 0)
+                    endRotation = _rightDirection;
+                else
+                    endRotation = _leftDirection;
+            else
+                if (_dy > 0)
+                    endRotation = _upDirection;
+                else
+                    endRotation = _downDirection;
+
+            yield return StartCoroutine(MoveTo(endPosition, endRotation, Constants.STEP_DURATION)); //start one movement
 
             //if card is enemy break movement
-            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated())
+            if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated)
             {
                 FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;
@@ -140,7 +180,7 @@ public class Unit : MonoBehaviour
         FinishedMovement?.Invoke();
     }
 
-    IEnumerator MoveTo(Vector3 endPosition, float duration)
+    IEnumerator MoveTo(Vector3 endPosition, Quaternion endRotation, float duration)
     {
         float time = 0;
         Vector3 currentPosition = transform.position;
@@ -151,6 +191,7 @@ public class Unit : MonoBehaviour
         startZPosition.y = 0;
         Vector3 endZPosition = startZPosition;
         endZPosition.z -= _jumpHeight;
+        Quaternion startRotation = transform.rotation;
 
         //in every moment move to destination
         while(time < duration)
@@ -158,11 +199,14 @@ public class Unit : MonoBehaviour
             currentPosition = Vector3.Lerp(startXYPosition, endPosition, MoveCurve.Evaluate(time / duration));
             currentPosition += Vector3.Lerp(startZPosition, endZPosition, JumpCurve.Evaluate(time / duration));
             transform.position = currentPosition;
+            transform.rotation = Quaternion.Lerp(startRotation, endRotation, (float)Math.Pow(time / duration, 0.3f));
+
             time += Time.deltaTime;
             yield return null;
             transform.position = currentPosition;
         }
         transform.position = endPosition;
+        transform.rotation = endRotation;
     }
 
     public void Death()
@@ -170,4 +214,30 @@ public class Unit : MonoBehaviour
         this.enabled = false;
         OnDeath?.Invoke();
     }
+
+    #region PunCallbacks
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(level);
+        }
+        else if (stream.IsReading)
+        {
+            level = (int) stream.ReceiveNext();
+        }
+    }
+
+    #endregion
+
+    #region RPCs
+
+    [PunRPC]
+    protected void SetLevel(int value)
+    {
+        level = value;
+    }
+
+    #endregion
 }

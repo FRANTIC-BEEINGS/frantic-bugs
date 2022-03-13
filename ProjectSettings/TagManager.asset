@@ -9,6 +9,7 @@ TagManager:
   - UIController
   - DontDestroy
   - MessageLog
+  - PathBuilder
   layers:
   - Default
   - TransparentFX

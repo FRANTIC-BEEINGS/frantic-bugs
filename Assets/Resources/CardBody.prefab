@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 5835306611185681335}
   - component: {fileID: 5835306611185681334}
   - component: {fileID: 4343200209940244073}
+  - component: {fileID: 355883352197707089}
   m_Layer: 0
   m_Name: CardBody
   m_TagString: Card
@@ -421,6 +422,28 @@ MonoBehaviour:
   id: 0
   Highlight: {fileID: 4704396405911148971}
   Selection: {fileID: 837572303757854176}
+--- !u!114 &355883352197707089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5835306611185681321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  Synchronization: 3
+  OwnershipTransfer: 0
+  observableSearch: 2
+  ObservedComponents: []
+  sceneViewId: 0
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &6413800721861471618
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,14 +643,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
---- !u!1 &837572303757854176 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1946189490516792424, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
-  m_PrefabInstance: {fileID: 1197366604261446024}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2400438404644379444 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3588793411335080636, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
+  m_PrefabInstance: {fileID: 1197366604261446024}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &837572303757854176 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1946189490516792424, guid: a3639064f3f44254e92de04c00ec879e, type: 3}
   m_PrefabInstance: {fileID: 1197366604261446024}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6814427267577745580

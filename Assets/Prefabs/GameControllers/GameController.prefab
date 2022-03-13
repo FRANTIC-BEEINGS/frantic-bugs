@@ -46,8 +46,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gameStartController: {fileID: 0}
   _gameTimer: {fileID: 0}
+  _turnTimers: []
   GameDuration: 30
-  MapPrefab: {fileID: 0}
+  TurnDuration: 0
+  TurnEnergy: 0
+  camera: {fileID: 0}
+  mapPrefab: {fileID: 0}
+  pathBuilderPrefab: {fileID: 0}
+  unitPrefab: {fileID: 3641727749063790958, guid: ca6f709f87d90a04196512bf2b90c462, type: 3}
+  guiController: {fileID: 0}
+  captureButton: {fileID: 0}
+  getResourceButton: {fileID: 0}
+  readyButton: {fileID: 0}
+  foodToWin: 0
+  moneyToWin: 0
 --- !u!114 &2010367550247793988
 MonoBehaviour:
   m_ObjectHideFlags: 0

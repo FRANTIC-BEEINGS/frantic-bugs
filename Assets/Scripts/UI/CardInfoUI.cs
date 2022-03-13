@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
@@ -6,29 +7,25 @@ using UnityEngine.UI;
 
 public class CardInfoUI : MonoBehaviour
 {
-    [SerializeField] private List<Button> actionButtons;
+    [SerializeField] private Button actionButton;
     [SerializeField] private Text cardName;
+    [SerializeField] private Text buttonText;
 
     public void DisplayCardInfo(Card card)
     {
-        if(card is EmptyCard)
+        if(card is EmptyCard || card is SpawnerCard)
         {
             gameObject.SetActive(false);
         }
-        if (card is ResourceCard)
+        if (card is ResourceCard resourceCard)
         {
-            foreach (var button in actionButtons)
-            {
-                button.gameObject.SetActive(true);
-                button.interactable = !(card.GetCurrentUnit() is null);
-            }
+            actionButton.gameObject.SetActive(!resourceCard.ResourceCollected);
+            actionButton.interactable = !(resourceCard.GetCurrentUnit() is null);
+            buttonText.text = resourceCard.GetCollectButtonText();
         }
         else
         {
-            foreach (var button in actionButtons)
-            {
-                button.gameObject.SetActive(false);
-            }
+            actionButton.gameObject.SetActive(false);
         }
         cardName.text = card.ToString();
     }

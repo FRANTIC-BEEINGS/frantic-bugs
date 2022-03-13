@@ -39,6 +39,16 @@ MonoBehaviour:
   - DestroySpaceship
   - Fire
   - RespawnSpaceship
+  - SetActive
+  - SetActive2
+  - EditCard
+  - SetMultiplayerSpawnsRpc
+  - SetCurrentUnitId
+  - SetIsCaptured
+  - SetIsDefeated
+  - "SetResource\u0421ollected"
+  - EndTurnRpc
+  - SetLevel
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

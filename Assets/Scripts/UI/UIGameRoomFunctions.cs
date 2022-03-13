@@ -20,7 +20,10 @@ namespace UI
 
         private void Awake()
         {
+            PhotonNetwork.AutomaticallySyncScene = true;
             UpdatePlayerList(); //called here instead of onJoined due to it being called prior to the script loading
+            var snd = SoundController.Instance;
+            snd.PlayMusic(snd.LevelMusic);
         }
 
         private void UpdatePlayerList()
@@ -48,6 +51,8 @@ namespace UI
         public void StartGame()
         {
             GameSettings.Multiplayer = true;
+            PhotonNetwork.LoadLevel("Game");
+            // SceneManager.LoadScene("Game");
         }
 
         #endregion
@@ -62,6 +67,8 @@ namespace UI
 
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
         {
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.PlayerList.Length == 2)
+                StartGame();
             UpdatePlayerList();
         }
 

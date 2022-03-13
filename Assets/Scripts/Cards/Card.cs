@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace Cards
 {
-    public class Card : MonoBehaviour
+    public class Card : MonoBehaviour, IPunObservable
     {
+        //переменные для генерации
         private AnimationCurve RotationCurve;
         private AnimationCurve JumpCurve;
         private Quaternion _openCard;
@@ -14,9 +17,49 @@ namespace Cards
         private Vector3 _downPosition;
         private Vector3 _upPosition;
         private float _jumpHeight;
+        public Action OnRotated;
 
-        private void Start ()
+        //свойства карты
+        private bool _isCaptured;
+        private bool _isVisible = false;
+        [SerializeField] protected Sprite FaceSprite;
+        protected ulong CaptorId;
+        private Unit _currentUnit;
+        int _currentUnitId;
+        private Coroutine _rotateCard;
+        public bool isTreeVisible;  //whether tree gives vision on the card
+
+        protected PhotonView photonView;
+
+        //синхронизация переменных
+        public virtual void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
         {
+            if (stream.IsWriting)
+            {
+                stream.SendNext(_isCaptured);
+                stream.SendNext(_currentUnitId);
+            }
+            else if (stream.IsReading)
+            {
+                _isCaptured = (bool) stream.ReceiveNext();
+                int newUnitIdValue = (int) stream.ReceiveNext();
+                if (newUnitIdValue != _currentUnitId)
+                {
+                    _currentUnitId = newUnitIdValue;
+                    if (_currentUnitId < 1)
+                    {
+                        _currentUnit = null;
+                    } else
+                    {
+                        _currentUnit = PhotonView.Find(_currentUnitId).gameObject.GetComponent<Unit>();
+                    }
+                }
+            }
+        }
+
+        private void Awake ()
+        {
+            //выставляются значения для генерации и правильного размещения карточки
             _jumpHeight = 1.5f;
             RotationCurve = gameObject.transform.GetChild(0).gameObject.GetComponent<BodyInformation>().GetRotationCurve();
             JumpCurve = gameObject.transform.GetChild(0).gameObject.GetComponent<BodyInformation>().GetJumpCurve();
@@ -25,15 +68,13 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
-        }
 
-        private bool _isCaptured;
-        private bool _isVisible = true;
-        [SerializeField] protected Sprite FaceSprite;
-        protected ulong CaptorId;
-        private Unit _currentUnit;
-        private Coroutine _rotateCard;
-        public bool isTreeVisible;  //whether tree gives vision on the card
+            // добавление скрипта в ObservedComponents для синхронизации
+            photonView = GetComponent<PhotonView>();
+            if (photonView) photonView.ObservedComponents.Add(this);
+
+            photonView = PhotonView.Get(this);
+        }
 
         public Unit GetCurrentUnit()
         {
@@ -51,11 +92,24 @@ namespace Cards
             }
         }
 
+        public int CurrentUnitId
+        {
+            get => _currentUnitId;
+            set
+            {
+                if (!PhotonNetwork.IsMasterClient)
+                    photonView.RPC("SetCurrentUnitId", RpcTarget.MasterClient, value);
+                _currentUnitId = value;
+            }
+        }
+
         public bool IsCaptured
         {
             get => _isCaptured;
             set
             {
+                if (!PhotonNetwork.IsMasterClient)
+                    photonView.RPC("SetIsCaptured", RpcTarget.MasterClient, value);
                 _isCaptured = value;
                 if (value)
                     IsVisible = true;
@@ -78,12 +132,14 @@ namespace Cards
             }
 
             _currentUnit = unit;
-            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
+            CurrentUnitId = unit.gameObject.GetPhotonView().ViewID;
+            //unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
             return true;
         }
 
         public void LeaveCard()
         {
+            CurrentUnitId = -1;
             _currentUnit = null;
         }
 
@@ -120,7 +176,25 @@ namespace Cards
                 time += Time.deltaTime;
                 yield return null;
             }
+            transform.rotation = endRotationValue;
             transform.position = _downPosition;
+            OnRotated?.Invoke();
         }
+
+        #region RPCs
+
+        [PunRPC]
+        protected void SetIsCaptured(bool value)
+        {
+            _isCaptured = value;
+        }
+
+        [PunRPC]
+        protected void SetCurrentUnitId(int value)
+        {
+            _currentUnitId = value;
+        }
+
+        #endregion
     }
 }
