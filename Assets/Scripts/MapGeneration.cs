@@ -58,7 +58,7 @@ public class MapGeneration : MonoBehaviour
 
     // public void Initialize()
     // {
-    //     Initialize(2, 10, 20, 0.2f, 0.05f, 2f, 3, 3);
+    //     Initialize(1, 10, 20, 0.2f, 0.05f, 2f, 3, 3);
     // }
 
     public void Initialize(int numberOfPlayers=2, int mapCardHeight=10, int mapCardWidth=20, float cardToCardDistance=0.2f, float fluctuatePosition=0.05f, float fluctuateAngle=2f, int fluctuateSpawn=3, int peacefulRadius=3)

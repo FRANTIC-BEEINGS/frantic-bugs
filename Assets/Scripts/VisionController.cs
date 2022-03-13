@@ -59,7 +59,7 @@ public class VisionController : MonoBehaviour
         }
 
         // get list of cards in vision
-        private HashSet<Card> GetCardsInVision(int vision, Card firstCard)
+        public HashSet<Card> GetCardsInVision(int vision, Card firstCard)
         {
                 Vector2 card = FindCardOnMap(firstCard);
                 int x = (int) card.x;

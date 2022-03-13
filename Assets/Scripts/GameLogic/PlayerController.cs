@@ -44,6 +44,7 @@ namespace GameLogic
 			}
 			else
 			{
+				_resourceManager.ReplenishEnergy();
 				thisPlayerTurn = true;
 				if (_pathBuilder != null)
 					_pathBuilder.CanBuild = true;
@@ -52,16 +53,16 @@ namespace GameLogic
 
 		void Update()
 		{
-			if (photonView.IsMine && !thisPlayerTurn)
+			if ((photonView.IsMine && !thisPlayerTurn) || (_resourceManager.GetResource(ResourceType.Energy) <= 0 && photonView.IsMine))
 			{
 				_pathBuilder.CanBuild = false;
 			}
-			// if (Input.GetMouseButtonDown((int) MouseButtons.Right))
-			// {
-			// 	if (thisPlayerTurn)
-			// 		StopMovement();
-			// }
-			//
+			if (Input.GetMouseButtonDown((int) MouseButtons.Right))
+			{
+				if (thisPlayerTurn && photonView.IsMine)
+					StopMovement();
+			}
+
 			// if (Input.GetMouseButtonUp((int) MouseButtons.Left))
 			// {
 			// 	if (thisPlayerTurn)
@@ -88,7 +89,7 @@ namespace GameLogic
 		private void Awake()
 		{
 			_resourceManager = new ResourceManager(GameSettings.TurnEnergy);
-			
+
 			GameObject pathBuilderGO = GameObject.FindWithTag("PathBuilder");
 			_pathBuilder = pathBuilderGO.GetComponent<PathBuilder>();
 			_unitsMoveController = new UnitsMoveController(_pathBuilder, _resourceManager);
@@ -109,7 +110,7 @@ namespace GameLogic
 			// 	StopMovement();
 			// }
 		}
-		
+
 
 		// [ServerRpc(RequireOwnership = false)]
 		// public void StartTurnServerRpc()
@@ -141,7 +142,7 @@ namespace GameLogic
 		// 	_unitsMoveController.FinishedMovementAction += FinishedMovement;
 		// }
 
-		[PunRPC] 
+		[PunRPC]
 		void EndTurnRpc()
 		{
 			_gameController.NextTurn();
