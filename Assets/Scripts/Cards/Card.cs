@@ -28,7 +28,7 @@ namespace Cards
         int _currentUnitId;
         private Coroutine _rotateCard;
         public bool isTreeVisible;  //whether tree gives vision on the card
-        
+
         protected PhotonView photonView;
 
         //синхронизация переменных
@@ -56,7 +56,7 @@ namespace Cards
                 }
             }
         }
-        
+
         private void Awake ()
         {
             //выставляются значения для генерации и правильного размещения карточки
@@ -68,11 +68,11 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
-            
+
             // добавление скрипта в ObservedComponents для синхронизации
             photonView = GetComponent<PhotonView>();
             if (photonView) photonView.ObservedComponents.Add(this);
-            
+
             photonView = PhotonView.Get(this);
         }
 
@@ -102,7 +102,7 @@ namespace Cards
                 _currentUnitId = value;
             }
         }
-        
+
         public bool IsCaptured
         {
             get => _isCaptured;
@@ -180,7 +180,7 @@ namespace Cards
             transform.position = _downPosition;
             OnRotated?.Invoke();
         }
-        
+
         #region RPCs
 
         [PunRPC]
@@ -188,7 +188,7 @@ namespace Cards
         {
             _isCaptured = value;
         }
-        
+
         [PunRPC]
         protected void SetCurrentUnitId(int value)
         {

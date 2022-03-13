@@ -136,7 +136,7 @@ public class Unit : MonoBehaviour, IPunObservable
         for(int i = 1; i < cards.Count; i++)
         {
             // check if we can step on next card and if player want stop
-            if (isStopMovement || !cards[i].StepOn(this) || resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
+            if (isStopMovement || resourceManager.GetResource(ResourceType.Energy) < moveEnergy || !cards[i].StepOn(this))
             {
                 break;
             }
@@ -230,7 +230,7 @@ public class Unit : MonoBehaviour, IPunObservable
     }
 
     #endregion
-    
+
     #region RPCs
 
     [PunRPC]
