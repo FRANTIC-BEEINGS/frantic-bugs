@@ -49,6 +49,8 @@ MonoBehaviour:
   - "SetResource\u0421ollected"
   - EndTurnRpc
   - SetLevel
+  - WinRpc
+  - LossRpc
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

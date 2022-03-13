@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cards;
+using GameLogic;
 using Photon.Pun;
 using ResourceManagment;
 using UnityEngine;
@@ -39,6 +40,8 @@ public class Unit : MonoBehaviour, IPunObservable
     public Action<int> OnLevelChange;
     private bool initialized;
 
+    private GameController _gameController;
+
     public int Level
     {
         get => level;
@@ -62,6 +65,7 @@ public class Unit : MonoBehaviour, IPunObservable
         _rightDirection = Quaternion.Euler(new Vector3(0, 0, 270));
         photonView = GetComponent<PhotonView>();
         if (photonView) photonView.ObservedComponents.Add(this);
+        _gameController = GameObject.FindWithTag("GameController").GetComponent<GameLogic.GameController>();
     }
 
     public void Initialize(MapGeneration mapGeneration)
@@ -211,8 +215,12 @@ public class Unit : MonoBehaviour, IPunObservable
 
     public void Death()
     {
-        this.enabled = false;
-        OnDeath?.Invoke();
+        photonView.RPC("LossRpc", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
+    }
+    
+    public void KillEnemyUnit()
+    {
+        photonView.RPC("WinRpc", RpcTarget.All, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     #region PunCallbacks
@@ -237,6 +245,18 @@ public class Unit : MonoBehaviour, IPunObservable
     protected void SetLevel(int value)
     {
         level = value;
+    }
+
+    [PunRPC]
+    protected void LossRpc(Int32 playerId)
+    {
+        _gameController.Loss(playerId);
+    }
+    
+    [PunRPC]
+    protected void WinRpc(Int32 playerId)
+    {
+        _gameController.Win(playerId);
     }
 
     #endregion

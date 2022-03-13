@@ -79,6 +79,7 @@ namespace UI
 
         public void OnWin()
         {
+            Debug.Log("WIN");
             // endText.gameObject.SetActive(true);
             // endText.text = "You won!";
             // restartButton.gameObject.SetActive(true);
@@ -86,6 +87,7 @@ namespace UI
 
         public void OnLoss()
         {
+            Debug.Log("LOSS");
             //endText.gameObject.SetActive(true);
             //endText.text = "You lost...";
             //restartButton.gameObject.SetActive(true);
