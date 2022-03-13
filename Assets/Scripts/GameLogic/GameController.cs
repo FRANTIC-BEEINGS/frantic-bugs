@@ -48,6 +48,7 @@ namespace GameLogic
         
         private PlayerController _playerController;
         public Card lastClickedCard;
+        private bool isLooser = false;
 
         public PlayerController GetPlayerController()
         {
@@ -277,8 +278,22 @@ namespace GameLogic
             {
                 NextTurn();
             }
-            Debug.Log("Update: timeToNextTurn = " + timeToNextTurn + 
-                      ", turn of " + IndexOfCurrentPlayerTurn);
+
+            if (timeToEndGame < 0 && lastTurnStartTime > 0 && gameStartTime > 0 && !isLooser)
+            {
+                var units = GameObject.FindGameObjectsWithTag("Unit");
+                var myLevel = units[0].GetComponent<Unit>().Level;
+                var enemyLevel = units[1].GetComponent<Unit>().Level;
+                if (units[1].GetComponent<PhotonView>().IsMine)
+                {
+                    (myLevel, enemyLevel) = (enemyLevel, myLevel);
+                }
+                isLooser = true;
+                if (myLevel > enemyLevel)
+                    guiFunctions.OnWin();
+                else
+                    guiFunctions.OnLoss();
+            }
         }
 
         #region PunCallbacks

@@ -78,6 +78,9 @@ namespace Cards
 
         public Unit GetCurrentUnit()
         {
+            if (_currentUnitId < 1)
+                return null;
+            _currentUnit = PhotonView.Find(_currentUnitId).gameObject.GetComponent<Unit>();
             return _currentUnit;
         }
 
@@ -124,12 +127,13 @@ namespace Cards
 
         public bool StepOn(Unit unit)
         {
-            if(!CanStepOn(unit)) return false;
-            if (_currentUnit != null)
+            //if(!CanStepOn(unit)) return false;
+            if (_currentUnitId > 0)
             {
+                Debug.Log("tut vrag");
                 // if (unit.Level == _currentUnit.Level)
                 //     return false;
-                if (unit.Level < _currentUnit.Level)
+                if (unit.Level < GetCurrentUnit().Level)
                 {
                     unit.Death();
                 }
