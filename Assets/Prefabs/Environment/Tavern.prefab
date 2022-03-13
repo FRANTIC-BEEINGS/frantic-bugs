@@ -289,7 +289,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3255836900553885131}
   - component: {fileID: 601935567340172811}
-  - component: {fileID: 8898216513683344032}
   m_Layer: 0
   m_Name: Tavern
   m_TagString: Untagged
@@ -337,18 +336,3 @@ MonoBehaviour:
   - {fileID: 2781124000851043801, guid: e9a05af7ef2a9304c9671bbb2973f6e9, type: 3}
   - {fileID: 8584706285311586427, guid: fb8599e8d4ff36f4cad2a9dbc474c0d3, type: 3}
   AmountOfObjects: 010000000100000001000000020000000200000004000000030000000a000000
---- !u!114 &8898216513683344032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6189538852330857903}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 95f242a59528c9d4aa4cf77f9f241bfd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TablePrefab: {fileID: 0}
-  StuffPrefabs: []
-  AmountOfObjects: 

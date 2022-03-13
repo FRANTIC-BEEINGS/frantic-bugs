@@ -44,6 +44,7 @@ namespace GameLogic
 			}
 			else
 			{
+				_resourceManager.ReplenishEnergy();
 				thisPlayerTurn = true;
 				if (_pathBuilder != null)
 					_pathBuilder.CanBuild = true;
@@ -56,12 +57,12 @@ namespace GameLogic
 			{
 				_pathBuilder.CanBuild = false;
 			}
-			// if (Input.GetMouseButtonDown((int) MouseButtons.Right))
-			// {
-			// 	if (thisPlayerTurn)
-			// 		StopMovement();
-			// }
-			//
+			if (Input.GetMouseButtonDown((int) MouseButtons.Right))
+			{
+				if (thisPlayerTurn && photonView.IsMine)
+					StopMovement();
+			}
+			
 			// if (Input.GetMouseButtonUp((int) MouseButtons.Left))
 			// {
 			// 	if (thisPlayerTurn)

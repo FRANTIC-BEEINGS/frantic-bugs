@@ -15,8 +15,10 @@ namespace GameLogic
     {
         //gameplay
         [SerializeField] private MapGeneration mapGeneration;
+        [SerializeField] private GameObject tavernPrefab;
         [SerializeField] private Camera mainCamera;
         [SerializeField] private PathBuilder pathBuilder;
+        private TavernGeneration TG;
 
         //UI
         [SerializeField] private GUIFunctions guiFunctions;
@@ -78,13 +80,19 @@ namespace GameLogic
             return playerIds[IndexOfCurrentPlayerTurn];
         }
 
+        private void Awake()
+        {
+            var snd = SoundController.Instance;
+            snd.PlayMusic(snd.LevelMusic);
+        }
+
         private void Start()
         {
             
             if (GameSettings.Multiplayer)
                 MultiplayerStart();
             else
-                SingleplayerStart();
+                MultiplayerStart();
 
             // //set camera location and borders
             
@@ -139,6 +147,10 @@ namespace GameLogic
 
         private void SpawnUnitsAndSetCamera()
         {
+            // beautiful taverna
+            TG = Instantiate(tavernPrefab).GetComponent<TavernGeneration>();
+            TG.Initialize(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
+            
             // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
             _playerController = player.GetComponent<PlayerController>();
@@ -148,31 +160,51 @@ namespace GameLogic
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
             {
-                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), 
+                    Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetFirstSpawnCard());
-                
+
                 //set camera
                 CameraController cameraController = mainCamera.GetComponent<CameraController>();
                 cameraController.SetViewAtCoords(mapGeneration.GetFirstSpawnCoords());
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
                 
+                //set open cards near spawned unit
+                VisionController visionController = unitGO.GetComponent<VisionController>();
+                visionController.Initialize(mapGeneration);
+                HashSet<Card> firstCards = visionController.GetCardsInVision(2, mapGeneration.GetFirstSpawnCard());
+                foreach (var c in firstCards)
+                {
+                    c.IsVisible = true;
+                }
+                
             }
             // спавн главного юнита второго игрока, если он есть
             else if (playerIds.Count > 1 && PhotonNetwork.LocalPlayer.ActorNumber == playerIds[1])
             {
-                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), 
+                    Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());
-                
+
                 //set camera
                 CameraController cameraController = mainCamera.GetComponent<CameraController>();
                 cameraController.SetViewAtCoords(mapGeneration.GetSecondSpawnCoords());
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
+                
+                //set open cards near spawned unit
+                VisionController visionController = unitGO.GetComponent<VisionController>();
+                visionController.Initialize(mapGeneration);
+                HashSet<Card> firstCards = visionController.GetCardsInVision(2, mapGeneration.GetSecondSpawnCard());
+                foreach (var c in firstCards)
+                {
+                    c.IsVisible = true;
+                }
             }
             // set path builder map
             pathBuilder.Initialize(mapGeneration: mapGeneration);

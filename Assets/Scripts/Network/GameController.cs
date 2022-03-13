@@ -131,7 +131,7 @@ public class GameController : NetworkBehaviour
 			Debug.Log(firstCards.Count);
 			foreach (var c in firstCards)
 			{
-				c.OnStart += () => c.IsVisible = true;
+				c.IsVisible = true;
 			}
 
 			card.OnRotated += SpawnUnit;

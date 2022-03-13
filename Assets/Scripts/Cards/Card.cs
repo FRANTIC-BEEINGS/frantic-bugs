@@ -17,7 +17,6 @@ namespace Cards
         private Vector3 _downPosition;
         private Vector3 _upPosition;
         private float _jumpHeight;
-        public Action OnStart;
         public Action OnRotated;
 
         //свойства карты
@@ -75,7 +74,6 @@ namespace Cards
             if (photonView) photonView.ObservedComponents.Add(this);
             
             photonView = PhotonView.Get(this);
-            OnStart?.Invoke();
         }
 
         public Unit GetCurrentUnit()
@@ -135,7 +133,7 @@ namespace Cards
 
             _currentUnit = unit;
             CurrentUnitId = unit.gameObject.GetPhotonView().ViewID;
-            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
+            //unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
             return true;
         }
 
