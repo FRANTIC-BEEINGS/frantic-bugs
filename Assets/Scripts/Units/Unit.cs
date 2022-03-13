@@ -129,6 +129,7 @@ public class Unit : MonoBehaviour, IPunObservable
             if (isStopMovement || !cards[i].StepOn(this) || resourceManager.GetResource(ResourceType.Energy) < moveEnergy)
             {
                 break;
+                //todo
             }
 
             endPosition = cards[i].gameObject.transform.position; // find destination position
@@ -148,6 +149,7 @@ public class Unit : MonoBehaviour, IPunObservable
             {
                 FightEnemy?.Invoke((EnemyCard)cards[i]);
                 break;
+                //todo
             }
         }
         for (int i = 0; i < cards.Count; i++) {
@@ -155,6 +157,7 @@ public class Unit : MonoBehaviour, IPunObservable
         }
         isStopMovement = false;
         FinishedMovement?.Invoke();
+        //
     }
 
     IEnumerator MoveTo(Vector3 endPosition, float duration)

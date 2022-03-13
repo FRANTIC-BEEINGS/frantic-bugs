@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.SceneManagement;
 using Photon.Realtime;
+using ResourceManagment;
 
 namespace GameLogic
 {
@@ -30,7 +31,10 @@ namespace GameLogic
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject fighterPrefab;
         
-        
+        private readonly int _foodNeededForLevelUp = 100;
+        private readonly int _moneyNeededForLevelUp = 50;
+
+        private Unit _unit;
         private PlayerController _playerController;
         public Card lastClickedCard;
 
@@ -56,6 +60,14 @@ namespace GameLogic
         private void ChangeLevelUI(int level)
         {
             guiFunctions.UpdateLevelDisplay(level);
+        }
+
+        public void ManualLevelUp()
+        {
+            _unit.IncreaseLevel();
+            _playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
+            _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
+            guiFunctions.ManualLevelUpUI();
         }
         
         // Network
@@ -150,6 +162,7 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                _unit = unit;
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetFirstSpawnCard());
@@ -165,6 +178,7 @@ namespace GameLogic
             {
                 GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), Quaternion.identity);
                 Unit unit = unitGO.GetComponent<Unit>();
+                _unit = unit;
                 unit.OnDeath += Death;
                 unit.OnLevelChange += ChangeLevelUI;
                 UnitCardInteractionController.StepOnCard(unit, mapGeneration.GetSecondSpawnCard());

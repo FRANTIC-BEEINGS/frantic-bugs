@@ -41,6 +41,20 @@ namespace ResourceManagment
             return 0;
         }
 
+        public void ConsumeResource(ResourceType resourceType, int resourceAmount)
+        {
+            for (int i = 0; i < resources.Count; ++i)
+            {
+                if (resources[i].ResourceType == resourceType)
+                {
+                    var tmp = resources[i];
+                    tmp.Amount = resources[i].Amount - resourceAmount;
+                    resources[i] = tmp;
+                    OnResourceChange?.Invoke(resources[i]);
+                }
+            }
+        }
+        
         public void ReplenishEnergy()
         {
             for (int i = 0; i < resources.Count; ++i)

@@ -1,6 +1,9 @@
+using System;
 using Cards;
+using GameLogic;
 using ResourceManagment;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace UI
@@ -13,6 +16,9 @@ namespace UI
         [SerializeField] private Text foodCount;
         [SerializeField] private Text moneyCount;
         [SerializeField] private Text currentLevel;
+        [SerializeField] private Text turnTimerText;
+
+        [SerializeField] private Button manualLevelUpButton;
 
         [SerializeField] private GameObject endScreen;
         [SerializeField] private GameObject menuScreen;
@@ -26,10 +32,20 @@ namespace UI
         {
             if (_logRenderer != null) _logRenderer.enabled = false;
         }
+        
+        public void SetTurnValue(bool yourTurn)
+        {
+            turnTimerText.text = yourTurn ? "Your Turn " : "Enemy Turn: ";
+        }
     
         public void OnGameStarted()
         {
         
+        }
+
+        public void ManualLevelUpUI()
+        {
+            manualLevelUpButton.gameObject.SetActive(false);
         }
 
         public void UpdateCardInfo(Card card)
