@@ -90,7 +90,7 @@ namespace Cards
 
         public override string ToString()
         {
-            return _resource.ToString() + " | " + _quantity;
+            return _resourceCollected ? _resource.ToString() : _resource.ToString() + " | " + _quantity;
         }
 
         public string GetCollectButtonText()

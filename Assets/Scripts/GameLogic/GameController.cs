@@ -33,8 +33,10 @@ namespace GameLogic
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject fighterPrefab;
         
-        private readonly int _foodNeededForLevelUp = 100;
-        private readonly int _moneyNeededForLevelUp = 50;
+        private int _foodNeededForLevelUp = 8;
+        private int _moneyNeededForLevelUp = 100;
+        private int _foodNeededToWin = 30;
+        private int _moneyNeededToWin = 500;
 
         private Unit _unit;
         private PlayerController _playerController;
@@ -44,10 +46,16 @@ namespace GameLogic
         {
             return _playerController;
         }
-        public void CanGetResource()
+        public bool CanGetResource()
         {
-            UnitCardInteractionController.CanGetResource(lastClickedCard as ResourceCard,
+            return UnitCardInteractionController.CanGetResource(lastClickedCard as ResourceCard,
                 lastClickedCard.GetCurrentUnit());
+        }
+
+        private bool HasEnoughEnergyToInteract(ResourceCard card)
+        {
+            return UnitCardInteractionController.HaveEnoughResourceToGetResourceCard(card,
+                _playerController.GetResourceManager(), _unit);
         }
         public void GetResource()
         {
@@ -59,9 +67,50 @@ namespace GameLogic
             guiFunctions.OnLoss();
         }
 
+        private void CardInfoCollectResourceButton()
+        {
+            GetResource();
+            guiFunctions.UpdateCardInfo(lastClickedCard);
+        }
+
+        public void UpdateCardInfo()
+        {
+            guiFunctions.UpdateCardInfo(lastClickedCard);
+        }
+
         private void ChangeLevelUI(int level)
         {
             guiFunctions.UpdateLevelDisplay(level);
+        }
+
+        private void CheckSingleplayerWin(Resource resource)
+        {
+            ResourceManager resourceManager = _playerController.GetResourceManager();
+            switch (resource.ResourceType)
+            {
+                case ResourceType.Food when resourceManager.GetResource(ResourceType.Food) >= _foodNeededToWin:
+                    _foodNeededToWin = -1;
+                    break;
+                case ResourceType.Money when resourceManager.GetResource(ResourceType.Money) >= _moneyNeededToWin:
+                    _moneyNeededToWin = -1;
+                    break;
+            }
+
+            if (_foodNeededToWin == -1 && _moneyNeededToWin == -1)
+            {
+                guiFunctions.OnWin();
+            }
+        }
+
+        private void CanManualLevelUp(Resource resource)
+        {
+            if(!GameSettings.Multiplayer)
+                return;
+            if (_foodNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Food) &&
+                _moneyNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Money))
+            {
+                guiFunctions.ShowManualLevelUpUI(true);
+            }
         }
 
         public void ManualLevelUp()
@@ -69,7 +118,7 @@ namespace GameLogic
             _unit.IncreaseLevel();
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
-            guiFunctions.ManualLevelUpUI();
+            guiFunctions.ShowManualLevelUpUI(false);
         }
         
         // Network
@@ -121,6 +170,14 @@ namespace GameLogic
         private void MultiplayerStart()
         {
             MultiplayerSetup();
+            
+            if (!GameSettings.Multiplayer)
+            {
+                guiFunctions.DisplayGoals();
+                guiFunctions.SetGameGoals(_foodNeededToWin,_moneyNeededToWin);
+            }
+
+            guiFunctions.GetResourceButtonAction = CardInfoCollectResourceButton;
         }
 
         private void Setup()
@@ -155,6 +212,8 @@ namespace GameLogic
                 Hashtable ht = new Hashtable {{"GameStartTime", timeTmp}, {"LastTurnStartTime", timeTmp}};
                 PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
             }
+            
+            guiFunctions.AddLevelUpButtonAction(ManualLevelUp);
         }
 
         private void SpawnUnitsAndSetCamera()
@@ -167,7 +226,13 @@ namespace GameLogic
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
             _playerController = player.GetComponent<PlayerController>();
             _playerController.SetGameControllerAndSubscribe(this);
+            //subscribe resource update actions
             _playerController.GetResourceManager().OnResourceChange += guiFunctions.UpdateResourceDisplay;
+            _playerController.GetResourceManager().OnResourceChange += CanManualLevelUp;
+            if(!GameSettings.Multiplayer)
+                _playerController.GetResourceManager().OnResourceChange += CheckSingleplayerWin;
+
+            CardInfoUI.CheckEnergy = HasEnoughEnergyToInteract;
 
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
@@ -260,8 +325,6 @@ namespace GameLogic
             {
                 NextTurn();
             }
-            Debug.Log("Update: timeToNextTurn = " + timeToNextTurn + 
-                      ", turn of " + IndexOfCurrentPlayerTurn);
         }
 
         #region PunCallbacks

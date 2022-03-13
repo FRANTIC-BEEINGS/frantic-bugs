@@ -50,19 +50,18 @@ public class BodyInformation : MonoBehaviour {
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            _gameController.lastClickedCard = _card;
-            _guiFunctions.UpdateCardInfo(_card);
-        }
+        
+        _gameController.lastClickedCard = _card;
     }
-
-    private void OnMouseDrag()
+    
+    private void OnMouseDown()
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-        
-        _guiFunctions.HideCardInfo();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            _guiFunctions.UpdateCardInfo(_card);
+        }
     }
 }

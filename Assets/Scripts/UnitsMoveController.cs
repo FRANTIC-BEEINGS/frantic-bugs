@@ -9,7 +9,7 @@ public class UnitsMoveController
     private PathBuilder pathBuilder;
     private ResourceManager resourceManager;
     private Unit currentMovingUnit;
-    public Action FinishedMovementAction;
+    public Action<Card> FinishedMovementAction;
 
     public UnitsMoveController(PathBuilder pathBuilder, ResourceManager resourceManager)
     {
@@ -34,10 +34,10 @@ public class UnitsMoveController
         currentMovingUnit.MoveAlongPath(path, resourceManager);
     }
 
-    private void FinishedMovement()
+    private void FinishedMovement(Card card)
     {
         pathBuilder.CanBuild = true;
-        FinishedMovementAction?.Invoke();
+        FinishedMovementAction?.Invoke(card);
     }
 
     public bool UnitIsMoving()

@@ -33,7 +33,7 @@ public class Unit : MonoBehaviour, IPunObservable
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience = 0;
     [SerializeField] private int experienceLimit;
-    public Action FinishedMovement;
+    public Action<Card> FinishedMovement;
     public Action<EnemyCard> FightEnemy;
     public Action OnDeath;
     public Action<int> OnLevelChange;
@@ -133,11 +133,14 @@ public class Unit : MonoBehaviour, IPunObservable
 
     IEnumerator Move(List<Card> cards, ResourceManager resourceManager)
     {
+        Card lastCard = null;
         for(int i = 1; i < cards.Count; i++)
         {
+            lastCard = cards[i];
             // check if we can step on next card and if player want stop
             if (isStopMovement || resourceManager.GetResource(ResourceType.Energy) < moveEnergy || !cards[i].StepOn(this))
             {
+                lastCard = cards[i-1];
                 break;
                 //todo
             }
@@ -179,7 +182,7 @@ public class Unit : MonoBehaviour, IPunObservable
             cards[i].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
         }
         isStopMovement = false;
-        FinishedMovement?.Invoke();
+        FinishedMovement?.Invoke(lastCard);
         //
     }
 

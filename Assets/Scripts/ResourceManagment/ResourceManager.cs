@@ -7,6 +7,9 @@ namespace ResourceManagment
 {
     public class ResourceManager
     {
+        public const int FoodNeededForLevelUp = 100;
+        public const int MoneyNeededForLevelUp = 50;
+        
         private List<ResourceCard> _replenishableResources;
         private int _maxEnergy;
         private int _extraEnergy;
