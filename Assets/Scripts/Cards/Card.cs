@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -16,17 +17,18 @@ namespace Cards
         private Vector3 _downPosition;
         private Vector3 _upPosition;
         private float _jumpHeight;
+        public Action OnRotated;
 
         //свойства карты
         private bool _isCaptured;
-        private bool _isVisible = true;
+        private bool _isVisible = false;
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
         int _currentUnitId;
         private Coroutine _rotateCard;
         public bool isTreeVisible;  //whether tree gives vision on the card
-        
+
         protected PhotonView photonView;
 
         //синхронизация переменных
@@ -54,7 +56,7 @@ namespace Cards
                 }
             }
         }
-        
+
         private void Awake ()
         {
             //выставляются значения для генерации и правильного размещения карточки
@@ -66,11 +68,11 @@ namespace Cards
             _downPosition = transform.position;
             _upPosition = _downPosition;
             _upPosition.z -= _jumpHeight;
-            
+
             // добавление скрипта в ObservedComponents для синхронизации
             photonView = GetComponent<PhotonView>();
             if (photonView) photonView.ObservedComponents.Add(this);
-            
+
             photonView = PhotonView.Get(this);
         }
 
@@ -100,7 +102,7 @@ namespace Cards
                 _currentUnitId = value;
             }
         }
-        
+
         public bool IsCaptured
         {
             get => _isCaptured;
@@ -131,7 +133,7 @@ namespace Cards
 
             _currentUnit = unit;
             CurrentUnitId = unit.gameObject.GetPhotonView().ViewID;
-            unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
+            //unit.transform.parent = this.transform; //change parent of the unit in the hierarchy (check later)
             return true;
         }
 
@@ -174,9 +176,11 @@ namespace Cards
                 time += Time.deltaTime;
                 yield return null;
             }
+            transform.rotation = endRotationValue;
             transform.position = _downPosition;
+            OnRotated?.Invoke();
         }
-        
+
         #region RPCs
 
         [PunRPC]
@@ -184,7 +188,7 @@ namespace Cards
         {
             _isCaptured = value;
         }
-        
+
         [PunRPC]
         protected void SetCurrentUnitId(int value)
         {

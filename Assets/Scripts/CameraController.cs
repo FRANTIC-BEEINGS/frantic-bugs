@@ -60,6 +60,7 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
+        SetViewBorders(100, 100);
         projectionToTarget = new Vector3(0, 0, 0);
         projection = new Vector3(0, 0, 0);
         target = new Vector3(0, 0, 0);

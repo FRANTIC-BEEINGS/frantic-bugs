@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Cards;
-using Unity.Netcode;
 using UnityEngine;
 
 namespace ResourceManagment
@@ -11,7 +10,7 @@ namespace ResourceManagment
         private List<ResourceCard> _replenishableResources;
         private int _maxEnergy;
         private int _extraEnergy;
-        private NetworkList<Resource> resources;
+        private List<Resource> resources;
         
         public Action<ResourceCard> ReplenishResource;
         public Action<Resource> OnResourceChange;
@@ -25,7 +24,7 @@ namespace ResourceManagment
 
         private void InitializeResources()
         {
-            resources = new NetworkList<Resource>();
+            resources = new List<Resource>();
             foreach (ResourceType type in Enum.GetValues(typeof(ResourceType)))
                 resources.Add(new Resource(type, 0));
         }

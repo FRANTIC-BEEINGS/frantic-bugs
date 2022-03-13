@@ -8,6 +8,9 @@ public static class UnitCardInteractionController
 {
     public static void FightEnemyCard(EnemyCard enemyCard, Unit unit, ResourceManager resourceManager)
     {
+        var soundController = SoundController.Instance;
+        soundController.PlaySound(soundController.FightSnd);
+        
         if (unit.Force < enemyCard.GetLevel() || resourceManager.GetResource(ResourceType.Energy) < unit.FightEnergy)
         {
             unit.Death();
@@ -61,8 +64,25 @@ public static class UnitCardInteractionController
         if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy || resourceCard.ResourceCollected)
             return;
         resourceManager.AddResource(ResourceType.Energy, -unit.ResourceEnergy);
-        resourceManager.AddResource(resourceCard.GetResource(), resourceCard.GetResourceCount());
-        resourceCard.ConsumeResource();
+        ResourceType resourceType = resourceCard.GetResource();
+        resourceManager.AddResource(resourceType, resourceCard.GetResourceCount());
+        if (resourceType == ResourceType.Money)
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.GoldSound);
+        }
+        else if (resourceType == ResourceType.Food)
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.NyomSnd);
+        }
+        else
+        {
+            var soundController = SoundController.Instance;
+            soundController.PlaySound(soundController.EnergySound);
+        }
+
+        
     }
     
     public static bool StepOnCard(Unit unit, Card card)
