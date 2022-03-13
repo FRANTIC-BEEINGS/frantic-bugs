@@ -11,6 +11,10 @@ public class Unit : MonoBehaviour, IPunObservable
     [SerializeField] private AnimationCurve MoveCurve;
     [SerializeField] private AnimationCurve JumpCurve;
     [SerializeField] private float _jumpHeight;
+    private Quaternion _upDirection;
+    private Quaternion _downDirection;
+    private Quaternion _leftDirection;
+    private Quaternion _rightDirection;
 
     [SerializeField] int moveEnergy;
     [SerializeField] int captureEnergy;
@@ -21,8 +25,10 @@ public class Unit : MonoBehaviour, IPunObservable
     [SerializeField] double increaseCoef;
     [SerializeField] double decreaseCoef;
     [SerializeField] int vision;
+    public int Vision => vision;
     [SerializeField] private Sprite sprite;
     private Vector3 endPosition;
+    private Quaternion endRotation;
     private bool isStopMovement = false;
     public AllegianceType Allegiance = AllegianceType.A;
     private int experience = 0;
@@ -43,13 +49,17 @@ public class Unit : MonoBehaviour, IPunObservable
             level = value;
         }
     }
-    private VisionController visionController;
+    public VisionController visionController;
 
     private PhotonView photonView;
 
     private void Start()
     {
         visionController = GetComponent<VisionController>();
+        _upDirection = Quaternion.Euler(new Vector3(0, 0, 0));
+        _downDirection = Quaternion.Euler(new Vector3(0, 0, 180));
+        _leftDirection = Quaternion.Euler(new Vector3(0, 0, 90));
+        _rightDirection = Quaternion.Euler(new Vector3(0, 0, 270));
         photonView = GetComponent<PhotonView>();
         if (photonView) photonView.ObservedComponents.Add(this);
     }
@@ -94,10 +104,10 @@ public class Unit : MonoBehaviour, IPunObservable
         Level += 1;
         OnLevelChange?.Invoke(Level);
         forceCoef = (int)(forceCoef * increaseCoef);
-        moveEnergy = (int)(moveEnergy * decreaseCoef);
-        captureEnergy = (int)(captureEnergy * decreaseCoef);
-        fightEnergy = (int)(fightEnergy * decreaseCoef);
-        resourceEnergy = (int)(resourceEnergy * decreaseCoef);
+        moveEnergy = (int)(moveEnergy * decreaseCoef)>0?(int)(moveEnergy * decreaseCoef):1;
+        captureEnergy = (int)(captureEnergy * decreaseCoef)>0?(int)(captureEnergy * decreaseCoef):1;
+        fightEnergy = (int)(fightEnergy * decreaseCoef)>0?(int)(fightEnergy * decreaseCoef):1;
+        resourceEnergy = (int)(resourceEnergy * decreaseCoef)>0?(int)(resourceEnergy * decreaseCoef):1;
     }
 
     public void IncreaseExperience(int exp)
@@ -141,7 +151,20 @@ public class Unit : MonoBehaviour, IPunObservable
             cards[i - 1].gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             //BI.SetHighlight(false);
 
-            yield return StartCoroutine(MoveTo(endPosition, Constants.STEP_DURATION)); //start one movement
+            float _dx = endPosition.x - transform.position.x;
+            float _dy = endPosition.y - transform.position.y;
+            if (Math.Abs(_dx) > Math.Abs(_dy))
+                if (_dx > 0)
+                    endRotation = _rightDirection;
+                else
+                    endRotation = _leftDirection;
+            else
+                if (_dy > 0)
+                    endRotation = _upDirection;
+                else
+                    endRotation = _downDirection;
+
+            yield return StartCoroutine(MoveTo(endPosition, endRotation, Constants.STEP_DURATION)); //start one movement
 
             //if card is enemy break movement
             if (cards[i] is EnemyCard && !((EnemyCard) cards[i]).IsDefeated)
@@ -157,7 +180,7 @@ public class Unit : MonoBehaviour, IPunObservable
         FinishedMovement?.Invoke();
     }
 
-    IEnumerator MoveTo(Vector3 endPosition, float duration)
+    IEnumerator MoveTo(Vector3 endPosition, Quaternion endRotation, float duration)
     {
         float time = 0;
         Vector3 currentPosition = transform.position;
@@ -168,6 +191,7 @@ public class Unit : MonoBehaviour, IPunObservable
         startZPosition.y = 0;
         Vector3 endZPosition = startZPosition;
         endZPosition.z -= _jumpHeight;
+        Quaternion startRotation = transform.rotation;
 
         //in every moment move to destination
         while(time < duration)
@@ -175,11 +199,14 @@ public class Unit : MonoBehaviour, IPunObservable
             currentPosition = Vector3.Lerp(startXYPosition, endPosition, MoveCurve.Evaluate(time / duration));
             currentPosition += Vector3.Lerp(startZPosition, endZPosition, JumpCurve.Evaluate(time / duration));
             transform.position = currentPosition;
+            transform.rotation = Quaternion.Lerp(startRotation, endRotation, (float)Math.Pow(time / duration, 0.3f));
+
             time += Time.deltaTime;
             yield return null;
             transform.position = currentPosition;
         }
         transform.position = endPosition;
+        transform.rotation = endRotation;
     }
 
     public void Death()

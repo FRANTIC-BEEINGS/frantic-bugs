@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -16,10 +17,12 @@ namespace Cards
         private Vector3 _downPosition;
         private Vector3 _upPosition;
         private float _jumpHeight;
+        public Action OnStart;
+        public Action OnRotated;
 
         //свойства карты
         private bool _isCaptured;
-        private bool _isVisible = true;
+        private bool _isVisible = false;
         [SerializeField] protected Sprite FaceSprite;
         protected ulong CaptorId;
         private Unit _currentUnit;
@@ -72,6 +75,7 @@ namespace Cards
             if (photonView) photonView.ObservedComponents.Add(this);
             
             photonView = PhotonView.Get(this);
+            OnStart?.Invoke();
         }
 
         public Unit GetCurrentUnit()
@@ -174,7 +178,9 @@ namespace Cards
                 time += Time.deltaTime;
                 yield return null;
             }
+            transform.rotation = endRotationValue;
             transform.position = _downPosition;
+            OnRotated?.Invoke();
         }
         
         #region RPCs

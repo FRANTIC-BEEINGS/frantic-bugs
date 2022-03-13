@@ -13,6 +13,10 @@ public class CardInfoUI : MonoBehaviour
 
     public void DisplayCardInfo(Card card)
     {
+        if(card is EmptyCard || card is SpawnerCard)
+        {
+            gameObject.SetActive(false);
+        }
         if (card is ResourceCard resourceCard)
         {
             actionButton.gameObject.SetActive(!resourceCard.ResourceCollected);
