@@ -56,7 +56,7 @@ public class CardSpawner : MonoBehaviour
                     break;
                 case ResourceType.Energy:
                     gameObject.transform.GetChild(3).gameObject.SetActive(true);
-                    ((ResourceCard) _newCard).Initialize(ResourceType.Energy, Random.Range(1, 5));
+                    ((ResourceCard) _newCard).Initialize(ResourceType.Energy, Random.Range(11, 15));
                     break;
                 case ResourceType.Money:
                     gameObject.transform.GetChild(2).gameObject.SetActive(true);

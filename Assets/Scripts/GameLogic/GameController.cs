@@ -57,6 +57,8 @@ namespace GameLogic
         public Card lastClickedCard;
         private bool isLooser = false;
 
+        public GUIFunctions GetGuiFunctions() => guiFunctions;
+
         public PlayerController GetPlayerController()
         {
             return _playerController;

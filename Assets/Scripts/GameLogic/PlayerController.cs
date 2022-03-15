@@ -48,6 +48,7 @@ namespace GameLogic
 				if (_pathBuilder != null)
 					_pathBuilder.CanBuild = true;
 			}
+			_gameController.GetGuiFunctions().SetTimerTurnValue(thisPlayerTurn);
 		}
 
 		void Update()

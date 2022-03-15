@@ -1938,7 +1938,7 @@ MonoBehaviour:
   foodCount: {fileID: 1511444104626661433}
   moneyCount: {fileID: 9011881587493942662}
   currentLevel: {fileID: 1360583439}
-  turnTimerText: {fileID: 6616788803473285303}
+  turnTimerText: {fileID: 1414866345}
   timerButton: {fileID: 6534564530969781041}
   foodToWin: {fileID: 1679547526}
   moneyToWin: {fileID: 1044229192}
@@ -3387,7 +3387,6 @@ GameObject:
   - component: {fileID: 8576817541016259290}
   - component: {fileID: 9045546285764921761}
   - component: {fileID: 5777621377398103526}
-  - component: {fileID: 4022952794034593784}
   m_Layer: 5
   m_Name: TurnControlUI
   m_TagString: Untagged
@@ -3395,18 +3394,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &4022952794034593784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4022952794034593783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb87ecbf289c94b40ba16b4ef4205229, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!222 &4198023206008196390
 CanvasRenderer:
   m_ObjectHideFlags: 0
