@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-    public class GUIFunctions : MonoBehaviour, UIController
+    public class GUIFunctions : MonoBehaviourPunCallbacks, UIController
     {
         [SerializeField] private CardInfoUI cardInfoUI;
 
@@ -51,6 +51,7 @@ namespace UI
         {
             turnTimerText.text = yourTurn ? "Your Turn " : "Enemy Turn: ";
             timerButton.interactable = yourTurn;
+            manualLevelUpButton.interactable = yourTurn;
         }
     
         public void OnGameStarted()
@@ -60,8 +61,8 @@ namespace UI
 
         public void Leave()
         {
+            _messageLog.AddMessage("Leaving room " + PhotonNetwork.CurrentRoom?.Name);
             PhotonNetwork.LeaveRoom();
-            SceneManager.LoadScene("Lobby");
         }
 
         public void DisplayGoals()
@@ -161,8 +162,14 @@ namespace UI
 
             if (!endScreen.gameObject.activeSelf && Input.GetButtonDown("Pause"))
             {
-                leaveButton.gameObject.SetActive(leaveButton.gameObject.activeSelf);
+                leaveButton.gameObject.SetActive(!leaveButton.gameObject.activeSelf);
             }
+        }
+        
+        public override void OnLeftRoom()
+        {
+            if (_logRenderer != null) _logRenderer.enabled = true;
+            SceneManager.LoadScene("Lobby");
         }
     }
 }
