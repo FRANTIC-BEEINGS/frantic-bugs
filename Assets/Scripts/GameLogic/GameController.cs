@@ -38,10 +38,10 @@ namespace GameLogic
         private List<int> playerIds;
         private int IndexOfCurrentPlayerTurn = 0;
         
-        private int _foodNeededForLevelUp = 8;
-        private int _moneyNeededForLevelUp = 100;
-        private int _foodNeededToWin = 30;
-        private int _moneyNeededToWin = 500;
+        private int _foodNeededForLevelUp = 12;
+        private int _moneyNeededForLevelUp = 160;
+        private int _foodNeededToWin = 120;
+        private int _moneyNeededToWin = 1900;
 
         private Unit _unit;
         // Actions
@@ -130,12 +130,12 @@ namespace GameLogic
             }
         }
 
-        public void ManualLevelUp()
+        private void ManualLevelUp()
         {
             _unit.IncreaseLevel();
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
-            _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
             guiFunctions.ShowManualLevelUpUI(false);
+            _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
         }
 
         public int GetCurrentPlayerTurnPhotonId()

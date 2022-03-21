@@ -464,9 +464,9 @@ MonoBehaviour:
   moveEnergy: 5
   captureEnergy: 10
   forceCoef: 1
-  fightEnergy: 5
+  fightEnergy: 10
   level: 1
-  resourceEnergy: 10
+  resourceEnergy: 7
   increaseCoef: 1.2
   decreaseCoef: 0.8
   vision: 2
