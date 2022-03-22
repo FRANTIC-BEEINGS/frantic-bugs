@@ -19,7 +19,8 @@ public class CardSpawner : MonoBehaviour
     private void EditCard(int i, int j, int _level, int _mapCardWidth, int seed)
     {
         Random.seed = seed;
-        transform.eulerAngles = new Vector3(0, 180, Random.Range(-2, 2));
+        //                                      v 180
+        transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
         GameObject map = GameObject.Find("Map");
         gameObject.transform.parent = map.transform;
         MapGeneration mapGeneration = map.GetComponent<MapGeneration>();

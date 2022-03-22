@@ -10,7 +10,6 @@ using Random = UnityEngine.Random;
 public class MapGeneration : MonoBehaviour
 {
     [SerializeField] private List<GameObject> _cardPrefabs;
-    [SerializeField] private List<int> _cardTypeCnt;
 
     private enum CardId: ushort
     {
@@ -63,7 +62,7 @@ public class MapGeneration : MonoBehaviour
 
     public void Initialize(int numberOfPlayers=2, int mapCardHeight=10, int mapCardWidth=20, float cardToCardDistance=0.2f, float fluctuatePosition=0.05f, float fluctuateAngle=2f, int fluctuateSpawn=3, int peacefulRadius=3)
     {
-        
+
         _numberOfPlayers = numberOfPlayers;
         _mapCardWidth = mapCardWidth;
         _mapCardHeight = mapCardHeight;
@@ -75,7 +74,7 @@ public class MapGeneration : MonoBehaviour
 
         _mapUnityWidth  = (_mapCardWidth  - 1) * Constants.CARD_WIDTH  + (_mapCardWidth  - 1) * _cardToCardDistance;
         _mapUnityHeight = (_mapCardHeight - 1) * Constants.CARD_HEIGHT + (_mapCardHeight - 1) * _cardToCardDistance;
-        
+
         if (!PhotonNetwork.IsMasterClient)
             return;
         ClearAll();
@@ -89,11 +88,11 @@ public class MapGeneration : MonoBehaviour
     private void SetAdditionalContentPercentage()
     {
         _additionalContentPercentage = new List<int>();
-        _additionalContentPercentage.Add(0);
-        _additionalContentPercentage.Add(10);
-        _additionalContentPercentage.Add(90);
-        _additionalContentPercentage.Add(0); //30
-        _additionalContentPercentage.Add(0);
+        _additionalContentPercentage.Add(0);  // Empty
+        _additionalContentPercentage.Add(10); // Enemy
+        _additionalContentPercentage.Add(90); // Resource
+        _additionalContentPercentage.Add(0);  // Tree
+        _additionalContentPercentage.Add(0);  // Spawn
     }
 
     private void SetNumberOfEachEnemy()
@@ -147,12 +146,6 @@ public class MapGeneration : MonoBehaviour
 
     private void SetMapId()
     {
-        _cardTypeCnt[0] = _mapCardHeight * _mapCardWidth;
-        for (int i = 1; i < _cardTypeCnt.Count; ++i)
-        {
-            _cardTypeCnt[0] -= _cardTypeCnt[i];
-        }
-
         _mapId = new List<List<int>>();
         for (int i = 0; i < _mapCardHeight; ++i)
         {
@@ -196,6 +189,24 @@ public class MapGeneration : MonoBehaviour
             SetMultiplayerEnemies();
         }
 
+        if (_numberOfPlayers == 2)
+        {
+            SetTrees();
+        }
+
+        SetAdditionalContent();
+
+        for (int i = 0; i < _mapCardHeight; ++i) {
+            for (int j = 0; j < _mapCardWidth; ++j) {
+                if (_mapId[i][j] == -1) {
+                    _mapId[i][j] = 0;
+                }
+            }
+        }
+    }
+
+    private void SetAdditionalContent()
+    {
         int _additionalContent = _mapCardWidth * _mapCardHeight / 6;
         for (int _try = 0; _try < _additionalContent; ++_try)
         {
@@ -220,14 +231,11 @@ public class MapGeneration : MonoBehaviour
                 _mapId[i][j] = _cardType;
             }
         }
+    }
 
-        for (int i = 0; i < _mapCardHeight; ++i) {
-            for (int j = 0; j < _mapCardWidth; ++j) {
-                if (_mapId[i][j] == -1) {
-                    _mapId[i][j] = 0;
-                }
-            }
-        }
+    private void SetTrees()
+    {
+
     }
 
     private void SetSingleplayerEnemies()
@@ -390,7 +398,7 @@ public class MapGeneration : MonoBehaviour
         }
         _secondSpawnPosI += _dI2;
         _secondSpawnPosJ += _dJ2;
-        
+
         PhotonView photonView = PhotonView.Get(this);
         photonView.RPC("SetMultiplayerSpawnsRpc", RpcTarget.AllBuffered, _firstSpawnPosI, _firstSpawnPosJ, _secondSpawnPosI, _secondSpawnPosJ);
     }
@@ -400,7 +408,7 @@ public class MapGeneration : MonoBehaviour
     {
         MapGeneration mg = gameObject.GetComponent<MapGeneration>();
         mg._playerIJPositions = new List<List<int>>();
-        
+
         mg._playerIJPositions.Add(new List<int>());
         mg._playerIJPositions[0].Add(_firstSpawnPosI);
         mg._playerIJPositions[0].Add(_firstSpawnPosJ);
@@ -411,7 +419,7 @@ public class MapGeneration : MonoBehaviour
 
     void InstantiateCards()
     {
-        
+
         for (int i = 0; i < _mapCardHeight; ++i)
         {
             for (int j = 0; j < _mapCardWidth; ++j)
@@ -498,15 +506,15 @@ public class MapGeneration : MonoBehaviour
     {
         if (_mapCard == null) _mapCard = new List<List<Card>>();
         if (_mapObject == null) _mapObject = new List<List<GameObject>>();
-        
+
         if (_mapCard.Count == i)
             _mapCard.Add(new List<Card>());
-        else if (_mapCard.Count < i) 
+        else if (_mapCard.Count < i)
             return;
-        
+
         if (_mapObject.Count == i)
             _mapObject.Add(new List<GameObject>());
-        else if (_mapObject.Count < i) 
+        else if (_mapObject.Count < i)
             return;
 
         _mapCard[i].Add(_newCard);
