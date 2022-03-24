@@ -19,8 +19,7 @@ public class CardSpawner : MonoBehaviour
     private void EditCard(int i, int j, int _level, int _mapCardWidth, int seed)
     {
         Random.seed = seed;
-        //                                      v 180
-        transform.eulerAngles = new Vector3(0, 0, Random.Range(-2, 2));
+        transform.eulerAngles = new Vector3(0, 180, Random.Range(-2, 2));
         GameObject map = GameObject.Find("Map");
         gameObject.transform.parent = map.transform;
         MapGeneration mapGeneration = map.GetComponent<MapGeneration>();
@@ -69,6 +68,12 @@ public class CardSpawner : MonoBehaviour
                     break;
             }
         }
+        /*
+        else if (_newCard is TreeCard)
+        {
+            ((TreeCard) _newCard).Initialize(4);
+        }
+        */
 
         BodyInformation _body = gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
         _body.id = i * _mapCardWidth + j;
