@@ -43,7 +43,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.2784311, g: 0.3584906, b: 0.26886794, a: 0}
+  m_BackGroundColor: {r: 0.1981132, g: 0.08348165, b: 0.13112217, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -101,10 +101,6 @@ MonoBehaviour:
   bordersWidth: 10
   minDistance: 10
   maxDistance: 400
-  minXPoint: -20
-  maxXPoint: 20
-  minYPoint: -20
-  maxYPoint: 20
   zoomEnabled: 1
   zoomToCursorEnabled: 1
   buttonsCameraMoveEnabled: 1
