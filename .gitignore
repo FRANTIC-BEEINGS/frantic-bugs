@@ -70,6 +70,12 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
+#Photon Demos
+/[Aa]ssets/Photon/*/Demos/*
+
+#Sandbox Scene (for testing stuff locally)
+/[Aa]Assets/Scenes/Sandbox
+
 # Mac
 *.DS_Store
 
