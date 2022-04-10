@@ -68,6 +68,12 @@ public class CardSpawner : MonoBehaviour
                     break;
             }
         }
+        /*
+        else if (_newCard is TreeCard)
+        {
+            ((TreeCard) _newCard).Initialize(4);
+        }
+        */
 
         BodyInformation _body = gameObject.transform.GetChild(0).GetComponent<BodyInformation>();
         _body.id = i * _mapCardWidth + j;

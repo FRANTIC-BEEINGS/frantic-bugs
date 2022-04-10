@@ -84,7 +84,7 @@ public class CameraController : MonoBehaviour
     void MoveProjectionToTarget()
     {
         projectionToTarget = target - projection;
-        projectionToTarget *= Time.deltaTime;
+        projectionToTarget *= 0.1f;//Time.deltaTime;
         projectionToTarget *= movementSpeed;
         transform.position = transform.position + projectionToTarget;
     }
@@ -116,9 +116,9 @@ public class CameraController : MonoBehaviour
         {
             Vector3 direction;
             if (zoomToCursorEnabled)
-                direction = Camera.main.ScreenPointToRay(Input.mousePosition).direction * scroll * zoomSpeed * Time.deltaTime;
+                direction = Camera.main.ScreenPointToRay(Input.mousePosition).direction * scroll * zoomSpeed * 0.1f;//Time.deltaTime;
             else
-                direction = transform.forward * scroll * zoomSpeed * Time.deltaTime;
+                direction = transform.forward * scroll * zoomSpeed * 0.1f;//Time.deltaTime;
 
             if ((direction[2] > 0 && transform.position.z < -minDistance) ||
                 (direction[2] < 0 && transform.position.z > -maxDistance))
@@ -159,7 +159,7 @@ public class CameraController : MonoBehaviour
     void MoveTarget(Vector3 direction)
     {
         direction = Vector3.Normalize(direction);
-        direction *= Time.deltaTime;
+        direction *= 0.1f;//Time.deltaTime;
         direction *= movementSpeed;
 
         if  ((direction[0] < 0 && projection[0] <= minXPoint) ||
