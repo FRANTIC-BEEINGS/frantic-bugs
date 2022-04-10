@@ -37,7 +37,7 @@ public class SoundController : MonoBehaviour
     public AudioClip LobbyMusic => _lobbyMusic;
 
     private readonly List<AudioSource> _soundSources = new List<AudioSource>();
-    private float _soundVolume = 0.5f;
+    private float _soundVolume = 0f;
     public float SoundVolume {
         get => _soundVolume;
         set {
@@ -52,7 +52,7 @@ public class SoundController : MonoBehaviour
         }
     }
 
-    private float _musicVolume = 0.2f;
+    private float _musicVolume = 0f;
     public float MusicVolume {
         get => _musicVolume;
         set {

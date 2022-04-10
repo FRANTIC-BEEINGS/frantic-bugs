@@ -84,7 +84,12 @@ public static class UnitCardInteractionController
 
         
     }
-    
+
+    public static void CaptureTree(TreeCard treeCard)
+    {
+        treeCard.Capture(1);
+    }
+
     public static bool StepOnCard(Unit unit, Card card)
     {
         return card.StepOn(unit);

@@ -39,8 +39,8 @@ namespace GameLogic
         private int IndexOfCurrentPlayerTurn = 0;
         
         private int _foodNeededForLevelUp = 12;
-        private int _moneyNeededForLevelUp = 160
-            ;
+        private int _moneyNeededForLevelUp = 160;
+        
         private int _foodNeededToWin = 120;
         private int _moneyNeededToWin = 1900;
 
@@ -77,8 +77,15 @@ namespace GameLogic
         }
         public void GetResource()
         {
-            UnitCardInteractionController.GetResource(lastClickedCard as ResourceCard,
-                lastClickedCard.GetCurrentUnit(), _playerController.GetResourceManager());
+            if (lastClickedCard is ResourceCard)
+            {
+                UnitCardInteractionController.GetResource(lastClickedCard as ResourceCard,
+                    lastClickedCard.GetCurrentUnit(), _playerController.GetResourceManager());
+            }
+            else if (lastClickedCard is TreeCard)
+            {
+                UnitCardInteractionController.CaptureTree(lastClickedCard as TreeCard);
+            }
         }
         private void Death()
         {

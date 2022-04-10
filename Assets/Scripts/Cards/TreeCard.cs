@@ -7,12 +7,15 @@ namespace Cards
     {
         [SerializeField] private int _visionRadius;
         private VisionController visionController;
+        public bool isCaptured = false;
         public void Capture(ulong captorId)
         {
             if (IsCaptured) return; //todo: remove tmp fix and handle recapturing
             IsCaptured = true;
             CaptorId = captorId;
             //todo: change captor status on each card in radius
+            visionController.OpenCardsInTreeVision(_visionRadius, this);
+            isCaptured = true;
         }
         
         //use this in generation for setting default parameters
@@ -21,7 +24,6 @@ namespace Cards
             _visionRadius = visionRadius;
             visionController = GetComponent<VisionController>();
             visionController.Initialize(mapGeneration);
-            visionController.OpenCardsInTreeVision(_visionRadius, this);
         }
 
         public override string ToString()

@@ -133,6 +133,7 @@ MonoBehaviour:
   FaceSprite: {fileID: 0}
   isTreeVisible: 0
   _visionRadius: 0
+  isCaptured: 0
 --- !u!114 &8020909878238985346
 MonoBehaviour:
   m_ObjectHideFlags: 0
