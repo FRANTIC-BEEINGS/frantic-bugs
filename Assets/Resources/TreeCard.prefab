@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 829005116101268098}
   - component: {fileID: 8020909878238985346}
   - component: {fileID: -4385204341876708847}
+  - component: {fileID: 1604003011977304808}
   m_Layer: 0
   m_Name: TreeCard
   m_TagString: Untagged
@@ -150,7 +151,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 829005116101268098}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -166,6 +168,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 961ece0ead2774f5c892d28a7817e6fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1604003011977304808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5014831593590833974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cf629cdb0034050b0b9e3f42f9ad7c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m: {fileID: 0}
 --- !u!1 &9066662685008203800
 GameObject:
   m_ObjectHideFlags: 0

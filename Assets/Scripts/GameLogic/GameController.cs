@@ -39,7 +39,8 @@ namespace GameLogic
         private int IndexOfCurrentPlayerTurn = 0;
         
         private int _foodNeededForLevelUp = 12;
-        private int _moneyNeededForLevelUp = 160;
+        private int _moneyNeededForLevelUp = 160
+            ;
         private int _foodNeededToWin = 120;
         private int _moneyNeededToWin = 1900;
 
@@ -105,15 +106,15 @@ namespace GameLogic
             ResourceManager resourceManager = _playerController.GetResourceManager();
             switch (resource.ResourceType)
             {
-                case ResourceType.Food when resourceManager.GetResource(ResourceType.Food) >= _foodNeededToWin:
+                /*case ResourceType.Food when resourceManager.GetResource(ResourceType.Food) >= _foodNeededToWin:
                     _foodNeededToWin = -1;
-                    break;
+                    break;*/
                 case ResourceType.Money when resourceManager.GetResource(ResourceType.Money) >= _moneyNeededToWin:
                     _moneyNeededToWin = -1;
                     break;
             }
 
-            if (_foodNeededToWin == -1 && _moneyNeededToWin == -1)
+            if (/*_foodNeededToWin == -1 &&*/ _moneyNeededToWin == -1)
             {
                 guiFunctions.OnWin();
             }
@@ -123,7 +124,7 @@ namespace GameLogic
         {
             if(!GameSettings.Multiplayer)
                 return;
-            if (_foodNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Food) &&
+            if (/*_foodNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Food) &&*/
                 _moneyNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Money))
             {
                 guiFunctions.ShowManualLevelUpUI(true);
@@ -133,7 +134,7 @@ namespace GameLogic
         private void ManualLevelUp()
         {
             _unit.IncreaseLevel();
-            _playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
+            //_playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
             guiFunctions.ShowManualLevelUpUI(false);
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
         }
