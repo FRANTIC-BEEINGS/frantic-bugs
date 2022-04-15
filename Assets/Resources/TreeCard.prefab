@@ -150,7 +150,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 829005116101268098}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -255,6 +256,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5136906502037703288}
     m_Modifications:
+    - target: {fileID: 1030002455855846681, guid: 69d5cf3c3706a5a498e1ef54d7ee74b1, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1555258366964537690, guid: 69d5cf3c3706a5a498e1ef54d7ee74b1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5835306611185681321, guid: 69d5cf3c3706a5a498e1ef54d7ee74b1, type: 3}
       propertyPath: m_Name
       value: CardBody
