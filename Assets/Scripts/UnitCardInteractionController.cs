@@ -10,7 +10,7 @@ public static class UnitCardInteractionController
     {
         var soundController = SoundController.Instance;
         soundController.PlaySound(soundController.FightSnd);
-        
+
         if (unit.Force < enemyCard.GetLevel() || resourceManager.GetResource(ResourceType.Energy) < unit.FightEnergy)
         {
             unit.Death();
@@ -36,7 +36,7 @@ public static class UnitCardInteractionController
     {
         return resourceManager.GetResource(ResourceType.Energy) >= unit.CaptureEnergy;
     }
-    
+
     public static bool CanGetResource(Card card, Unit unit)
     {
         return card is ResourceCard && card.GetCurrentUnit() == unit && !((ResourceCard)card).ResourceCollected;
@@ -46,7 +46,7 @@ public static class UnitCardInteractionController
     {
         return resourceManager.GetResource(ResourceType.Energy) >= unit.ResourceEnergy;
     }
-    
+
     public static void CaptureCard(ICapturable card, ulong captorId, Unit unit, ResourceManager resourceManager)
     {
         if (resourceManager.GetResource(ResourceType.Energy) < unit.CaptureEnergy)
@@ -58,7 +58,7 @@ public static class UnitCardInteractionController
             resourceManager.AddReplenishableResource((ResourceCard) card);
         }
     }
-    
+
     public static void GetResource(ResourceCard resourceCard, Unit unit, ResourceManager resourceManager)
     {
         if (resourceManager.GetResource(ResourceType.Energy) < unit.ResourceEnergy || resourceCard.ResourceCollected)
@@ -71,18 +71,11 @@ public static class UnitCardInteractionController
             var soundController = SoundController.Instance;
             soundController.PlaySound(soundController.GoldSound);
         }
-        else if (resourceType == ResourceType.Food)
-        {
-            var soundController = SoundController.Instance;
-            soundController.PlaySound(soundController.NyomSnd);
-        }
         else
         {
             var soundController = SoundController.Instance;
             soundController.PlaySound(soundController.EnergySound);
         }
-
-        
     }
 
     public static void CaptureTree(TreeCard treeCard)

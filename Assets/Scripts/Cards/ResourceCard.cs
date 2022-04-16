@@ -13,7 +13,7 @@ namespace Cards
         [SerializeField] private int _replenishmentSpeed;    //how many turns must pass before a replenishment occurs
         private int _turnsToNextReplenishment;
         public Action<ResourceCard> Replenish;
-        
+
         private bool _resourceCollected;
 
         public bool ResourceCollected
@@ -61,7 +61,7 @@ namespace Cards
         {
             return _quantity;
         }
-        
+
         public void ConsumeResource()
         {
             ResourceCollected = true;
@@ -102,16 +102,13 @@ namespace Cards
                 case ResourceType.Energy:
                     result = "Rest";
                     break;
-                case ResourceType.Food:
-                    result = "Gather " + _resource.ToString();
-                    break;
                 case ResourceType.Money:
                     result = "Collect " + _resource.ToString();
                     break;
             }
             return result;
         }
-        
+
         public override void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo messageInfo)
         {
             base.OnPhotonSerializeView(stream, messageInfo);
@@ -132,7 +129,7 @@ namespace Cards
         {
             _resourceCollected = value;
         }
-        
+
         #endregion
     }
 }

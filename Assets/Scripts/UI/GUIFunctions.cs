@@ -15,26 +15,24 @@ namespace UI
         [SerializeField] private CardInfoUI cardInfoUI;
 
         [SerializeField] private Text energyCount;
-        [SerializeField] private Text foodCount;
         [SerializeField] private Text moneyCount;
         [SerializeField] private Text currentLevel;
         [SerializeField] private Text turnTimerText;
         [SerializeField] private Button timerButton;
-        
-        [SerializeField] private Text foodToWin;
+
         [SerializeField] private Text moneyToWin;
 
         [SerializeField] private Button manualLevelUpButton;
-        
+
         [SerializeField] private Button leaveButton;
         [SerializeField] private GameObject endScreen;
         [SerializeField] private Text endText;
 
         [SerializeField] private GameObject goals;
-    
+
         private MessageLogUI _messageLog;
         private Canvas _logRenderer;
-        
+
         public Action GetResourceButtonAction;
 
         public void GetResourceButton()
@@ -46,17 +44,17 @@ namespace UI
         {
             if (_logRenderer != null) _logRenderer.enabled = false;
         }
-        
+
         public void SetTimerTurnValue(bool yourTurn)
         {
             turnTimerText.text = yourTurn ? "Your Turn " : "Enemy Turn: ";
             timerButton.interactable = yourTurn;
             manualLevelUpButton.interactable = yourTurn;
         }
-    
+
         public void OnGameStarted()
         {
-        
+
         }
 
         public void Leave()
@@ -84,8 +82,8 @@ namespace UI
         {
             if(!card.IsVisible)
                 return;
-            if ((card.GetCurrentUnit() == null || 
-                 card.GetCurrentUnit().GetComponent<PhotonView>().IsMine) && 
+            if ((card.GetCurrentUnit() == null ||
+                 card.GetCurrentUnit().GetComponent<PhotonView>().IsMine) &&
                 (card is EmptyCard || card is SpawnerCard))
             {
                 cardInfoUI.gameObject.SetActive(false);
@@ -100,9 +98,8 @@ namespace UI
             cardInfoUI.gameObject.SetActive(false);
         }
 
-        public void SetGameGoals(int food, int money)
+        public void SetGameGoals(int money)
         {
-            //foodToWin.text = food.ToString();
             moneyToWin.text = money.ToString();
         }
 
@@ -113,9 +110,6 @@ namespace UI
                 case ResourceType.Energy:
                     energyCount.text = resource.Amount.ToString();
                     break;
-                /*case ResourceType.Food:
-                    foodCount.text = resource.Amount.ToString();
-                    break;*/
                 case ResourceType.Money:
                     moneyCount.text = resource.Amount.ToString();
                     break;
@@ -153,7 +147,7 @@ namespace UI
         private void Update()
         {
             //ui input updates
-        
+
             //hide/show text log
             if (Input.GetButtonDown("Log"))
             {
@@ -165,7 +159,7 @@ namespace UI
                 leaveButton.gameObject.SetActive(!leaveButton.gameObject.activeSelf);
             }
         }
-        
+
         public override void OnLeftRoom()
         {
             if (_logRenderer != null) _logRenderer.enabled = true;

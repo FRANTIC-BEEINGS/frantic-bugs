@@ -25,35 +25,33 @@ namespace GameLogic
         [SerializeField] private GUIFunctions guiFunctions;
         [SerializeField] private UITimerController gameTimer;
         [SerializeField] private UITimerController turnTimer;
-        
+
         //network
         private Photon.Realtime.Player[] _players;
-        
+
         //prefabs
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private GameObject fighterPrefab;
         [SerializeField] private Material localPlayerMaterial;
-        
+
         // Network
         private List<int> playerIds;
         private int IndexOfCurrentPlayerTurn = 0;
-        
-        private int _foodNeededForLevelUp = 12;
+
         private int _moneyNeededForLevelUp = 160;
-        
-        private int _foodNeededToWin = 120;
+
         private int _moneyNeededToWin = 1900;
 
         private Unit _unit;
         // Actions
         public Action<int> NextTurnPlayerId;
-        
+
         //timers
         private double gameStartTime = 0;
         private double lastTurnStartTime = 0;
         private double timeToNextTurn = 0;
         private double timeToEndGame = 0;
-        
+
         private PlayerController _playerController;
         public Card lastClickedCard;
         private bool isLooser = false;
@@ -113,15 +111,12 @@ namespace GameLogic
             ResourceManager resourceManager = _playerController.GetResourceManager();
             switch (resource.ResourceType)
             {
-                /*case ResourceType.Food when resourceManager.GetResource(ResourceType.Food) >= _foodNeededToWin:
-                    _foodNeededToWin = -1;
-                    break;*/
                 case ResourceType.Money when resourceManager.GetResource(ResourceType.Money) >= _moneyNeededToWin:
                     _moneyNeededToWin = -1;
                     break;
             }
 
-            if (/*_foodNeededToWin == -1 &&*/ _moneyNeededToWin == -1)
+            if (_moneyNeededToWin == -1)
             {
                 guiFunctions.OnWin();
             }
@@ -131,8 +126,7 @@ namespace GameLogic
         {
             if(!GameSettings.Multiplayer)
                 return;
-            if (/*_foodNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Food) &&*/
-                _moneyNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Money))
+            if (_moneyNeededForLevelUp <= _playerController.GetResourceManager().GetResource(ResourceType.Money))
             {
                 guiFunctions.ShowManualLevelUpUI(true);
             }
@@ -141,7 +135,6 @@ namespace GameLogic
         private void ManualLevelUp()
         {
             _unit.IncreaseLevel();
-            //_playerController.GetResourceManager().ConsumeResource(ResourceType.Food,_foodNeededForLevelUp);
             guiFunctions.ShowManualLevelUpUI(false);
             _playerController.GetResourceManager().ConsumeResource(ResourceType.Money,_moneyNeededForLevelUp);
         }
@@ -161,14 +154,14 @@ namespace GameLogic
 
         private void Start()
         {
-            
+
             if (GameSettings.Multiplayer)
                 MultiplayerStart();
             else
                 MultiplayerStart();
 
             // //set camera location and borders
-            
+
             //
             // Instantiate(playerPrefab, Vector3.zero, Quaternion.identity);
         }
@@ -182,11 +175,11 @@ namespace GameLogic
         private void MultiplayerStart()
         {
             MultiplayerSetup();
-            
+
             if (!GameSettings.Multiplayer)
             {
                 guiFunctions.DisplayGoals();
-                guiFunctions.SetGameGoals(_foodNeededToWin,_moneyNeededToWin);
+                guiFunctions.SetGameGoals(_moneyNeededToWin);
             }
 
             guiFunctions.GetResourceButtonAction = CardInfoCollectResourceButton;
@@ -209,13 +202,13 @@ namespace GameLogic
         {
             // сохраняем id игроков, чтобы потом понимать, какой игрок, за какую сторону играет
             setPlayerIds();
-            
+
             // генерация карты идет асинхронно
             // action нужен, чтобы юниты спавнились после того, как места спавна определены
             mapGeneration.MapGenerated += SpawnUnitsAndSetCamera;
             //Начать генерацию карты для нужного количества игроков
             mapGeneration.Initialize(PhotonNetwork.PlayerList.Length);
-            
+
             //Set start time to room properties
             if (PhotonNetwork.IsMasterClient)
             {
@@ -224,7 +217,7 @@ namespace GameLogic
                 Hashtable ht = new Hashtable {{"GameStartTime", timeTmp}, {"LastTurnStartTime", timeTmp}};
                 PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
             }
-            
+
             guiFunctions.AddLevelUpButtonAction(ManualLevelUp);
         }
 
@@ -233,7 +226,7 @@ namespace GameLogic
             // beautiful taverna
             TG = Instantiate(tavernPrefab).GetComponent<TavernGeneration>();
             TG.Initialize(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
-            
+
             // спавн игрока (не юнита) с его контроллером, чтобы у каждого игрока был свой
             GameObject player = PhotonNetwork.Instantiate(playerPrefab.name, Vector3.zero, Quaternion.identity);
             _playerController = player.GetComponent<PlayerController>();
@@ -249,13 +242,13 @@ namespace GameLogic
             // спавн главного юнита первого игрока
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerIds[0])
             {
-                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(), 
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetFirstSpawnCoords(),
                     Quaternion.identity);
                 // раскрашиваем своего юнита в другой цвет (локально)
                 Transform unitModel = unitGO.transform.Find("DefaultUnit");
                 for (int i = 0; i < unitModel.childCount; i++)
                 {
-                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials =
                         new []{localPlayerMaterial};
                 }
                 Unit unit = unitGO.GetComponent<Unit>();
@@ -268,7 +261,7 @@ namespace GameLogic
                 CameraController cameraController = mainCamera.GetComponent<CameraController>();
                 cameraController.SetViewAtCoords(mapGeneration.GetFirstSpawnCoords());
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
-                
+
                 //set open cards near spawned unit
                 VisionController visionController = unitGO.GetComponent<VisionController>();
                 visionController.Initialize(mapGeneration);
@@ -277,18 +270,18 @@ namespace GameLogic
                 {
                     c.IsVisible = true;
                 }
-                
+
             }
             // спавн главного юнита второго игрока, если он есть
             else if (playerIds.Count > 1 && PhotonNetwork.LocalPlayer.ActorNumber == playerIds[1])
             {
-                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(), 
+                GameObject unitGO = PhotonNetwork.Instantiate(fighterPrefab.name, mapGeneration.GetSecondSpawnCoords(),
                     Quaternion.identity);
                 // раскрашиваем своего юнита в другой цвет (локально)
                 Transform unitModel = unitGO.transform.Find("DefaultUnit");
                 for (int i = 0; i < unitModel.childCount; i++)
                 {
-                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials = 
+                    unitModel.GetChild(i).gameObject.GetComponent<MeshRenderer>().materials =
                         new []{localPlayerMaterial};
                 }
                 Unit unit = unitGO.GetComponent<Unit>();
@@ -301,7 +294,7 @@ namespace GameLogic
                 CameraController cameraController = mainCamera.GetComponent<CameraController>();
                 cameraController.SetViewAtCoords(mapGeneration.GetSecondSpawnCoords());
                 cameraController.SetViewBorders(mapGeneration.GetMapUnityWidth(), mapGeneration.GetMapUnityHeight());
-                
+
                 //set open cards near spawned unit
                 VisionController visionController = unitGO.GetComponent<VisionController>();
                 visionController.Initialize(mapGeneration);
@@ -334,7 +327,7 @@ namespace GameLogic
             if (PhotonNetwork.IsMasterClient)
             {
                 int newIndexOfCurrentPlayerTurn = (IndexOfCurrentPlayerTurn + 1) % playerIds.Count;
-                Hashtable ht = new Hashtable {{"LastTurnStartTime", PhotonNetwork.Time}, 
+                Hashtable ht = new Hashtable {{"LastTurnStartTime", PhotonNetwork.Time},
                     {"IndexOfCurrentPlayerTurn", newIndexOfCurrentPlayerTurn}};
                 PhotonNetwork.CurrentRoom.SetCustomProperties(ht);
             }
@@ -344,10 +337,10 @@ namespace GameLogic
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
                 guiFunctions.OnLoss();
-            else 
+            else
                 guiFunctions.OnWin();
         }
-        
+
         public void Win(int playerId)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == playerId)
@@ -356,7 +349,7 @@ namespace GameLogic
                 guiFunctions.OnLoss();
 
         }
-        
+
         private void Update()
         {
             //todo: game input updates
@@ -401,7 +394,7 @@ namespace GameLogic
                 SceneManager.LoadScene("GameRoom");
             }
         }
-        
+
         public void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
             object propsTime;
@@ -409,12 +402,12 @@ namespace GameLogic
             {
                 gameStartTime = (double) propsTime;
             }
-            
+
             if (propertiesThatChanged.TryGetValue("LastTurnStartTime", out propsTime))
             {
                 lastTurnStartTime = (double) propsTime;
             }
-            
+
             if (propertiesThatChanged.TryGetValue("IndexOfCurrentPlayerTurn", out propsTime))
             {
                 IndexOfCurrentPlayerTurn = (int) propsTime;

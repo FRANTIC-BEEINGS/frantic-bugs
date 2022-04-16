@@ -42,7 +42,7 @@ public class CardSpawner : MonoBehaviour
 
             ((EnemyCard) _newCard).Initialize(_level, 50,
                 new Dictionary<ResourceType, int>()
-                    {{ResourceType.Food, 10 * _level}, {ResourceType.Money, 100 * _level}});
+                    {{ResourceType.Money, 100 * _level}});
         }
         else if (_newCard is ResourceCard)
         {
@@ -50,10 +50,6 @@ public class CardSpawner : MonoBehaviour
             var resourceType = (ResourceType) resourceTypes.GetValue(Random.Range(0, resourceTypes.Length));
             switch (resourceType)
             {
-                case ResourceType.Food:
-                    gameObject.transform.GetChild(4).gameObject.SetActive(true);
-                    ((ResourceCard) _newCard).Initialize(ResourceType.Food, Random.Range(5, 20));
-                    break;
                 case ResourceType.Energy:
                     gameObject.transform.GetChild(3).gameObject.SetActive(true);
                     ((ResourceCard) _newCard).Initialize(ResourceType.Energy, Random.Range(11, 15));
