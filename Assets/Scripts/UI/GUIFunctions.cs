@@ -102,7 +102,7 @@ namespace UI
 
         public void SetGameGoals(int food, int money)
         {
-            foodToWin.text = food.ToString();
+            //foodToWin.text = food.ToString();
             moneyToWin.text = money.ToString();
         }
 
@@ -113,9 +113,9 @@ namespace UI
                 case ResourceType.Energy:
                     energyCount.text = resource.Amount.ToString();
                     break;
-                case ResourceType.Food:
+                /*case ResourceType.Food:
                     foodCount.text = resource.Amount.ToString();
-                    break;
+                    break;*/
                 case ResourceType.Money:
                     moneyCount.text = resource.Amount.ToString();
                     break;

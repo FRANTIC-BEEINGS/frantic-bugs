@@ -53,8 +53,8 @@ public class VisionController : MonoBehaviour
                         if (!card.IsVisible)
                         {
                                 card.IsVisible = true;
-                                card.isTreeVisible = true;
                         }
+                        card.isTreeVisible = true;
                 }
         }
 

@@ -40,6 +40,12 @@ public class CardInfoUI : MonoBehaviour
             }
             buttonText.text = resourceCard.GetCollectButtonText();
         }
+        else if (card is TreeCard treeCard)
+        {
+            actionButton.gameObject.SetActive(!treeCard.isCaptured);
+            actionButton.interactable = true;
+            buttonText.text = "Capture tree";
+        }
         else
         {
             actionButton.gameObject.SetActive(false);
