@@ -1655,12 +1655,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardInfoUI: {fileID: 924453401065970940}
   energyCount: {fileID: 1593941898}
-  foodCount: {fileID: 0}
   moneyCount: {fileID: 9011881587493942662}
   currentLevel: {fileID: 1360583439}
   turnTimerText: {fileID: 1414866345}
   timerButton: {fileID: 6534564530969781041}
-  foodToWin: {fileID: 0}
   moneyToWin: {fileID: 1044229192}
   manualLevelUpButton: {fileID: 1313103949}
   leaveButton: {fileID: 5240647255437255789}
